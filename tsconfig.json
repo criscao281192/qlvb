@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "./client/build",
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+  },
+  "exclude": [
+    "client/*"
+  ]
+}
