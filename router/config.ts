@@ -1,24 +1,22 @@
 import express, { Request, Response } from "express";
-import { LoaiTaiLieu, CoQuanBanHanh, PhuTrach } from "../models";
+import { LoaiTaiLieu, VanBanDen } from "../models";
 
 const router = express.Router();
 
 /**
- * Search case by condition
+ * HÀM TÌM KIẾM
  */
 router.get("/", async (req: Request, res: Response) => {
+
   const loaitailieus = await LoaiTaiLieu.findAll();
 
-  const coquanbanhanhs = await CoQuanBanHanh.findAll();
-
-  const phutraches = await PhuTrach.findAll();
+  const vanbandens = await VanBanDen.findAll();
 
   return res.json({
     loai_tai_lieu: loaitailieus,
-    phu_trach: phutraches,
-    co_quan_ban_hanh: coquanbanhanhs,
+    van_ban_den: vanbandens,
   });
-  
+
 });
 
 export { router as configRouter };

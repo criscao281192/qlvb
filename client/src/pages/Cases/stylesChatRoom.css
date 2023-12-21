@@ -1,0 +1,35 @@
+.chat-case-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.info-container {
+  order: 1;
+  width: 30%;
+}
+
+.messages-container {
+  order: 3;
+  box-sizing: border-box;
+  padding-left: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 2px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 10px;
+  width: 70%;
+}
+
+.messages-display ul {
+  list-style-type: none;
+  padding: 0;
+  height: 100%;
+}
+
+.messages-display ul li {
+  border-bottom: 2px double #000;
+  padding: 10px 0;
+  margin: 0;
+  font-size: 14px;
+}

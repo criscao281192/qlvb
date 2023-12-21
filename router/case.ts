@@ -1,16 +1,17 @@
 import express, { Request, Response } from "express";
-import { LoaiTaiLieu, CoQuanBanHanh, PhuTrach, TaiLieu } from "../models";
+import { LoaiTaiLieu, VanBanDen, TaiLieu } from "../models";
 import Sequelize, { Op, where } from "sequelize";
+import fs from 'fs';
 import moment from "moment";
 
 const router = express.Router();
 
-
 const buildQuery = (req: Request) => {
   const query = req.query;
   let whereCon = {};
-  // - Bước 1: Tính thời gian còn lại dựa trên cột Ngày hết hạn
-  // - Bước 2: Sắp xếp 
+
+  // QUẢN LÝ VĂN BẢN
+  // 
 
   // loai_tai_lieu_id
   if (query.loai_tai_lieu_id) {
@@ -20,19 +21,21 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // so_tai_lieu
-  if (query.so_tai_lieu) {
+  // van_ban_den_id
+  if (query.van_ban_den_id) {
     whereCon = {
       ...whereCon,
-      so_tai_lieu: query.so_tai_lieu,
-      };
+      van_ban_den_id: query.van_ban_den_id,
+    };
   }
 
-  // co_quan_ban_hanh_id
-  if (query.co_quan_ban_hanh_id) {
+  // van_ban_den_so
+  if (query.van_ban_den_so) {
     whereCon = {
       ...whereCon,
-      co_quan_ban_hanh_id: query.co_quan_ban_hanh_id,
+      van_ban_den_so: {
+        [Op.like]: `%${query.van_ban_den_so}%`,
+      },
     };
   }
 
@@ -108,16 +111,6 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // yeu_cau
-  if (query.yeu_cau) {
-    whereCon = {
-      ...whereCon,
-      yeu_cau: {
-        [Op.like]: `%${query.yeu_cau}%`,
-      },
-    };
-  }
-
   // ngay_het_han
   if (query.ngay_het_han_1 && query.ngay_het_han_2) {
     whereCon = {
@@ -129,45 +122,12 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // nguoi_ki
-  if (query.nguoi_ki) {
+  // noi_nhan
+  if (query.noi_nhan) {
     whereCon = {
       ...whereCon,
-      nguoi_ki: {
-        [Op.like]: `%${query.nguoi_ki}%`,
-      },
-    };
-  }
-
-
-  // doi_bao_cao
-  if (query.doi_bao_cao) {
-    whereCon = {
-      ...whereCon,
-      doi_bao_cao: {
-        [Op.like]: `%${query.doi_bao_cao}%`,
-      },
-    };
-  }
-
-
-  // so_van_ban_tra_loi
-  if (query.so_van_ban_tra_loi) {
-    whereCon = {
-      ...whereCon,
-      so_van_ban_tra_loi: {
-        [Op.like]: `%${query.so_van_ban_tra_loi}%`,
-      },
-    };
-  }
-
-  // ngay_van_ban_tra_loi
-  if (query.ngay_van_ban_tra_loi_1 && query.ngay_van_ban_tra_loi_2) {
-    whereCon = {
-      ...whereCon,
-      ngay_van_ban_tra_loi: {
-        [Op.gt]: query.ngay_van_ban_tra_loi_1,
-        [Op.lt]: query.ngay_van_ban_tra_loi_2,
+      noi_nhan: {
+        [Op.like]: `%${query.noi_nhan}%`,
       },
     };
   }
@@ -182,76 +142,11 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // doi_bao_cao
-  if (query.doi_bao_cao) {
-    whereCon = {
-      ...whereCon,
-      doi_bao_cao: {
-        [Op.like]: `%${query.doi_bao_cao}%`,
-      },
-    };
-  }
-
-  // trang_thai_d2
-  if (query.trang_thai_d2) {
-    whereCon = {
-      ...whereCon,
-      trang_thai_d2: {
-        [Op.like]: `%${query.trang_thai_d2}%`
-      }
-    }
-  }
-  // trang_thai_d3
-  if (query.trang_thai_d3) {
-    whereCon = {
-      ...whereCon,
-      trang_thai_d3: {
-        [Op.like]: `%${query.trang_thai_d3}%`
-      }
-    }
-  }
-  // trang_thai_d4
-  if (query.trang_thai_d4) {
-    whereCon = {
-      ...whereCon,
-      trang_thai_d4: {
-        [Op.like]: `%${query.trang_thai_d4}%`
-      }
-    }
-  }
-  // trang_thai_d5
-  if (query.trang_thai_d5) {
-    whereCon = {
-      ...whereCon,
-      trang_thai_d5: {
-        [Op.like]: `%${query.trang_thai_d5}%`
-      }
-    }
-  }  
-
-  // phu_trach_id
-  if (query.phu_trach_id) {
-    whereCon = {
-      ...whereCon,
-      phu_trach_id: query.phu_trach_id,
-    };
-  }
-
-  // lanh_dao_phu_trach
-  if (query.lanh_dao_phu_trach) {
-    whereCon = {
-      ...whereCon,
-      lanh_dao_phu_trach: {
-        [Op.like]: `%${query.lanh_dao_phu_trach}%`
-      }
-    }
-  }  
-
   return whereCon;
 };
 
 /**
- * Search case by condition
+ * TÌM KIẾM
  */
 router.get("/", (req: Request, res: Response) => {
   const whereCon = buildQuery(req);
@@ -262,10 +157,7 @@ router.get("/", (req: Request, res: Response) => {
         model: LoaiTaiLieu,
       },
       {
-        model: CoQuanBanHanh,
-      },
-      {
-        model: PhuTrach,
+        model: VanBanDen,
       },
     ],
     where: whereCon,
@@ -280,7 +172,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 /**
- * Download file excel by condition
+ * DOWLOAD
  */
 router.get("/download", (req: Request, res: Response) => {
   const whereCon = buildQuery(req);
@@ -291,10 +183,7 @@ router.get("/download", (req: Request, res: Response) => {
         model: LoaiTaiLieu,
       },
       {
-        model: CoQuanBanHanh,
-      },
-      {
-        model: PhuTrach,
+        model: VanBanDen,
       },
     ],
     where: whereCon,
@@ -313,176 +202,178 @@ interface CountResponse {
 }
 
 /**
- * Count case by creator
+ * THỐNG KÊ VĂN BẢN ĐẾN
  */
-router.get("/countByCreator", async (req: Request, res: Response) => {
-  const queryBy = req.query.by;
+router.get("/countVanBanDen", async (req: Request, res: Response) => {
   const currentYear = new Date().getFullYear();
-  let whereCon = {};
-  const listPhutrach = await PhuTrach.findAll();
+  const currentMonth = new Date().getMonth();
 
-  // ngay_tiep_nhan
-  if (req.query.startDate && req.query.endDate) {
-    whereCon = {
-      ngay_tiep_nhan: {
-        [Op.gt]: req.query.startDate,
-        [Op.lt]: req.query.endDate,
-      },
-      trang_thai_van_ban: {
-        [Op.like]: `%${req.query.trang_thai_van_ban}%`,
-      },
-    };
-  } else {
-    whereCon = {
-      ngay_tiep_nhan: {
-        ngay_tiep_nhan: {
-          [Op.gt]: new Date(currentYear, new Date().getMonth(), 1),
-          [Op.lt]: new Date(currentYear, new Date().getMonth() + 1, 1),
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+  const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 1);
+
+  const whereCon = {
+    ngay_tiep_nhan: {
+      [Op.gte]: firstDayOfMonth,
+      [Op.lte]: lastDayOfMonth,
+    },
+  };
+
+  try {
+    const tailieus = await TaiLieu.findAll({
+      attributes: [
+        [Sequelize.col("van_ban_den.name"), "ten_van_ban_den"],
+        [Sequelize.fn("COUNT", Sequelize.col("van_ban_den_id")), "no_van_ban_den"],
+      ],
+      include: [
+        {
+          model: VanBanDen,
         },
+      ],
+      group: ["van_ban_den_id"],
+      where: whereCon,
+    });
+
+    res.json(tailieus);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'LỖI TRUY VẤN CƠ SỞ DỮ LIỆU' });
+  }
+});
+
+
+// THỐNG KÊ TỔNG VĂN BẢN ĐẾN THEO 12 THÁNG
+router.get("/countVanBanDenFor12Months", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  const results = [];
+
+  for (let i = 1; i <= 12; i++) {
+    const firstDay = new Date(currentYear, i - 1, 1);
+    const lastDay = new Date(currentYear, i, 1);
+
+    const whereCon = {
+      ngay_tiep_nhan: {
+        [Op.between]: [firstDay, lastDay],
       },
     };
+
+    const count = await TaiLieu.count({
+      where: whereCon,
+    });
+
+    results.push({ month: i - 1, count });
   }
 
-  const response = await Promise.all(
-    listPhutrach.map(async (phutrach) => {
-      const tailieu = await TaiLieu.findAll({
-        attributes: [
-          [
-            Sequelize.fn("CONCAT", "type_", Sequelize.col("loai_tai_lieu_id")),
-            "loai",
-          ],
-          [
-            Sequelize.fn("COUNT", Sequelize.col("loai_tai_lieu_id")),
-            "no_tai_lieu",
-          ],
-        ],
-        group: ["loai_tai_lieu_id"],
-        where: {
-          ...whereCon,
-          phu_trach_id: phutrach.getDataValue("id"),
-        },
-      });
+  res.json(results);
+});
 
-      let res = {
-        phu_trach: phutrach.getDataValue("name"),
-      };
-      const tai_lieu = tailieu.forEach((vv) => {
-        res = {
-          ...res,
-          [vv.getDataValue("loai")]: vv.getDataValue("no_tai_lieu"),
-        };
-      });
+// SO SÁNH VĂN BẢN ĐẾN SO VỚI CÙNG KỲ
+router.get("/countVanBanDenForComparison", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  const lastYear = currentYear - 1;
+  const results = [];
 
-      return res;
-    })
-  );
+  for (let i = 1; i <= 12; i++) {
+    const firstDayCurrentYear = new Date(currentYear, i - 1, 1);
+    const lastDayCurrentYear = new Date(currentYear, i, 1);
+    const firstDayLastYear = new Date(lastYear, i - 1, 1);
+    const lastDayLastYear = new Date(lastYear, i, 1);
 
-  res.json(response);
+    const whereConCurrentYear = {
+      ngay_tiep_nhan: {
+        [Op.between]: [firstDayCurrentYear, lastDayCurrentYear],
+      },
+    };
+
+    const whereConLastYear = {
+      ngay_tiep_nhan: {
+        [Op.between]: [firstDayLastYear, lastDayLastYear],
+      },
+    };
+
+    const countCurrentYear = await TaiLieu.count({
+      where: whereConCurrentYear,
+    });
+
+    const countLastYear = await TaiLieu.count({
+      where: whereConLastYear,
+    });
+
+    results.push({
+      month: i,
+      year: currentYear,
+      countCurrentYear,
+      yearLastYear: lastYear,
+      countLastYear,
+    });
+  }
+
+  res.json(results);
+});
+
+
+// THỐNG KÊ THEO NGÀY
+router.get("/countVanBanDenForRecentDays", async (req: Request, res: Response) => {
+  const numberOfDaysToCheck = 30;
+  const currentDate = new Date();
+  let totalCount = 0;
+  for (let i = 0; i < numberOfDaysToCheck; i++) {
+    const targetDate = new Date(currentDate);
+    targetDate.setDate(currentDate.getDate() - i);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(targetDate.getDate() + 1);
+
+    const whereCon = {
+      ngay_tiep_nhan: {
+        [Op.between]: [targetDate, nextDay],
+      },
+    };
+
+    const count = await TaiLieu.count({
+      where: whereCon,
+    });
+
+    totalCount += count;
+
+    if (count > 0) {
+      break;
+    }
+  }
+
+  res.json(totalCount);
 });
 
 /**
- * Count case by district
+ * THỐNG KÊ VĂN BẢN PC09 BAN HÀNH
  */
-router.get("/countByDistrict", async (req: Request, res: Response) => {
-  const queryBy = req.query.by;
+router.get("/countVanBanDi", async (req: Request, res: Response) => {
   const currentYear = new Date().getFullYear();
   let whereCon = {};
-  const listCoquan = await CoQuanBanHanh.findAll();
 
-  // ngay_tiep_nhan
   if (req.query.startDate && req.query.endDate) {
     whereCon = {
-      ngay_tiep_nhan: {
+      ngay_ban_hanh: {
         [Op.gt]: req.query.startDate,
         [Op.lt]: req.query.endDate,
       },
-      noi_dung_van_ban: {
-        [Op.like]: `%${req.query.noi_dung_van_ban}%`,
+      noi_nhan: {
+        [Op.like]: `%${req.query.noi_nhan}%`,
       },
     };
   } else {
     whereCon = {
-      ngay_tiep_nhan: {
-        ngay_tiep_nhan: {
-          [Op.gt]: new Date(currentYear, new Date().getMonth(), 1),
-          [Op.lt]: new Date(currentYear, new Date().getMonth() + 1, 1),
-        },
+      ngay_ban_hanh: {
+        [Op.gt]: new Date(currentYear, new Date().getMonth(), 1),
+        [Op.lt]: new Date(currentYear, new Date().getMonth() + 1, 1),
       },
-    };
-  }
-
-  const response = await Promise.all(
-    listCoquan.map(async (coquan) => {
-      const tailieu = await TaiLieu.findAll({
-        attributes: [
-          [
-            Sequelize.fn("CONCAT", "type_", Sequelize.col("loai_tai_lieu_id")),
-            "loai",
-          ],
-          [
-            Sequelize.fn("COUNT", Sequelize.col("loai_tai_lieu_id")),
-            "no_tai_lieu",
-          ],
-        ],
-        group: ["loai_tai_lieu_id"],
-        where: {
-          ...whereCon,
-          co_quan_ban_hanh_id: coquan.getDataValue("id"),
-        },
-      });
-
-      let res = {
-        co_quan_ban_hanh: coquan.getDataValue("name"),
-      };
-      const tai_lieu = tailieu.forEach((vv) => {
-        res = {
-          ...res,
-          [vv.getDataValue("loai")]: vv.getDataValue("no_tai_lieu"),
-        };
-      });
-
-      return res;
-    })
-  );
-
-  res.json(response);
-});
-
-/**
- * Count case by month
- */
-router.get("/countByMonth", async (req: Request, res: Response) => {
-  const currentYear = new Date().getFullYear();
-  let whereCon = {};
-  // ngay tiep nhan
-  if (req.query.startDate && req.query.endDate) {
-    whereCon = {
-      ngay_tiep_nhan: {
-        [Op.gt]: req.query.startDate,
-        [Op.lt]: req.query.endDate,
-      },
-      noi_dung_van_ban: {
-        [Op.like]: `%${req.query.noi_dung_van_ban}%`,
-      },
-      trang_thai_van_ban: {
-        [Op.like]: `%${req.query.trang_thai_van_ban}%`,
-      },
-    };
-  } else {
-    whereCon = {
-      ngay_tiep_nhan: {
-        ngay_tiep_nhan: {
-          [Op.gt]: new Date(currentYear, new Date().getMonth(), 1),
-          [Op.lt]: new Date(currentYear, new Date().getMonth() + 1, 1),
-        },
-      },
-    };
+    }
   }
 
   const tailieus = await TaiLieu.findAll({
     attributes: [
-      [Sequelize.col("loai_tai_lieu.name"), "ten_tai_lieu"],
-      [Sequelize.fn("COUNT", Sequelize.col("loai_tai_lieu_id")), "no_tai_lieu"],
+      [Sequelize.col("loai_tai_lieu.name"), "ten_loai_tai_lieu"],
+      [Sequelize.fn("COUNT", Sequelize.col("loai_tai_lieu_id")), "no_loai_tai_lieu"],
     ],
     include: [
       {
@@ -497,50 +388,278 @@ router.get("/countByMonth", async (req: Request, res: Response) => {
   res.json(tailieus);
 });
 
+
+// THỐNG KÊ TỔNG SỐ VĂN BẢN BAN HÀNH THEO 12 THÁNG
+router.get("/countVanBanDiFor12Months", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  const results = [];
+
+  for (let i = 1; i <= 12; i++) {
+    const firstDay = new Date(currentYear, i - 1, 1);
+    const nextMonth = new Date(currentYear, i, 1);
+
+    const whereCon = {
+      [Op.and]: [
+        {
+          ngay_ban_hanh: {
+            [Op.between]: [firstDay, nextMonth],
+          },
+        },
+        {
+          so_van_ban: {
+            [Op.like]: `%PC09%`,
+          },
+        },
+      ],
+    };
+    const count = await TaiLieu.count({
+      where: whereCon,
+    });
+    results.push({ month: i - 1, count });
+  }
+
+  res.json(results);
+});
+
+
+// SO SÁNH VĂN BẢN ĐI SO VỚI CÙNG KỲ
+router.get("/countVanBanDiForComparison", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  const lastYear = currentYear - 1;
+  const results = [];
+
+  for (let i = 1; i <= 12; i++) {
+    const firstDayCurrentYear = new Date(currentYear, i - 1, 1);
+    const lastDayCurrentYear = new Date(currentYear, i, 1);
+    const firstDayLastYear = new Date(lastYear, i - 1, 1);
+    const lastDayLastYear = new Date(lastYear, i, 1);
+
+    const whereConCurrentYear = {
+      [Op.and]: [
+        {
+          ngay_ban_hanh: {
+            [Op.between]: [firstDayCurrentYear, lastDayCurrentYear],
+          },
+        },
+        {
+          so_van_ban: {
+            [Op.like]: `%PC09%`,
+          },
+        },
+      ],
+    };
+
+    const whereConLastYear = {
+      [Op.and]: [
+        {
+          ngay_ban_hanh: {
+            [Op.between]: [firstDayLastYear, lastDayLastYear],
+          },
+        },
+        {
+          so_van_ban: {
+            [Op.like]: `%PC09%`,
+          },
+        },
+      ],
+    };
+
+    const countCurrentYear = await TaiLieu.count({
+      where: whereConCurrentYear,
+    });
+
+    const countLastYear = await TaiLieu.count({
+      where: whereConLastYear,
+    });
+
+    results.push({
+      month: i,
+      year: currentYear,
+      countCurrentYear,
+      yearLastYear: lastYear,
+      countLastYear,
+    });
+  }
+
+  res.json(results);
+});
+
+
 // *
-// // KIỂM TRA TÀI LIỆU
+// // LẤY SỐ TÀI LIỆU ĐẾN
 // *
-router.get("/kiemTraSoTaiLieu", async (req: Request, res: Response) => {
+router.get("/laysoVanBanDen", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
   let whereCon = {};
 
   whereCon = {
-    so_tai_lieu: Number(req.query.so_tai_lieu_id),
-    loai_tai_lieu_id: Number(req.query.loai_tai_lieu_id),
+    van_ban_den_id: Number(req.query.van_ban_den_id),
+    ngay_tiep_nhan: {
+      [Op.gt]: `${currentYear}/01/01`,
+      [Op.lt]: `${currentYear}/12/31`,
+    }
   };
 
-  if (req.query.id) {
-    whereCon = {
-      ...whereCon,
-      id: {
-        [Op.ne]: Number(req.query.id),
-      },
-    };
-  }
+  whereCon = {
+    ...whereCon,
+
+  };
   const tailieus = await TaiLieu.findAll({
-    include: [
-      {
-        model: LoaiTaiLieu,
-      },
-      {
-        model: PhuTrach,
-      },
-      {
-        model: CoQuanBanHanh,
-      },
-    ],
     where: {
       ...whereCon,
     },
   });
 
-  return res.json({ result: tailieus.length > 0 });
+  console.log(tailieus)
+
+  return res.json({ result: tailieus.length + 1 });
+});
+
+// *
+// // LẤY SỐ CÔNG VĂN MỚI
+// *
+router.get("/laysoVanBanDi", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  let whereCon = {};
+
+  whereCon = {
+    loai_tai_lieu_id: Number(req.query.loai_tai_lieu_id),
+    ngay_ban_hanh: {
+      [Op.gt]: `${currentYear}/01/01`,
+      [Op.lt]: `${currentYear}/12/31`,
+    }
+  };
+
+  whereCon = {
+    ...whereCon,
+
+  };
+  const tailieus = await TaiLieu.findAll({
+
+    where: {
+      ...whereCon,
+    },
+  });
+
+  console.log(tailieus)
+
+  return res.json({ result: tailieus.length + 1 });
+});
+
+// *
+// // BẢNG THÔNG BÁO VĂN BẢN ĐẾN HẠN
+// *
+router.get("/bangVanBanDenHan", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear()
+  let whereCon = {};
+
+  whereCon = {
+    ngay_het_han: {
+      [Op.gt]: new Date(currentYear, new Date().getMonth(), new Date().getDate() - 5),
+      [Op.lt]: new Date(currentYear, new Date().getMonth(), new Date().getDate() + 5),
+    },
+    trang_thai_van_ban: {
+      [Op.like]: `ĐANG XỬ LÝ`,
+    },
+  };
+
+  whereCon = {
+    ...whereCon,
+
+  };
+  const tailieus = await TaiLieu.findAll({
+
+    where: {
+      ...whereCon,
+    },
+  });
+
+  console.log(tailieus)
+
+  return res.json({ result: tailieus });
 });
 
 
+// *
+// // BẢNG VĂN BẢN ĐẾN
+// *
+router.get("/bangVanBanDen", async (req, res) => {
+  const trangThaiOptions = ["ĐANG XỬ LÝ", "LƯU", "XONG"];
+  let results = null;
+  const numberOfDaysToCheck = 30;
+  const currentDate = new Date();
+
+  for (let i = 0; i < numberOfDaysToCheck; i++) {
+    const targetDate = new Date(currentDate);
+    targetDate.setDate(currentDate.getDate() - i);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(targetDate.getDate() + 1);
+
+    const whereCon = {
+      trang_thai_van_ban: {
+        [Op.in]: trangThaiOptions,
+      },
+      ngay_tiep_nhan: {
+        [Op.between]: [targetDate, nextDay],
+      },
+    };
+
+    const tailieus = await TaiLieu.findAll({
+      where: whereCon,
+      attributes: {
+        exclude: ['file_van_ban']
+      }
+    });
+
+    if (tailieus.length > 0) {
+      results = tailieus;
+      break;
+    }
+  }
+
+  if (results) {
+    return res.json({ result: results });
+  } else {
+    return res.status(404).json({ error: 'KHÔNG TÌM THẤY DỮ LIỆU' });
+  }
+});
+
+
+// *
+// // BẢNG VĂN BẢN BAN HÀNH
+// *
+router.get("/bangVanBanBanHanh", async (req: Request, res: Response) => {
+  const currentYear = new Date().getFullYear();
+  let whereCon = {
+    ten_don_vi: {
+      [Op.like]: `PC09`,
+    },
+    ngay_ban_hanh: {
+      [Op.gt]: `${currentYear}/01/01`,
+      [Op.lt]: `${currentYear}/12/31`,
+    },
+  };
+
+  try {
+    const tailieus = await TaiLieu.findAll({
+      where: whereCon,
+      attributes: {
+        exclude: ['file_van_ban']
+      }
+    });
+    return res.json({ result: tailieus });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'LỖI TRUY VẤN CƠ SỞ DỮ LIỆU' });
+  }
+});
+
 /**
- * Get case by case id
+ * GET CASE BY CASE ID
  */
- router.get("/:caseId", (req: Request, res: Response) => {
+router.get("/:caseId", (req: Request, res: Response) => {
   const caseId = req.params.caseId;
 
   TaiLieu.findByPk(Number(caseId))
@@ -553,60 +672,124 @@ router.get("/kiemTraSoTaiLieu", async (req: Request, res: Response) => {
 });
 
 /**
- * Create new case
+ * TẠO MỚI
  */
 router.post("/", (req: Request, res: Response) => {
   const body = req.body;
 
-  const record = {
-    loai_tai_lieu_id: body.loai_tai_lieu,
-    so_tai_lieu: body.so_tai_lieu,
-    co_quan_ban_hanh_id: body.co_quan_ban_hanh,
-    ten_don_vi: body.ten_don_vi,
-    so_van_ban: body.so_van_ban,
-    so_cong_van: body.so_cong_van,
-    ngay_ban_hanh: body.ngay_ban_hanh,
-    ngay_tiep_nhan: body.ngay_tiep_nhan,
-    do_mat: body.do_mat,
-    do_khan: body.do_khan,
-    noi_dung_van_ban: body.noi_dung_van_ban,
-    yeu_cau: body.yeu_cau,
-    ngay_het_han: body.ngay_het_han,
-    nguoi_ki: body.nguoi_ki,
-    doi_bao_cao: body.doi_bao_cao,
-    phu_trach_id: body.phu_trach,
-    so_van_ban_tra_loi: body.so_van_ban_tra_loi,
-    ngay_van_ban_tra_loi: body.ngay_van_ban_tra_loi,
-    trang_thai_van_ban: body.trang_thai_van_ban,
-    trang_thai_d2: body.trang_thai_d2,
-    trang_thai_d3: body.trang_thai_d3,
-    trang_thai_d4: body.trang_thai_d4,
-    trang_thai_d5: body.trang_thai_d5,
-    lanh_dao_phu_trach: body.lanh_dao_phu_trach,
-  };
-
-  if (body.id) {
-    TaiLieu.update(record, { where: { id: body.id } })
-      .then((a) => {
-        console.log(a);
-      })
-      .catch((e) => {
-        console.log(e);
+  if (body.isChangedFile) {
+    if (body.file_van_ban) {
+      fs.readFile(body.file_van_ban.path, function (err, data) {
+        if (err) {
+          console.error('LỖI KHI ĐỌC FILE PDF:', err);
+        } else {
+          const record = {
+            loai_tai_lieu_id: body.loai_tai_lieu,
+            van_ban_den_id: body.van_ban_den,
+            van_ban_den_so: body.van_ban_den_so,
+            ten_don_vi: body.ten_don_vi,
+            so_van_ban: body.so_van_ban,
+            ngay_ban_hanh: body.ngay_ban_hanh,
+            ngay_tiep_nhan: body.ngay_tiep_nhan,
+            do_mat: body.do_mat,
+            do_khan: body.do_khan,
+            noi_dung_van_ban: body.noi_dung_van_ban,
+            ngay_het_han: body.ngay_het_han,
+            noi_nhan: body.noi_nhan,
+            trang_thai_van_ban: body.trang_thai_van_ban,
+            de_xuat: body.de_xuat,
+            file_van_ban: data,
+          };
+          if (body.id) {
+            TaiLieu.update(record, { where: { id: body.id } })
+              .then((a) => {
+              })
+              .catch((e) => {
+                console.error('LỖI KHI CẬP NHẬT:', e);
+              });
+          } else {
+            TaiLieu.create(record)
+              .then((a) => {
+              })
+              .catch((e) => {
+                console.error('LỖI KHI TẠO MỚI:', e);
+              });
+          }
+        }
       });
+    } else {
+      const record = {
+        loai_tai_lieu_id: body.loai_tai_lieu,
+        van_ban_den_id: body.van_ban_den,
+        van_ban_den_so: body.van_ban_den_so,
+        ten_don_vi: body.ten_don_vi,
+        so_van_ban: body.so_van_ban,
+        ngay_ban_hanh: body.ngay_ban_hanh,
+        ngay_tiep_nhan: body.ngay_tiep_nhan,
+        do_mat: body.do_mat,
+        do_khan: body.do_khan,
+        noi_dung_van_ban: body.noi_dung_van_ban,
+        ngay_het_han: body.ngay_het_han,
+        noi_nhan: body.noi_nhan,
+        trang_thai_van_ban: body.trang_thai_van_ban,
+        de_xuat: body.de_xuat,
+      };
+      if (body.id) {
+        TaiLieu.update(record, { where: { id: body.id } })
+          .then((a) => {
+          })
+          .catch((e) => {
+            console.error('LỖI KHI CẬP NHẬT:', e);
+          });
+      } else {
+        TaiLieu.create(record)
+          .then((a) => {
+          })
+          .catch((e) => {
+            console.error('LỖI KHI TẠO MỚI:', e);
+          });
+      }
+    }
   } else {
-    TaiLieu.create(record)
-      .then((a) => {
-        console.log(a);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    const record = {
+      loai_tai_lieu_id: body.loai_tai_lieu,
+      van_ban_den_id: body.van_ban_den,
+      van_ban_den_so: body.van_ban_den_so,
+      ten_don_vi: body.ten_don_vi,
+      so_van_ban: body.so_van_ban,
+      ngay_ban_hanh: body.ngay_ban_hanh,
+      ngay_tiep_nhan: body.ngay_tiep_nhan,
+      do_mat: body.do_mat,
+      do_khan: body.do_khan,
+      noi_dung_van_ban: body.noi_dung_van_ban,
+      ngay_het_han: body.ngay_het_han,
+      noi_nhan: body.noi_nhan,
+      trang_thai_van_ban: body.trang_thai_van_ban,
+      de_xuat: body.de_xuat,
+    };
+    if (body.id) {
+      TaiLieu.update(record, { where: { id: body.id } })
+        .then((a) => {
+        })
+        .catch((e) => {
+          console.error('LỖI KHI CẬP NHẬT:', e);
+        });
+    } else {
+      TaiLieu.create(record)
+        .then((a) => {
+        })
+        .catch((e) => {
+          console.error('LỖI KHI TẠO MỚI:', e);
+        });
+    }
   }
   return res.json({ a: 1 });
 });
 
+// 
+
 /**
- * Get case by case id
+ * GET CASE BY CASE ID
  */
 router.delete("/:caseId", (req: Request, res: Response) => {
   const caseId = req.params.caseId;
@@ -619,6 +802,5 @@ router.delete("/:caseId", (req: Request, res: Response) => {
       return res.json({ a: "da xoa" });
     });
 });
-
 
 export { router as caseRouter };

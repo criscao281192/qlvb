@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Input, Col, Select, DatePicker, Button } from "antd";
+import { Form, Row, Input, Col, Select, DatePicker, Button, Radio, TreeSelect } from "antd";
+import moment from "moment";
 import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
+import { NOI_NHAN } from "../shared/constants/index";
 
-const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
+const SearchCase = ({ onSearch, cases }) => {
   const [form] = Form.useForm();
   let history = useHistory();
 
   const onFinish = (values) => {
+    const selectedNoiNhan =
+      values["noi_nhan"] && values["noi_nhan"].length > 0
+        ? values["noi_nhan"][0].value
+        : null;
     onSearch({
       ...values,
+      noi_nhan: selectedNoiNhan,
       ngay_ban_hanh_1:
         values["ngay_ban_hanh"] &&
         values["ngay_ban_hanh"][0] &&
@@ -34,14 +41,6 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
         values["ngay_het_han"] &&
         values["ngay_het_han"][1] &&
         values["ngay_het_han"][1].format("yyyy-MM-DD"),
-      ngay_van_ban_tra_loi_1:
-        values["ngay_van_ban_tra_loi"] &&
-        values["ngay_van_ban_tra_loi"][0] &&
-        values["ngay_van_ban_tra_loi"][0].format("yyyy-MM-DD"),
-      ngay_van_ban_tra_loi_2:
-        values["ngay_van_ban_tra_loi"] &&
-        values["ngay_van_ban_tra_loi"][1] &&
-        values["ngay_van_ban_tra_loi"][1].format("yyyy-MM-DD"),
     });
   };
 
@@ -61,14 +60,14 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
 
   const searchControls = [
     {
-      name: "loai_tai_lieu_id",
-      label: "LOẠI TÀI LIỆU",
+      name: "van_ban_den_id",
+      label: "VĂN BẢN ĐẾN",
       render: () => {
         return (
           <Select>
             {config &&
-              config["loai_tai_lieu"] &&
-              config["loai_tai_lieu"].map((item) => {
+              config["van_ban_den"] &&
+              config["van_ban_den"].map((item) => {
                 return (
                   <Option key={item.id} value={item.id}>
                     {item.name}
@@ -77,32 +76,20 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
               })}
           </Select>
         );
-      },
+      }
     },
     {
-      name: "so_tai_lieu",
-      label: "SỐ TÀI LIỆU TẠI PC09",
+      name: "ten_don_vi",
+      label: "ĐƠN VỊ",
       render: () => {
-        return <Input placeholder="123" />;
-      },
+        return <Input placeholder="PC01; PC02; PX01; PX02... " />;
+      }
     },
     {
-      name: "co_quan_ban_hanh_id",
-      label: "CƠ QUAN BAN HÀNH VĂN BẢN",
+      name: "van_ban_den_so",
+      label: "SỐ ĐẾN",
       render: () => {
-        return (
-          <Select>
-            {config &&
-              config["co_quan_ban_hanh"] &&
-              config["co_quan_ban_hanh"].map((item) => {
-                return (
-                  <Option key={item.id} value={item.id}>
-                    {item.name}
-                  </Option>
-                );
-              })}
-          </Select>
-        );
+        return <Input placeholder="123/TLĐ" />;
       },
     },
     {
@@ -113,125 +100,51 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
       },
     },
     {
-      name: "ngay_ban_hanh",
-      label: "NGÀY BAN HÀNH VĂN BẢN",
-      render: () => {
-        return (
-          <DatePicker.RangePicker
-            placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]}
-            format={"yyyy-MM-DD"}
-          />
-        );
-      },
-    },
-    {
       name: "ngay_tiep_nhan",
-      label: "NGÀY TIẾP NHẬN",
+      label: "NGÀY NHẬN",
       render: () => {
-        return <DatePicker.RangePicker placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
-      },
-    },
-    {
-      name: "do_mat",
-      label: "ĐỘ MẬT",
-      render: () => {
-        return <Input placeholder="THƯỜNG / MẬT / TỐI MẬT / TUYỆT MẬT" />;
-      },
-    },
-    {
-      name: "do_khan",
-      label: "ĐỘ KHẨN",
-      render: () => {
-        return <Input placeholder="THƯỜNG / KHẨN / THƯỢNG KHẨN / HOẢ TỐC" />;
+        return <DatePicker.RangePicker style={{ width: '100%', }} placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
       },
     },
     {
       name: "noi_dung_van_ban",
-      label: "NỘI DUNG VĂN BẢN",
+      label: "TRÍCH YẾU",
       render: () => {
-        return <Input placeholder="ABC" />;
+        return <Input placeholder="A.B.C" />;
       },
     },
     {
-      name: "ngay_het_han",
-      label: "NGÀY HẾT HẠN",
-      render: () => {
-        return <DatePicker.RangePicker placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
-      },
-    },
-    {
-      name: "phu_trach_id",
-      label: "CÁN BỘ - ĐỘI PHỤ TRÁCH",
+      name: "noi_nhan",
+      label: "NƠI NHẬN",
       render: () => {
         return (
-          <Select>
-            {config &&
-              config["phu_trach"] &&
-              config["phu_trach"].map((item) => {
-                return (
-                  <Option key={item.id} value={item.id}>
-                    {item.name}
-                  </Option>
-                );
-              })}
-          </Select>
+          <TreeSelect
+            treeData={NOI_NHAN}
+            placeholder="NƠI NHẬN"
+            treeCheckable={true}
+            treeCheckStrictly={true}
+          />
         );
-      },
-    },
-    {
-      name: "doi_bao_cao",
-      label: "ĐỘI THỰC HIỆN BÁO CÁO",
-      render: () => {
-        return <Input placeholder="ĐỘI..." />;
-      },
-    },
-    {
-      name: "so_van_ban_tra_loi",
-      label: "SỐ BC/KH TRẢ LỜI",
-      render: () => {
-        return <Input placeholder="ABC-PC09" />;
-      },
-    },
-    {
-      name: "ngay_van_ban_tra_loi",
-      label: "NGÀY BC/KH TRẢ LỜI",
-      render: () => {
-        return <DatePicker.RangePicker placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
       },
     },
     {
       name: "trang_thai_van_ban",
       label: "TRẠNG THÁI VĂN BẢN",
       render: () => {
-        return <Input placeholder="ĐANG XỬ LÝ/ĐÚNG HẠN/QUÁ HẠN/LƯU" />;
+        return (
+          <Radio.Group buttonStyle="solid" style={{ width: '100%' }}>
+            <Radio.Button value="LƯU">LƯU</Radio.Button>
+            <Radio.Button value="ĐANG XỬ LÝ">ĐANG XỬ LÝ</Radio.Button>
+            <Radio.Button value="XONG">XONG</Radio.Button>
+          </Radio.Group>
+        );
       },
     },
     {
-      name: "trang_thai_d2",
-      label: "BÁO CÁO ĐỘI 2",
+      name: "ngay_het_han",
+      label: "NGÀY HẾT HẠN",
       render: () => {
-        return <Input placeholder="ĐANG XỬ LÝ/ĐÚNG HẠN/QUÁ HẠN" />;
-      },
-    },
-    {
-      name: "trang_thai_d3",
-      label: "BÁO CÁO ĐỘI 3",
-      render: () => {
-        return <Input placeholder="ĐANG XỬ LÝ/ĐÚNG HẠN/QUÁ HẠN" />;
-      },
-    },
-    {
-      name: "trang_thai_d4",
-      label: "BÁO CÁO ĐỘI 4",
-      render: () => {
-        return <Input placeholder="ĐANG XỬ LÝ/ĐÚNG HẠN/QUÁ HẠN" />;
-      },
-    },
-    {
-      name: "trang_thai_d5",
-      label: "BÁO CÁO ĐỘI 5",
-      render: () => {
-        return <Input placeholder="ĐANG XỬ LÝ/ĐÚNG HẠN/QUÁ HẠN" />;
+        return <DatePicker.RangePicker style={{ width: '100%', }} placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
       },
     },
   ];
@@ -247,6 +160,148 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
       );
     });
   };
+
+  const onReset = () => {
+    form.resetFields();
+    window.location.reload();
+  };
+
+  const onPrint = () => {
+    const printWindow = window.open('', '_blank');
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+    printWindow.document.open();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <style>
+            @media print {
+              @page {
+                size: A4 landscape;
+                margin: 2cm 1.5cm 2cm 2cm;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              th, td {
+                border: 1px solid black;
+                padding: 5px;
+                font-size: 14px;
+              }
+              th {
+                background-color: #66FF33;
+                font-weight: bold;
+                border: 2px double black;
+              }
+              tr:nth-child(odd) {
+                background-color: #f9f9f9;
+              }
+              td {
+                border-width: 1pt;
+                border-style: solid;
+                border-color: #000;
+                padding: 5px;
+              }
+              .print-caption {
+                font-weight: bold;
+                font-size: 24px;
+                text-align: center;
+                margin-top: 20px;
+              }
+              .print-date {
+                font-weight: bold;
+                font-style: italic;
+                font-size: 18px;
+                text-align: center;
+              }
+              .agency-info {
+                text-align: center;
+                border: 1px solid white;
+                font-size: 14px;
+                padding: 0px;
+              }
+            </style>
+          </head>
+          <body>
+            <style type="text/css">
+              @media screen {
+                body::before {
+                  content: "Đội 1 - PC09" !important;
+                  display: block !important;
+                }
+              }
+            </style>
+            <table class="border-white">
+              <thead>
+                <tr>
+                  <th class="agency-info" style="font-weight: normal;">CÔNG AN TP HÀ NỘI</th>
+                  <th class="agency-info" style="width: 250px;"></th>
+                  <th class="agency-info">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</th>
+                </tr>
+                <tr>
+                <th class="agency-info" style="text-decoration: underline;">PHÒNG KỸ THUẬT HÌNH SỰ</th>
+                  <th class="agency-info" style="width: 250px;"></th>
+                  <th class="agency-info" style="text-decoration: underline;">Độc lập - Tự do - Hạnh phúc</th>
+                </tr>
+            </thead>
+            </table>
+            <div class="print-caption">GIAO NHẬN VĂN BẢN</div>
+            <div class="print-date">Ngày: ${formattedDate}</div>
+            <table>
+              <thead>
+                <br/>
+                <tr>
+                  <th style="width: 30px;">TT</th>
+                  <th>SỐ ĐẾN</th>
+                  <th style="width: 100px;">ĐƠN VỊ</th>
+                  <th>SỐ VĂN BẢN</th>
+                  <th>NGÀY KÝ</th>
+                  <th>NGÀY NHẬN</th>
+                  <th>TRÍCH YẾU</th>
+                  <th class="noi-nhan-header">NƠI NHẬN</th>
+                  <th style="width: 150px;">KÝ NHẬN</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${cases.map((c, index) => `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${c.van_ban_den_so || "-"}</td>
+                    <td>${c.ten_don_vi || "-"}</td>
+                    <td>${c.so_van_ban || "-"}</td>
+                    <td>${c.ngay_ban_hanh ? moment(c.ngay_ban_hanh).format("DD/MM/YYYY") : "-"}</td>
+                    <td>${c.ngay_tiep_nhan ? moment(c.ngay_tiep_nhan).format("DD/MM/YYYY") : "-"}</td>
+                    <td>${c.noi_dung_van_ban || "-"}</td>
+                    <td class="noi-nhan" style="white-space: pre-wrap; width: 150px;">${(c.noi_nhan ? c.noi_nhan.replace(/,/g, '<br>') : "TB GIAO BAN(LƯU: H.Anh)").replace(/,/g, '<br>')}</td>
+                    <td> </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            <style>
+              .noi-nhan-header {
+                line-height: 1.5;
+              }
+              .noi-nhan {
+                line-height: 2;
+              }
+            </style>
+            <script>
+              const content = document.querySelector('body::before');
+              content.innerHTML = "Đội 1 - PC09";
+              content.style.display = 'block';
+            </script>
+          </body>
+        </html>
+      `);
+    printWindow.document.close();
+    printWindow.setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 500);
+  };
+
   return (
     <div>
       <Form
@@ -267,30 +322,14 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
               type="primary"
               style={{ marginBottom: 16 }}
             >
-              VĂN BẢN ĐẾN
+              NHẬP VĂN BẢN ĐẾN
             </Button>
             <Button
-              onClick={() => {
-                history.push("/quan-ly-van-ban/new2");
-              }}
               type="primary"
-              style={{ marginBottom: 16, marginLeft: 8 }}
+              style={{ margin: "0 8px" }}
+              onClick={onPrint}
             >
-              VĂN BẢN ĐI
-            </Button>
-            <Button
-              onClick={onDownload}
-              type="primary"
-              style={{ marginBottom: 16, marginLeft: 8 }}
-            >
-              FILE PHỤC VỤ BÁO CÁO
-            </Button>
-            <Button
-              onClick={onDownload1}
-              type="primary"
-              style={{ marginBottom: 16, marginLeft: 8 }}
-            >
-              GIAO NHẬN CÔNG VĂN
+              SỔ GIAO NHẬN CÔNG VĂN
             </Button>
           </Col>
           <Col span={12} style={{ textAlign: "right" }}>
@@ -300,9 +339,7 @@ const SearchCase = ({ onSearch, onDownload, onDownload1 }) => {
               </Button>
               <Button
                 style={{ margin: "0 8px" }}
-                onClick={() => {
-                  form.resetFields();
-                }}
+                onClick={onReset}
               >
                 XÓA
               </Button>
