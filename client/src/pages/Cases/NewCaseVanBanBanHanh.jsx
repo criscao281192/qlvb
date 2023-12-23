@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Select, DatePicker, Button, Radio, TreeSelect, message, Upload } from "antd";
-import { UploadOutlined, AudioTwoTone } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Button,
+  Radio,
+  message,
+  Upload,
+} from "antd";
+import { UploadOutlined, AudioTwoTone } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
+import { getCaseUser } from "../../api/index";
 
 import { getCase, getConfigs, lay_so_van_ban_di, postCase } from "../../api";
-import { XAY_DUNG_VAN_BAN } from "../../shared/constants";
 
 const NewCaseVanBanBanHanh = () => {
   const [form] = Form.useForm();
   let history = useHistory();
   let { id } = useParams();
-
-  const [selectedNoiNhan, setSelectedNoiNhan] = useState([]);
   const [isChangedFile, setIsChangeFile] = useState(false);
-  const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
+  const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
 
   const [setSpokenText] = useState("");
   const [trichYeu, setTrichYeu] = useState("");
@@ -29,7 +36,9 @@ const NewCaseVanBanBanHanh = () => {
     }
 
     if (values.ngay_ban_hanh) {
-      values.ngay_ban_hanh = moment(values.ngay_ban_hanh).format("YYYY-MM-DDT13:00:00.000Z");
+      values.ngay_ban_hanh = moment(values.ngay_ban_hanh).format(
+        "YYYY-MM-DDT13:00:00.000Z"
+      );
     }
 
     if (Array.isArray(values.noi_nhan)) {
@@ -51,7 +60,35 @@ const NewCaseVanBanBanHanh = () => {
   };
 
   const [config, setConfig] = useState();
+  const [userFullName, setUserFullName] = useState(null);
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedToken) {
+      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
+      console.log(decodedToken);
+      getCaseUser(decodedToken.userId)
+        .then((response) => {
+          console.log("User from API:", response);
+          const matchingUser = response.data.result.find(
+            (user) => user.id === decodedToken.userId
+          );
+
+          if (matchingUser) {
+            setUserFullName(matchingUser.fullname);
+            form.setFieldsValue({
+              noi_nhan: matchingUser.fullname,
+            });
+          } else {
+            console.error("No user data found in the response.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [form]);
 
   useEffect(() => {
     getConfigs().then((data) => {
@@ -83,10 +120,6 @@ const NewCaseVanBanBanHanh = () => {
 
   const { Option } = Select;
 
-  const handleNoiNhanChange = (values) => {
-    setSelectedNoiNhan(values);
-  };
-
   const [fileList, setFileList] = useState([]);
   const props = {
     onRemove: (file) => {
@@ -100,15 +133,15 @@ const NewCaseVanBanBanHanh = () => {
     },
     fileList,
     onChange(info) {
-      console.log(info)
-      if (info.file.status !== 'uploading') {
+      console.log(info);
+      if (info.file.status !== "uploading") {
         console.log(info.file, info.fileList);
-        setFileList(info.fileList)
+        setFileList(info.fileList);
         setIsChangeFile(true);
       }
-      if (info.file.status === 'done') {
+      if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
+      } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
@@ -136,60 +169,59 @@ const NewCaseVanBanBanHanh = () => {
   };
 
   const laysovanbandi = async (loai_tai_lieu_id) => {
-
     const result = await lay_so_van_ban_di({
       loai_tai_lieu_id: loai_tai_lieu_id,
     });
     if (result.data.result) {
-      console.log(result.data.result)
+      console.log(result.data.result);
     }
 
     let tenviettat = "";
     switch (loai_tai_lieu_id) {
       case 1:
-        tenviettat = "/BC-PC09"
+        tenviettat = "/BC-PC09";
         break;
       case 2:
-        tenviettat = "/CTr-PC09"
+        tenviettat = "/CTr-PC09";
         break;
       case 3:
-        tenviettat = "/PC09-Đ1"
+        tenviettat = "/PC09-Đ1";
         break;
       case 4:
-        tenviettat = "/GGT-PC09"
+        tenviettat = "/GGT-PC09";
         break;
       case 5:
-        tenviettat = "/GM-PC09"
+        tenviettat = "/GM-PC09";
         break;
       case 6:
-        tenviettat = "/GXN-PC09"
+        tenviettat = "/GXN-PC09";
         break;
       case 7:
-        tenviettat = "/HD-PC09"
+        tenviettat = "/HD-PC09";
         break;
       case 8:
-        tenviettat = "/KH-PC09"
+        tenviettat = "/KH-PC09";
         break;
       case 9:
-        tenviettat = "/PA-PC09"
+        tenviettat = "/PA-PC09";
         break;
       case 10:
-        tenviettat = "/QĐ-PC09"
+        tenviettat = "/QĐ-PC09";
         break;
       case 11:
-        tenviettat = "/TB-PC09"
+        tenviettat = "/TB-PC09";
         break;
       case 12:
-        tenviettat = "/TTr-PC09"
+        tenviettat = "/TTr-PC09";
         break;
       case 13:
-        tenviettat = "/TrS-PC09"
+        tenviettat = "/TrS-PC09";
         break;
       case 14:
-        tenviettat = "/YC-PC09"
+        tenviettat = "/YC-PC09";
         break;
       case 29:
-        tenviettat = "/BQHS-PC09"
+        tenviettat = "/BQHS-PC09";
         break;
       default:
         break;
@@ -201,8 +233,8 @@ const NewCaseVanBanBanHanh = () => {
       ngay_ban_hanh: moment(),
       do_mat: `THƯỜNG`,
       do_khan: `THƯỜNG`,
-    })
-  }
+    });
+  };
 
   const searchControls = [
     {
@@ -240,10 +272,7 @@ const NewCaseVanBanBanHanh = () => {
       name: "ten_don_vi",
       label: "ĐƠN VỊ",
       render: () => {
-        return <Input
-          placeholder="PC09"
-          disabled
-        />;
+        return <Input placeholder="PC09" disabled />;
       },
       rules: [
         {
@@ -264,12 +293,14 @@ const NewCaseVanBanBanHanh = () => {
       name: "ngay_ban_hanh",
       label: "NGÀY BAN HÀNH",
       render: () => {
-        return <DatePicker
-          format={dateFormatList}
-          disabled
-          showTime={false}
-          placeholder={"NGÀY"}
-        />;
+        return (
+          <DatePicker
+            format={dateFormatList}
+            disabled
+            showTime={false}
+            placeholder={"NGÀY"}
+          />
+        );
       },
       rules: [
         {
@@ -284,7 +315,9 @@ const NewCaseVanBanBanHanh = () => {
       render: () => {
         return (
           <Radio.Group buttonStyle="solid">
-            <Radio.Button defaultChecked value="THƯỜNG">THƯỜNG</Radio.Button>
+            <Radio.Button defaultChecked value="THƯỜNG">
+              THƯỜNG
+            </Radio.Button>
             <Radio.Button value="KHẨN">KHẨN</Radio.Button>
             <Radio.Button value="THƯỢNG KHẨN">THƯỢNG KHẨN</Radio.Button>
             <Radio.Button value="HOẢ TỐC">HOẢ TỐC</Radio.Button>
@@ -299,7 +332,9 @@ const NewCaseVanBanBanHanh = () => {
       render: () => {
         return (
           <Radio.Group buttonStyle="solid">
-            <Radio.Button value="THƯỜNG" defaultChecked>THƯỜNG</Radio.Button>
+            <Radio.Button value="THƯỜNG" defaultChecked>
+              THƯỜNG
+            </Radio.Button>
             <Radio.Button value="MẬT">MẬT</Radio.Button>
             <Radio.Button value="TỐI MẬT">TỐI MẬT</Radio.Button>
             <Radio.Button value="TUYỆT MẬT">TUYỆT MẬT</Radio.Button>
@@ -314,7 +349,8 @@ const NewCaseVanBanBanHanh = () => {
       render: () => {
         return (
           <div className="input-with-icon">
-            <TextArea rows={4}
+            <TextArea
+              rows={4}
               value={trichYeu}
               onChange={(e) => {
                 setTrichYeu(e.target.value);
@@ -340,13 +376,9 @@ const NewCaseVanBanBanHanh = () => {
       label: "XÂY DỰNG VĂN BẢN",
       render: () => {
         return (
-          <TreeSelect
-            treeData={XAY_DUNG_VAN_BAN}
-            placeholder="CÁN BỘ - ĐỘI XÂY DỰNG VĂN BẢN"
-            treeCheckable={true}
-            treeCheckStrictly={true}
-            onChange={handleNoiNhanChange}
-            value={selectedNoiNhan}
+          <Input
+            placeholder="CÁN BỘ/ĐỘI SOẠN THẢO VĂN BẢN"
+            disabled={userFullName !== "Cao Ngọc Tuyền"}
           />
         );
       },

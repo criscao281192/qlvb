@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Redirect } from "react-router-dom";
 import {
   UserOutlined,
   LockOutlined,
@@ -89,10 +90,11 @@ const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const handleLogin = async () => {
     if (!username || !password) {
-      alert("HÃY ĐIỀN ĐẦY ĐỦ TÀI KHOẢN VÀ MẬT KHẨU!");
+      alert("HÃY ĐIỀN ĐẦY ĐỦ TÀI KHOẢN VÀ MẬT KHẨU.\nNẾU CHƯA CÓ TÀI KHOẢN, VUI LÒNG LIÊN HỆ:\nĐ/c Cao Ngọc Tuyền\nSĐT: 0936342326");
       return;
     }
 
@@ -104,6 +106,7 @@ const Login = ({ onLogin }) => {
         console.log("userData", userData);
         localStorage.setItem("accessToken", userData.token);
         onLogin(username, userData);
+        window.location.href = "/";
       } else {
         alert("ĐĂNG NHẬP KHÔNG THÀNH CÔNG!");
       }
@@ -121,6 +124,8 @@ const Login = ({ onLogin }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
     if (storedToken) {
+      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
+      setUserData(decodedToken);
     }
   }, []);
 

@@ -56,7 +56,6 @@ app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
 
-app.use(cors());
 const rooms: Record<string, Socket[]> = {};
 io.on("connection", function (client: Socket) {
   console.log("A");

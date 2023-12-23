@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import {
-  countCasesVanBanDenDay,
-  bangVanBanDen,
-  bangVanBanDenHan,
-} from "../src/api";
-import styled, { keyframes } from "styled-components";
+import { countCasesVanBanDenDay, bangVanBanDen } from "../src/api";
+import styled from "styled-components";
 import { Badge } from "antd";
 import { BellTwoTone } from "@ant-design/icons";
 import Header from "./components/Header";
@@ -24,7 +20,7 @@ import NewUserForm from "./pages/Cases/userName";
 
 import "./stylesApp.css";
 import moment from "moment";
-import { } from "react-router-dom";
+import {} from "react-router-dom";
 
 const AppContainer = styled.div`
   display: grid;
@@ -60,50 +56,23 @@ const NotificationPopup = styled.div`
   }
 `;
 
-const MarqueeContainer = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-`;
-
-const marqueeAnimation = keyframes`
-  0% { transform: translateX(500%); }
-  100% { transform: translateX(-200%); }
-`;
-
-const MarqueeText = styled.div`
-  display: inline-block;
-  animation: ${marqueeAnimation} 20s linear infinite;
-  font-size: 18px;
-  color: #ff0000;
-`;
-
 function App() {
   const [notificationCount, setNotificationCount] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [isTableVisible, setIsTableVisible] = useState(false);
-  const [marqueeTexts, setMarqueeTexts] = useState([]);
-  const [currentMarqueeIndex, setCurrentMarqueeIndex] = useState(0);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleLoginSuccess = (username) => {
     setIsLoggedIn(true);
-    setCurrentUser(username);
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("currentUser", username);
+    sessionStorage.setItem("isLoggedIn", "true");
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setCurrentUser(null);
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
   };
 
   const handleApiError = (error, message) => {
@@ -114,37 +83,6 @@ function App() {
     try {
       const response = await bangVanBanDen();
       setNotifications(response.data.result);
-    } catch (err) {
-      handleApiError(err, "LỖI API LẤY DANH SÁCH THÔNG BÁO");
-    }
-  };
-
-  const fetchDataVanBanDenHan = async () => {
-    try {
-      const response = await bangVanBanDenHan();
-      const data = response.data.result;
-
-      if (data.length > 0) {
-        const marqueeTexts = data.map((record) => {
-          const dueDate = moment(record.ngay_het_han);
-          const today = moment();
-          const daysDifference = dueDate.diff(today, "days");
-
-          if (daysDifference < 0) {
-            return `Công văn số ${record.so_van_ban} của ${record.ten_don_vi} đã quá hạn`;
-          } else {
-            return `Đến hạn báo cáo Công văn số ${record.so_van_ban} của ${record.ten_don_vi} do ${record.noi_nhan} thực hiện`;
-          }
-        });
-
-        const sortedMarqueeTexts = marqueeTexts.sort((a, b) => {
-          const aDueDate = moment(a.ngay_het_han);
-          const bDueDate = moment(b.ngay_het_han);
-          return aDueDate - bDueDate;
-        });
-
-        setMarqueeTexts(sortedMarqueeTexts);
-      }
     } catch (err) {
       handleApiError(err, "LỖI API LẤY DANH SÁCH THÔNG BÁO");
     }
@@ -171,35 +109,9 @@ function App() {
   }, [isHovered]);
 
   useEffect(() => {
-    fetchDataVanBanDenHan();
-    const intervalId = setInterval(() => {
-      fetchDataVanBanDenHan();
-    }, 60000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (marqueeTexts.length > 0) {
-      const intervalId = setInterval(() => {
-        setCurrentMarqueeIndex(
-          (prevIndex) => (prevIndex + 1) % marqueeTexts.length
-        );
-      }, 15000);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [marqueeTexts]);
-
-  useEffect(() => {
-    const storedRememberMe = localStorage.getItem("rememberMe") === "true";
-    setRememberMe(storedRememberMe);
-
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const storedCurrentUser = localStorage.getItem("currentUser");
-
-    if (storedIsLoggedIn && storedCurrentUser) {
+    const storedIsLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    if (storedIsLoggedIn) {
       setIsLoggedIn(true);
-      setCurrentUser(storedCurrentUser);
     }
   }, []);
 
@@ -211,19 +123,6 @@ function App() {
             <HeaderContainer>
               <Header onLogout={handleLogout} />
             </HeaderContainer>
-            <MarqueeContainer>
-              {marqueeTexts.map((marqueeText, index) => (
-                <MarqueeText
-                  key={index}
-                  style={{
-                    display:
-                      index === currentMarqueeIndex ? "inline-block" : "none",
-                  }}
-                >
-                  {marqueeText}
-                </MarqueeText>
-              ))}
-            </MarqueeContainer>
             <MainContainer>
               <div className="notification-container">
                 <div
@@ -257,15 +156,15 @@ function App() {
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_ban_hanh
                                     ? moment(notification.ngay_ban_hanh).format(
-                                      "DD/MM/YYYY"
-                                    )
+                                        "DD/MM/YYYY"
+                                      )
                                     : "-"}
                                 </td>
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_tiep_nhan
                                     ? moment(
-                                      notification.ngay_tiep_nhan
-                                    ).format("DD/MM/YYYY")
+                                        notification.ngay_tiep_nhan
+                                      ).format("DD/MM/YYYY")
                                     : "-"}
                                 </td>
                               </tr>
@@ -319,7 +218,6 @@ function App() {
                 </Route>
               </Switch>
             </MainContainer>
-            <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <>

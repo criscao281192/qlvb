@@ -196,7 +196,7 @@ export const updateStatusInDatabase = async (recordId: any, newStatus: any) => {
 };
 
 export const loginAPI = async (username: string, password: string) => {
-  return axios.post(`${API_ENDPOINT}/api/login`, { username, password });
+  return axios.post(`${API_ENDPOINT}/api/user/login`, { username, password });
 };
 
 export const postCaseUser = async (body: any) => {
@@ -213,3 +213,16 @@ export const getCaseUser = async (params: any) => {
     params,
   });
 }
+
+export const getUserInfoAPI = async (token: any) => {
+  try {
+    const response = await axios.get(`${API_ENDPOINT}/api/user/infor`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

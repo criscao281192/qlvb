@@ -9,9 +9,10 @@ import {
   FolderOpenOutlined,
   CommentOutlined,
   LogoutOutlined,
-  UserAddOutlined
+  UserAddOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
+import { getCaseUser } from "../api/index";
 import "./stylesHeader.css";
 
 const Menu = styled.div`
@@ -60,19 +61,93 @@ const MenuItem = styled.li`
   }
 `;
 
+const BottomLeftContainer = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #ff0033;
+  border-radius: 5px;
+  z-index: -1;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+
+  .custom-menu-item-user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`;
+
+const MenuItemUser = styled.li`
+  list-style: none;
+  color: #000000;
+  &.custom-menu-item-user {
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    a {
+      text-decoration: none;
+    }
+    transition: transform 0.2s, color 0.2s, box-shadow 0.2s;
+    &:hover {
+      transform: scale(1.1);
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    &.custom-menu-item-user:hover {
+      cursor: pointer;
+    }
+  }
+`;
+
 const Header = ({ onLogout }) => {
-  // const [currentUser, setCurrentUser] = useState(null);
-  // useEffect(() => {
-  //   const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-  //   if (storedUser) {
-  //     setCurrentUser(storedUser);
-  //   }
-  // }, []);
+  const [userFullName, setUserFullName] = useState(null);
+  const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [isAccountMenuVisible, setAccountMenuVisible] = useState(false);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedToken) {
+      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
+      console.log(decodedToken);
+      getCaseUser(decodedToken.userId)
+        .then((response) => {
+          console.log("User from API:", response);
+          const matchingUser = response.data.result.find(
+            (user) => user.id === decodedToken.userId
+          );
+
+          if (matchingUser) {
+            setUserFullName(matchingUser.fullname);
+            setShowCreateAccount(matchingUser.fullname === "Cao Ngọc Tuyền");
+          } else {
+            console.error("No user data found in the response.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("Value of userFullName:", userFullName);
+  }, [userFullName]);
 
   const handleLogout = () => {
-    // localStorage.removeItem("currentUser");
     onLogout();
   };
+
+  const toggleAccountMenu = () => {
+    setAccountMenuVisible(!isAccountMenuVisible);
+  };
+
   return (
     <div className="menu-container">
       <Menu>
@@ -141,36 +216,48 @@ const Header = ({ onLogout }) => {
               </span>
             </a>
           </MenuItem>
-          <MenuItem className="custom-menu-item">
-            <Link to="/indexUserName">
-              <UserAddOutlined style={{ fontSize: "18px", color: "Red" }} />
-              <span style={{ fontSize: "18px", color: "black" }}>TÀI KHOẢN</span>
-            </Link>
-          </MenuItem>
-          {/* <MenuItem
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {currentUser && (
-              <span
-                style={{ fontSize: "20px", fontWeight: "bold", color: "#1A1249" }}
-              >
-                {currentUser.fullname}
-              </span>
-            )}
-          </MenuItem> */}
-          <MenuItem className="custom-menu-item">
-            <span onClick={handleLogout}>
-              <LogoutOutlined style={{ fontSize: "18px", color: "Red" }} />
-              <span style={{ fontSize: "18px", color: "black" }}>
-                ĐĂNG XUẤT
-              </span>
-            </span>
-          </MenuItem>
         </MenuList>
+        <BottomLeftContainer>
+          {userFullName && (
+            <>
+              <MenuItemUser
+                className="custom-menu-item-user"
+                onClick={toggleAccountMenu}
+              >
+                <span
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    color: "#cd201f",
+                  }}
+                >
+                  {userFullName}
+                </span>
+              </MenuItemUser>
+              {isAccountMenuVisible && (
+                <>
+                  <hr />
+                  {showCreateAccount && (
+                    <MenuItemUser className="custom-menu-item-user">
+                      <Link to="/indexUserName">
+                        <UserAddOutlined
+                          style={{ fontSize: "18px", color: "Red" }}
+                        />
+                      </Link>
+                    </MenuItemUser>
+                  )}
+                  <MenuItemUser className="custom-menu-item-user">
+                    <span onClick={handleLogout}>
+                      <LogoutOutlined
+                        style={{ fontSize: "18px", color: "Red" }}
+                      />
+                    </span>
+                  </MenuItemUser>
+                </>
+              )}
+            </>
+          )}
+        </BottomLeftContainer>
       </Menu>
     </div>
   );
