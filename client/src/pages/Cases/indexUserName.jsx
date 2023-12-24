@@ -69,6 +69,9 @@ const CaseUserNames = () => {
       key: "phan_quyen",
       align: "center",
       width: 200,
+      render: (text) => {
+        return text === "1" ? "Admin" : text === "2" ? "User" : "Unknown Role";
+      },
     },
   ];
 

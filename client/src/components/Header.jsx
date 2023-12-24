@@ -107,7 +107,7 @@ const MenuItemUser = styled.li`
 
 const Header = ({ onLogout }) => {
   const [userFullName, setUserFullName] = useState(null);
-  const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [showLeverAccount, setShowLeverAccount] = useState(false);
   const [isAccountMenuVisible, setAccountMenuVisible] = useState(false);
 
   useEffect(() => {
@@ -120,12 +120,12 @@ const Header = ({ onLogout }) => {
         .then((response) => {
           console.log("User from API:", response);
           const matchingUser = response.data.result.find(
-            (user) => user.id === decodedToken.userId
+            (user) => user.id === decodedToken.userId,
           );
-
+          console.log(matchingUser)
           if (matchingUser) {
             setUserFullName(matchingUser.fullname);
-            setShowCreateAccount(matchingUser.fullname === "Cao Ngọc Tuyền");
+            setShowLeverAccount(matchingUser.phan_quyen === "1");
           } else {
             console.error("No user data found in the response.");
           }
@@ -237,7 +237,7 @@ const Header = ({ onLogout }) => {
               {isAccountMenuVisible && (
                 <>
                   <hr />
-                  {showCreateAccount && (
+                  {showLeverAccount && (
                     <MenuItemUser className="custom-menu-item-user">
                       <Link to="/indexUserName">
                         <UserAddOutlined
