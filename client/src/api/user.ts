@@ -1,27 +1,25 @@
-import axios from "axios";
-import { API_ENDPOINT } from "./constants";
-
+import { axiosInstance } from "./constants";
 
 export const loginAPI = async (username: string, password: string) => {
-  return axios.post(`${API_ENDPOINT}/auth/whoami`, { username, password });
+  return axiosInstance.post(`/auth/whoami`, { username, password });
 };
 
 export const checkUser = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/users/checkUser`, {
+  return axiosInstance.get(`/api/users/checkUser`, {
     params,
   });
 }
 
 
 export const getCaseUser = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/users/getCaseUser`, {
+  return axiosInstance.get(`/api/users`, {
     params,
   });
 }
 
 export const postCaseUser = async (body: any) => {
   try {
-    const response = await axios.post(`${API_ENDPOINT}/api/users`, body);
+    const response = await axiosInstance.post(`/api/users`, body);
     console.log(response.data);
   } catch (error) {
     console.log(error);
@@ -29,7 +27,7 @@ export const postCaseUser = async (body: any) => {
 };
 
 export const getCaseUserName = async (caseId: string) => {
-  return axios.get(`${API_ENDPOINT}/api/users/userName/${caseId}`);
+  return axiosInstance.get(`/api/users/${caseId}`);
 };
 
 export const updateStatusInCaseUser = async (recordId: any, newStatus: any) => {
@@ -45,6 +43,6 @@ export const updateStatusInCaseUser = async (recordId: any, newStatus: any) => {
 };
 
 export const getConfigUsers = async () => {
-  const configUsers = await axios.get(`${API_ENDPOINT}/api/configUser`);
+  const configUsers = await axiosInstance.get(`/api/configUser`);
   return configUsers.data;
 };

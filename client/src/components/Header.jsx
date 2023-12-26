@@ -11,8 +11,8 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
-import { getCaseUser } from "../api/index";
 import "./stylesHeader.css";
+import { jwtDecode } from "jwt-decode";
 
 const Menu = styled.div`
   background-color: #defdda;
@@ -110,28 +110,10 @@ const Header = ({ onLogout }) => {
   const [isAccountMenuVisible, setAccountMenuVisible] = useState(false);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-
-    if (storedToken) {
-      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
-      console.log(decodedToken);
-      getCaseUser(decodedToken.userId)
-        .then((response) => {
-          console.log("API USER:", response);
-          const matchingUser = response.data.result.find(
-            (user) => user.id === decodedToken.userId
-          );
-          console.log(matchingUser);
-          if (matchingUser) {
-            setUserFullName(matchingUser.fullname);
-            setShowLeverAccount(matchingUser.phan_quyen === "1");
-          } else {
-            console.error("KHÔNG TÌM THẤY DỮ LIỆU NGƯỜI DÙNG.");
-          }
-        })
-        .catch((error) => {
-          console.error("LỖI TRUY VẤN DỮ LIỆU:", error);
-        });
+    const userInfo = jwtDecode(localStorage.getItem("accessToken"));
+    if (userInfo) {
+      setUserFullName(userInfo.fullname);
+      setShowLeverAccount(userInfo.phan_quyen === "1");
     }
   }, []);
 

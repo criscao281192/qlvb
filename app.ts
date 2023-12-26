@@ -6,7 +6,7 @@ import os from "os";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
-import { UserLogin } from "./models/user";
+import { checkJWTToken } from "./middleware/authentication";
 
 const app: express.Express = express();
 const server = http.createServer(app);
@@ -68,7 +68,8 @@ io.on("connection", function (client: Socket) {
 
 // Routing
 app.use("/auth", auth);
-app.use("/api", router);
+app.use("/api", checkJWTToken, router);
+// app.use("/api", router); // use this code if you do not want to check jwt token
 
 app.use(express.static(__dirname + "/"));
 
