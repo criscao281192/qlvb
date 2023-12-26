@@ -21,7 +21,7 @@ export const getCaseUser = async (params: any) => {
 
 export const postCaseUser = async (body: any) => {
   try {
-    const response = await axios.post(`${API_ENDPOINT}/api/users/userName`, body);
+    const response = await axios.post(`${API_ENDPOINT}/api/users`, body);
     console.log(response.data);
   } catch (error) {
     console.log(error);
