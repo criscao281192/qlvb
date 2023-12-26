@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import formData from "express-form-data";
 import router from "./router";
+import auth from "./router/auth";
 import os from "os";
 import http from "http";
 import { Server, Socket } from "socket.io";
@@ -19,30 +20,7 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
-app.post("/api/login", async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
-    const bcrypt = require("bcrypt");
-    const user: any = await UserLogin.findOne({
-      where: { username: username },
-    });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.status(200).json({ success: true, message: "Đăng nhập thành công" });
-    } else {
-      res.status(401).json({
-        success: false,
-        message:
-          "Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin đăng nhập.",
-      });
-    }
-  } catch (error) {
-    console.error("Lỗi khi kiểm tra đăng nhập:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Đã xảy ra lỗi khi đăng nhập." });
-  }
-});
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -88,6 +66,8 @@ io.on("connection", function (client: Socket) {
   });
 });
 
+// Routing
+app.use("/auth", auth);
 app.use("/api", router);
 
 app.use(express.static(__dirname + "/"));
