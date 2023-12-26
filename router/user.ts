@@ -1,15 +1,31 @@
 import express, { Request, Response } from "express";
 import { UserLogin } from "../models/user";
 import { Op } from "sequelize";
-const router = express.Router();
+const userRoutes = express.Router();
 
 /**
- * GET CASE BY CASE ID
+ * GET all users
  */
-router.get("/userName/:caseId", (req: Request, res: Response) => {
-  const caseId = req.params.caseId;
+userRoutes.get("", async (req: Request, res: Response) => {
+  let whereCon = {};
 
-  UserLogin.findByPk(Number(caseId))
+  try {
+    const userlogins = await UserLogin.findAll();
+    return res.json({ result: userlogins });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "LỖI TRUY VẤN CƠ SỞ DỮ LIỆU" });
+  }
+});
+
+
+/**
+ * GET user by id
+ */
+userRoutes.get("/:userId", (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  UserLogin.findByPk(Number(userId))
     .then((data) => {
       return res.json(data);
     })
@@ -22,7 +38,7 @@ router.get("/userName/:caseId", (req: Request, res: Response) => {
 /*
 TẠO TÀI KHOẢN MỚI 
 */
-router.post("/userName", async (req, res) => {
+userRoutes.post("", async (req, res) => {
   try {
     const body = req.body;
     const bcrypt = require("bcrypt");
@@ -52,7 +68,7 @@ router.post("/userName", async (req, res) => {
 });
 
 // KIỂM TRA USER
-router.get("/checkUser", async (req, res) => {
+userRoutes.get("/checkUser", async (req, res) => {
   try {
     const whereCon: {
       username: string;
@@ -80,19 +96,4 @@ router.get("/checkUser", async (req, res) => {
   }
 });
 
-// BẢNG USER
-router.get("/getCaseUser", async (req: Request, res: Response) => {
-  let whereCon = {};
-
-  try {
-    const userlogins = await UserLogin.findAll({
-      where: whereCon,
-    });
-    return res.json({ result: userlogins });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "LỖI TRUY VẤN CƠ SỞ DỮ LIỆU" });
-  }
-});
-
-export { router as caseUser };
+export default userRoutes;
