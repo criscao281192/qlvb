@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS user_logins (
     username VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
     fullname VARCHAR(100) NOT NULL,
+    phoneuser VARCHAR(100) NOT NULL,
     don_vi VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );

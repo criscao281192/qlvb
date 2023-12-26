@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { message } from "antd";
 import styled from "styled-components";
-import { loginAPI, getCaseUser } from "../api";
+import { loginAPI } from "../api";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -106,6 +106,7 @@ const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState(null);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -118,26 +119,25 @@ const Login = ({ onLogin }) => {
 
       if (response.status === 200) {
         const userData = response.data;
-        console.log("userData", userData);
-
-        // const caseUserResponse = await getCaseUser();
-
-        // const userExists = caseUserResponse.data.result.some(
-        //   (user) => user.username === username && user.phan_quyen
-        // );
-
-        // if (userExists) {
         localStorage.setItem("accessToken", userData.token);
         onLogin(username, userData);
         window.location.href = "/";
-        // } else {
-        //   message.error("BẠN CHƯA ĐƯỢC CẤP QUYỀN TRUY CẬP");
-        // }
       } else {
-        message.error("ĐĂNG NHẬP KHÔNG THÀNH CÔNG!");
+        const errorMessage = response.data && response.data.message;
+        setServerError(errorMessage || "ĐĂNG NHẬP KHÔNG THÀNH CÔNG!");
       }
     } catch (error) {
-      message.error("TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!");
+      console.log("Login API Error:", error);
+
+      if (error.response) {
+        setServerError(
+          error.response.data.message || "ĐĂNG NHẬP KHÔNG THÀNH CÔNG!"
+        );
+      } else if (error.request) {
+        setServerError("KHÔNG THỂ KẾT NỐI SERVER.");
+      } else {
+        setServerError("ĐÃ XẢY RA LỖI.");
+      }
     }
   };
 
@@ -182,6 +182,7 @@ const Login = ({ onLogin }) => {
             {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
           </PasswordIcon>
         </InputContainer>
+        {serverError && <div style={{ color: "red" }}>{serverError}</div>}
         <LoginButton onClick={handleLogin}>ĐĂNG NHẬP</LoginButton>
         <br />
         <NavLink to="/userName">

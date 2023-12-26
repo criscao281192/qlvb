@@ -131,7 +131,19 @@ const NewUserForm = () => {
         },
       ],
     },
-
+    {
+      name: "phoneuser",
+      label: "SỐ ĐIỆN THOẠI",
+      render: () => {
+        return <Input placeholder="0936342326" />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
   ];
   const getFields = () => {
     return userControls.map((control, i) => {
@@ -149,20 +161,29 @@ const NewUserForm = () => {
   };
 
   return (
-    <div >
-      <div style={{
-        textAlign: "center",
-        background: "url('./LOGOKTHS.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "90vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
-        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#006d75", margin: "0" }}>
+    <div>
+      <div
+        style={{
+          textAlign: "center",
+          background: "url('./LOGOKTHS.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "32px",
+            fontWeight: "bold",
+            color: "#006d75",
+            margin: "0",
+          }}
+        >
           ĐĂNG KÝ TÀI KHOẢN
         </div>
 

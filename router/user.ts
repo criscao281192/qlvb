@@ -18,7 +18,6 @@ userRoutes.get("", async (req: Request, res: Response) => {
   }
 });
 
-
 /**
  * GET user by id
  */
@@ -34,7 +33,6 @@ userRoutes.get("/:userId", (req: Request, res: Response) => {
     });
 });
 
-
 /*
 TẠO TÀI KHOẢN MỚI 
 */
@@ -48,6 +46,7 @@ userRoutes.post("", async (req, res) => {
       fullname: body.fullname,
       don_vi: body.don_vi,
       phan_quyen: body.phan_quyen,
+      phoneuser: body.phoneuser,
     };
 
     if (body.id) {

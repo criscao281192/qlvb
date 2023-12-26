@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Input, Col, Select, DatePicker, Button, Radio, TreeSelect } from "antd";
+import {
+  Form,
+  Row,
+  Input,
+  Col,
+  Select,
+  DatePicker,
+  Button,
+  Radio,
+  TreeSelect,
+} from "antd";
 import moment from "moment";
 import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
@@ -76,14 +86,14 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
               })}
           </Select>
         );
-      }
+      },
     },
     {
       name: "ten_don_vi",
       label: "ĐƠN VỊ",
       render: () => {
         return <Input placeholder="PC01; PC02; PX01; PX02... " />;
-      }
+      },
     },
     {
       name: "van_ban_den_so",
@@ -103,7 +113,12 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
       name: "ngay_tiep_nhan",
       label: "NGÀY NHẬN",
       render: () => {
-        return <DatePicker.RangePicker style={{ width: '100%', }} placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
+        return (
+          <DatePicker.RangePicker
+            style={{ width: "100%" }}
+            placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]}
+          />
+        );
       },
     },
     {
@@ -132,7 +147,7 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
       label: "TRẠNG THÁI VĂN BẢN",
       render: () => {
         return (
-          <Radio.Group buttonStyle="solid" style={{ width: '100%' }}>
+          <Radio.Group buttonStyle="solid" style={{ width: "100%" }}>
             <Radio.Button value="LƯU">LƯU</Radio.Button>
             <Radio.Button value="ĐANG XỬ LÝ">ĐANG XỬ LÝ</Radio.Button>
             <Radio.Button value="XONG">XONG</Radio.Button>
@@ -144,7 +159,12 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
       name: "ngay_het_han",
       label: "NGÀY HẾT HẠN",
       render: () => {
-        return <DatePicker.RangePicker style={{ width: '100%', }} placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />;
+        return (
+          <DatePicker.RangePicker
+            style={{ width: "100%" }}
+            placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]}
+          />
+        );
       },
     },
   ];
@@ -167,9 +187,11 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
   };
 
   const onPrint = () => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+    const formattedDate = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()}`;
     printWindow.document.open();
     printWindow.document.write(`
       <html>
@@ -264,19 +286,34 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
                 </tr>
               </thead>
               <tbody>
-                ${cases.map((c, index) => `
+                ${cases
+                  .map(
+                    (c, index) => `
                   <tr>
                     <td>${index + 1}</td>
                     <td>${c.van_ban_den_so || "-"}</td>
                     <td>${c.ten_don_vi || "-"}</td>
                     <td>${c.so_van_ban || "-"}</td>
-                    <td>${c.ngay_ban_hanh ? moment(c.ngay_ban_hanh).format("DD/MM/YYYY") : "-"}</td>
-                    <td>${c.ngay_tiep_nhan ? moment(c.ngay_tiep_nhan).format("DD/MM/YYYY") : "-"}</td>
+                    <td>${
+                      c.ngay_ban_hanh
+                        ? moment(c.ngay_ban_hanh).format("DD/MM/YYYY")
+                        : "-"
+                    }</td>
+                    <td>${
+                      c.ngay_tiep_nhan
+                        ? moment(c.ngay_tiep_nhan).format("DD/MM/YYYY")
+                        : "-"
+                    }</td>
                     <td>${c.noi_dung_van_ban || "-"}</td>
-                    <td class="noi-nhan" style="white-space: pre-wrap; width: 150px;">${(c.noi_nhan ? c.noi_nhan.replace(/,/g, '<br>') : "TB GIAO BAN(LƯU: H.Anh)").replace(/,/g, '<br>')}</td>
+                    <td class="noi-nhan" style="white-space: pre-wrap; width: 150px;">${(c.noi_nhan
+                      ? c.noi_nhan.replace(/,/g, "<br>")
+                      : "TB GIAO BAN(LƯU: H.Anh)"
+                    ).replace(/,/g, "<br>")}</td>
                     <td> </td>
                   </tr>
-                `).join('')}
+                `
+                  )
+                  .join("")}
               </tbody>
             </table>
             <style>
@@ -344,10 +381,7 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
               <Button type="primary" htmlType="submit">
                 TÌM KIẾM
               </Button>
-              <Button
-                style={{ margin: "0 8px" }}
-                onClick={onReset}
-              >
+              <Button style={{ margin: "0 8px" }} onClick={onReset}>
                 XÓA
               </Button>
             </div>

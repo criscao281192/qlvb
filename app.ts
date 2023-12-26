@@ -21,7 +21,6 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-
 app.use(express.urlencoded({ extended: true }));
 
 const options = {
@@ -69,7 +68,6 @@ io.on("connection", function (client: Socket) {
 // Routing
 app.use("/auth", auth);
 app.use("/api", checkJWTToken, router);
-// app.use("/api", router); // use this code if you do not want to check jwt token
 
 app.use(express.static(__dirname + "/"));
 

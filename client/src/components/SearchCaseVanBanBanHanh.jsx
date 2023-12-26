@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Row,
-  Input,
-  Col,
-  Select,
-  DatePicker,
-  Button,
-} from "antd";
+import { Form, Row, Input, Col, Select, DatePicker, Button } from "antd";
 import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
 

@@ -22,6 +22,9 @@ const UserLogin = dbConfig.define("user_login", {
   phan_quyen: {
     type: Sequelize.STRING,
   },
+  phoneuser: {
+    type: Sequelize.STRING,
+  },
 });
 UserLogin.sync();
 export { UserLogin };

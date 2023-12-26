@@ -716,13 +716,13 @@ router.post("/", (req: Request, res: Response) => {
           };
           if (body.id) {
             TaiLieu.update(record, { where: { id: body.id } })
-              .then((a) => { })
+              .then((a) => {})
               .catch((e) => {
                 console.error("LỖI KHI CẬP NHẬT:", e);
               });
           } else {
             TaiLieu.create(record)
-              .then((a) => { })
+              .then((a) => {})
               .catch((e) => {
                 console.error("LỖI KHI TẠO MỚI:", e);
               });
@@ -748,13 +748,13 @@ router.post("/", (req: Request, res: Response) => {
       };
       if (body.id) {
         TaiLieu.update(record, { where: { id: body.id } })
-          .then((a) => { })
+          .then((a) => {})
           .catch((e) => {
             console.error("LỖI KHI CẬP NHẬT:", e);
           });
       } else {
         TaiLieu.create(record)
-          .then((a) => { })
+          .then((a) => {})
           .catch((e) => {
             console.error("LỖI KHI TẠO MỚI:", e);
           });
@@ -779,13 +779,13 @@ router.post("/", (req: Request, res: Response) => {
     };
     if (body.id) {
       TaiLieu.update(record, { where: { id: body.id } })
-        .then((a) => { })
+        .then((a) => {})
         .catch((e) => {
           console.error("LỖI KHI CẬP NHẬT:", e);
         });
     } else {
       TaiLieu.create(record)
-        .then((a) => { })
+        .then((a) => {})
         .catch((e) => {
           console.error("LỖI KHI TẠO MỚI:", e);
         });

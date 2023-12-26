@@ -157,15 +157,15 @@ function App() {
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_ban_hanh
                                     ? moment(notification.ngay_ban_hanh).format(
-                                      "DD/MM/YYYY"
-                                    )
+                                        "DD/MM/YYYY"
+                                      )
                                     : "-"}
                                 </td>
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_tiep_nhan
                                     ? moment(
-                                      notification.ngay_tiep_nhan
-                                    ).format("DD/MM/YYYY")
+                                        notification.ngay_tiep_nhan
+                                      ).format("DD/MM/YYYY")
                                     : "-"}
                                 </td>
                               </tr>

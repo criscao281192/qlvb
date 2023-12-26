@@ -9,10 +9,16 @@ import {
   message,
   Upload,
 } from "antd";
-import { UploadOutlined, AudioTwoTone } from "@ant-design/icons"; 
+import { UploadOutlined, AudioTwoTone } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCase, getConfigs, lay_so_van_ban_di, postCase, getCaseUser } from "../../api";
+import {
+  getCase,
+  getConfigs,
+  lay_so_van_ban_di,
+  postCase,
+  getCaseUser,
+} from "../../api";
 
 const NewCaseVanBanBanHanh = () => {
   const [form] = Form.useForm();

@@ -10,15 +10,15 @@ const CaseUserNames = () => {
   const [error, setError] = useState(null);
   const history = useHistory();
 
-  const handleCaseUser = async (recordId) => {
+  const handleCaseUser = async (recordId, newRole) => {
     try {
       const updatedCases = cases.map((caseItem) =>
         caseItem.id === recordId
-          ? { ...caseItem, phan_quyen: "2" }
+          ? { ...caseItem, phan_quyen: newRole }
           : caseItem
       );
       setCases(updatedCases);
-      await updateStatusInCaseUser(recordId, "2");
+      await updateStatusInCaseUser(recordId, newRole);
       history.go(0);
     } catch (error) {
       console.error("LỖI THÊM DỮ LIỆU:", error);
@@ -68,21 +68,32 @@ const CaseUserNames = () => {
       dataIndex: "fullname",
       key: "fullname",
       align: "center",
-      width: 200,
+      width: 100,
     },
     {
       title: "ĐƠN VỊ CÔNG TÁC",
       dataIndex: "don_vi",
       key: "don_vi",
       align: "center",
-      width: 200,
+      width: 100,
       render: (text) => {
-        return text === "1" ? "Đội Tham mưu" :
-          text === "2" ? "Đội Khám nghiệm hiện trường" :
-            text === "3" ? "Đội Giám định KTHS truyền thống và tài liệu" :
-              text === "4" ? "Đội Giám định hoá, KTPL và pháp y, sinh vật" :
-                "Đội Kỹ thuật phòng, chống tội phạm";
+        return text === "1"
+          ? "Đội Tham mưu"
+          : text === "2"
+          ? "Đội Khám nghiệm hiện trường"
+          : text === "3"
+          ? "Đội Giám định KTHS truyền thống và tài liệu"
+          : text === "4"
+          ? "Đội Giám định hoá, KTPL và pháp y, sinh vật"
+          : "Đội Kỹ thuật phòng, chống tội phạm";
       },
+    },
+    {
+      title: "SỐ ĐIỆN THOẠI",
+      dataIndex: "phoneuser",
+      key: "phoneuser",
+      align: "center",
+      width: 100,
     },
     {
       title: "QUYỀN TRUY CẬP",
@@ -97,9 +108,14 @@ const CaseUserNames = () => {
           ) : text === "2" ? (
             "USER"
           ) : (
-            <Button danger onClick={() => handleCaseUser(record.id)}>
-              XONG
-            </Button>
+            <>
+              <Button danger onClick={() => handleCaseUser(record.id, "2")}>
+                CẤP QUYỀN USER
+              </Button>{" "}
+              <Button danger onClick={() => handleCaseUser(record.id, "1")}>
+                CẤP QUYỀN ADMIN
+              </Button>
+            </>
           )}
         </>
       ),

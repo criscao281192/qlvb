@@ -8,14 +8,13 @@ export const checkUser = async (params: any) => {
   return axiosInstance.get(`/api/users/checkUser`, {
     params,
   });
-}
-
+};
 
 export const getCaseUser = async (params: any) => {
   return axiosInstance.get(`/api/users`, {
     params,
   });
-}
+};
 
 export const postCaseUser = async (body: any) => {
   try {
