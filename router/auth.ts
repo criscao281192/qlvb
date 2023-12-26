@@ -1,0 +1,56 @@
+import express, { Request, Response } from "express";
+import { UserLogin } from "../models/user";
+const router = express.Router();
+
+/**
+ * POST /auth/whoami
+ */
+router.post("/whoami", async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const bcrypt = require("bcrypt");
+    const jwt = require("jsonwebtoken");
+    const user: any = await UserLogin.findOne({
+      where: { username: username },
+    });
+
+    if (user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+
+      if (passwordMatch) {
+        const secretKey = "caongoctuyen";
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            phan_quyen: user.phan_quyen,
+          },
+          secretKey,
+          { expiresIn: "1h", algorithm: "HS256" }
+        );
+        console.log(token)
+        res
+          .status(200)
+          .json({ success: true, message: "XIN CHÀO! BẠN ĐÃ ĐĂNG NHẬP THÀNH CÔNG", token });
+      } else {
+        res.status(401).json({
+          success: false,
+          message:
+            "MẬT KHẨU KHÔNG ĐÚNG.",
+        });
+      }
+    } else {
+      res.status(401).json({
+        success: false,
+        message:
+          "TÀI KHOẢN KHÔNG TỒN TẠI.",
+      });
+    }
+  } catch (error) {
+    console.error("LỖI:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "ĐÃ XẢY RA LỖI." });
+  }
+});
+
+export default router;

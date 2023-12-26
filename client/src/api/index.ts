@@ -196,7 +196,7 @@ export const updateStatusInDatabase = async (recordId: any, newStatus: any) => {
 };
 
 export const loginAPI = async (username: string, password: string) => {
-  return axios.post(`${API_ENDPOINT}/api/user/login`, { username, password });
+  return axios.post(`${API_ENDPOINT}/auth/whoami`, { username, password });
 };
 
 
