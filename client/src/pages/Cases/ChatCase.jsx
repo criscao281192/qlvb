@@ -3,6 +3,7 @@ import { Form, Input, message } from "antd";
 import { useHistory } from "react-router-dom";
 import { io } from "socket.io-client";
 import "./stylesChatRoom.css";
+import { getCaseUser } from "../../api/index";
 
 const ChatCase = () => {
   const [name, setName] = useState("");
@@ -11,6 +12,7 @@ const ChatCase = () => {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState("Đội Tham mưu");
+  const [userFullName, setUserFullName] = useState(null);
 
   const sendMessage = () => {
     if (messageInput && socket) {
@@ -20,7 +22,7 @@ const ChatCase = () => {
   };
 
   useEffect(() => {
-    const newSocket = io.connect("http://192.168.1.28:8000");
+    const newSocket = io.connect("http://192.168.1.28:3000");
     console.log("Socket", newSocket);
 
     setSocket(newSocket);
@@ -32,6 +34,31 @@ const ChatCase = () => {
     return () => {
       newSocket.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedToken) {
+      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
+
+      getCaseUser(decodedToken.userId)
+        .then((response) => {
+          const matchingUser = response.data.result.find(
+            (user) => user.id === decodedToken.userId
+          );
+
+          if (matchingUser) {
+            setUserFullName(matchingUser.fullname);
+            setName(matchingUser.fullname);
+          } else {
+            console.error("No user data found in the response.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
   }, []);
 
   const history = useHistory();
@@ -73,11 +100,7 @@ const ChatCase = () => {
             />
           </Form.Item>
           <Form.Item label="Name">
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyPress={handleNameKeyPress}
-            />
+            <Input value={name} onKeyPress={handleNameKeyPress} readOnly />
           </Form.Item>
         </Form>
       </div>

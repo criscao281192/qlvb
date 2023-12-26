@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, DatePicker, Row, Select } from "antd";
-import {
-  BarChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Bar,
-} from "recharts";
+import { BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Bar } from "recharts";
 
 import { countCasesVanBanDi } from "../../api";
 import { XAY_DUNG_VAN_BAN } from "../../shared/constants";
@@ -21,7 +14,7 @@ const ThongKeVanBanDi = () => {
   const [condition, setCondition] = useState({
     startDate: new Date(currentYear, currentMonth, 1),
     endDate: new Date(currentYear, currentMonth, 30),
-    noi_nhan: '',
+    noi_nhan: "",
   });
 
   const hasData = () => {
@@ -70,7 +63,9 @@ const ThongKeVanBanDi = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: "32px", fontWeight: "bold", color: '#0958d9' }}>THỐNG KÊ VĂN BẢN ĐI</div>
+      <div style={{ fontSize: "32px", fontWeight: "bold", color: "#0958d9" }}>
+        THỐNG KÊ VĂN BẢN ĐI
+      </div>
       <br />
       <Row>
         <Col span={12}>
@@ -101,69 +96,80 @@ const ThongKeVanBanDi = () => {
       </Row>
       <br />
       {filterData().length > 0 ? (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: "flex" }}>
           <BarChart width={800} height={250} data={filterData()}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="ten_loai_tai_lieu" tickFormatter={(name) => {
-
-              if (name === "BÁO CÁO") {
-                return "BC";
-              }
-              if (name === "CHƯƠNG TRÌNH") {
-                return "CTr";
-              }
-              if (name === "CÔNG VĂN") {
-                return "CV";
-              }
-              if (name === "TRÍCH SAO") {
-                return "TTs";
-              }
-              if (name === "GIẤY MỜI") {
-                return "GM";
-              }
-              if (name === "HƯỚNG DẪN") {
-                return "HD";
-              }
-              if (name === "KẾ HOẠCH") {
-                return "KH";
-              }
-              if (name === "PHƯƠNG ÁN") {
-                return "PA";
-              }
-              if (name === "QUYẾT ĐỊNH") {
-                return "QĐ";
-              }
-              if (name === "THÔNG BÁO") {
-                return "TB";
-              }
-              if (name === "YÊU CẦU") {
-                return "YC";
-              }
-              if (name === "TỜ TRÌNH") {
-                return "TTr";
-              }
-              if (name === "BÁO CÁO-ĐTN") {
-                return "BC-ĐTN";
-              }
-              if (name === "GIẤY XÁC NHẬN") {
-                return "GXN";
-              }
-              if (name === "GIẤY GIỚI THIỆU") {
-                return "GTT";
-              }
-              return name;
-            }} />
+            <XAxis
+              dataKey="ten_loai_tai_lieu"
+              tickFormatter={(name) => {
+                if (name === "BÁO CÁO") {
+                  return "BC";
+                }
+                if (name === "CHƯƠNG TRÌNH") {
+                  return "CTr";
+                }
+                if (name === "CÔNG VĂN") {
+                  return "CV";
+                }
+                if (name === "TRÍCH SAO") {
+                  return "TTs";
+                }
+                if (name === "GIẤY MỜI") {
+                  return "GM";
+                }
+                if (name === "HƯỚNG DẪN") {
+                  return "HD";
+                }
+                if (name === "KẾ HOẠCH") {
+                  return "KH";
+                }
+                if (name === "PHƯƠNG ÁN") {
+                  return "PA";
+                }
+                if (name === "QUYẾT ĐỊNH") {
+                  return "QĐ";
+                }
+                if (name === "THÔNG BÁO") {
+                  return "TB";
+                }
+                if (name === "YÊU CẦU") {
+                  return "YC";
+                }
+                if (name === "TỜ TRÌNH") {
+                  return "TTr";
+                }
+                if (name === "BÁO CÁO-ĐTN") {
+                  return "BC-ĐTN";
+                }
+                if (name === "GIẤY XÁC NHẬN") {
+                  return "GXN";
+                }
+                if (name === "GIẤY GIỚI THIỆU") {
+                  return "GTT";
+                }
+                return name;
+              }}
+            />
             <YAxis />
             <Tooltip />
             {renderBars()}
           </BarChart>
         </div>
       ) : (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#00474f" }}>KHÔNG CÓ DỮ LIỆU</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{ fontSize: "32px", fontWeight: "bold", color: "#00474f" }}
+          >
+            KHÔNG CÓ DỮ LIỆU
+          </div>
         </div>
       )}
-
     </div>
   );
 };

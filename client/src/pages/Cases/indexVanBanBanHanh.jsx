@@ -11,8 +11,8 @@ const CaseVanBanBanHanhs = () => {
   const [searchCondition, setSearchCondition] = useState();
   const [sortedInfo] = useState({});
   const [selectedDateRange, setSelectedDateRange] = useState(null);
-  const [noi_nhan, setNoiNhan] = useState("")
-  const [noi_dung_van_ban, setTrichYeu] = useState("")
+  const [noi_nhan, setNoiNhan] = useState("");
+  const [noi_dung_van_ban, setTrichYeu] = useState("");
 
   let history = useHistory();
 
@@ -49,7 +49,10 @@ const CaseVanBanBanHanhs = () => {
       key: "ngay_ban_hanh",
       render: (data) => data && moment(data).format("DD/MM/YYYY"),
       sorter: (a, b) => new Date(a.ngay_ban_hanh) - new Date(b.ngay_ban_hanh),
-      sortOrder: sortedInfo.columnKey === 'ngay_ban_hanh' ? sortedInfo.order : 'decrease',
+      sortOrder:
+        sortedInfo.columnKey === "ngay_ban_hanh"
+          ? sortedInfo.order
+          : "decrease",
       align: "center",
       width: 200,
     },
@@ -59,11 +62,11 @@ const CaseVanBanBanHanhs = () => {
       dataIndex: "noi_dung_van_ban",
     },
     {
-      title: "THỰC HIỆN",
+      title: "SOẠN THẢO",
       key: "noi_nhan",
       dataIndex: "noi_nhan",
-      align: "justify",
       width: 200,
+      align: "center",
     },
     {
       title: "VĂN BẢN",
@@ -77,7 +80,7 @@ const CaseVanBanBanHanhs = () => {
           if (caseData && caseData.file_van_ban) {
             const pdfData = caseData.file_van_ban.data;
             const blobData = new Blob([new Uint8Array(pdfData).buffer], {
-              type: 'application/pdf',
+              type: "application/pdf",
             });
             const pdfURL = URL.createObjectURL(blobData);
             openPDFModal(pdfURL);
@@ -92,9 +95,7 @@ const CaseVanBanBanHanhs = () => {
             />
           );
         } else {
-          return (
-            <></>
-          );
+          return <></>;
         }
       },
     },
@@ -106,7 +107,9 @@ const CaseVanBanBanHanhs = () => {
       render: (text, record) => (
         <>
           <EditOutlined
-            onClick={() => history.push(`/quan-ly-van-ban-ban-hanh/edit/${record.id}`)}
+            onClick={() =>
+              history.push(`/quan-ly-van-ban-ban-hanh/edit/${record.id}`)
+            }
           />
         </>
       ),
@@ -166,7 +169,7 @@ const CaseVanBanBanHanhs = () => {
     console.log(csvContent);
 
     const blob = new Blob([csvContent], {
-      type: "text/csv;charset=utf-8"
+      type: "text/csv;charset=utf-8",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -215,7 +218,8 @@ const CaseVanBanBanHanhs = () => {
     setItemsPerPage(pagination.pageSize);
   };
 
-  const [loai_tai_lieu_content, setLoaiTaiLieuContent] = useState("VĂN BẢN CÁC LOẠI");
+  const [loai_tai_lieu_content, setLoaiTaiLieuContent] =
+    useState("VĂN BẢN CÁC LOẠI");
   const loaiTaiLieuContentMapping = {
     0: "VĂN BẢN CÁC LOẠI",
     1: "BÁO CÁO",
@@ -245,7 +249,9 @@ const CaseVanBanBanHanhs = () => {
 
   const onSearch = (searchParams) => {
     const { loai_tai_lieu_id, noi_nhan, noi_dung_van_ban } = searchParams;
-    setLoaiTaiLieuContent(loaiTaiLieuContentMapping[loai_tai_lieu_id] || "VĂN BẢN CÁC LOẠI");
+    setLoaiTaiLieuContent(
+      loaiTaiLieuContentMapping[loai_tai_lieu_id] || "VĂN BẢN CÁC LOẠI"
+    );
     setSearchCondition(searchParams);
     setSelectedDateRange(searchParams.ngay_ban_hanh);
     setNoiNhan(noi_nhan);
@@ -258,20 +264,42 @@ const CaseVanBanBanHanhs = () => {
 
   let displayContent = "";
   if (totalItems === 0) {
-    displayContent = `${noi_nhan ? `ĐỒNG CHÍ ${noi_nhan.toUpperCase()} KHÔNG THAM MƯU BCH PHÒNG BAN HÀNH` : "PHÒNG PC09 KHÔNG BAN HÀNH"} 
+    displayContent = `${
+      noi_nhan
+        ? `ĐỒNG CHÍ ${noi_nhan.toUpperCase()} KHÔNG THAM MƯU BCH PHÒNG BAN HÀNH`
+        : "PHÒNG PC09 KHÔNG BAN HÀNH"
+    } 
     ${loai_tai_lieu_content} 
-    ${noi_dung_van_ban ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"` : ""} TRONG KHOẢNG THỜI GIAN NÀY!`;
+    ${
+      noi_dung_van_ban
+        ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
+        : ""
+    } TRONG KHOẢNG THỜI GIAN NÀY!`;
   } else {
-    displayContent = `TỪ NGÀY ${selectedDateRange && selectedDateRange[0] ? selectedDateRange[0].format("DD/MM/YYYY") : currentYearNow} 
-    ĐẾN NGÀY ${selectedDateRange && selectedDateRange[1] ? selectedDateRange[1].format("DD/MM/YYYY") : currentDate}, 
+    displayContent = `TỪ NGÀY ${
+      selectedDateRange && selectedDateRange[0]
+        ? selectedDateRange[0].format("DD/MM/YYYY")
+        : currentYearNow
+    } 
+    ĐẾN NGÀY ${
+      selectedDateRange && selectedDateRange[1]
+        ? selectedDateRange[1].format("DD/MM/YYYY")
+        : currentDate
+    }, 
     PC09-HN ĐÃ BAN HÀNH ${totalItems} ${loai_tai_lieu_content} 
-    ${noi_dung_van_ban ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"` : ""} 
-    ${noi_nhan ? ` DO Đ/C ${noi_nhan.toUpperCase()} THAM MƯU XÂY DỰNG` : ''}!`;
+    ${
+      noi_dung_van_ban
+        ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
+        : ""
+    } 
+    ${noi_nhan ? ` DO Đ/C ${noi_nhan.toUpperCase()} THAM MƯU XÂY DỰNG` : ""}!`;
   }
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: "32px", fontWeight: "bold", color: '#006d75' }}>QUẢN LÝ VĂN BẢN ĐI</div>
+      <div style={{ fontSize: "32px", fontWeight: "bold", color: "#006d75" }}>
+        QUẢN LÝ VĂN BẢN ĐI
+      </div>
       <br />
       <SearchCaseVanBanBanHanh
         onSearch={onSearch}
@@ -283,9 +311,7 @@ const CaseVanBanBanHanhs = () => {
       <div>
         <p style={{ display: "flex", alignItems: "center" }}>
           <SendOutlined style={{ fontSize: "28px", marginRight: "8px" }} />
-          <span style={{ fontWeight: "bold" }}>
-            {displayContent}
-          </span>
+          <span style={{ fontWeight: "bold" }}>{displayContent}</span>
         </p>
       </div>
       <Table
@@ -309,7 +335,7 @@ const CaseVanBanBanHanhs = () => {
         footer={null}
         width={1800}
         style={{ top: 0, right: 0, left: 0 }}
-        bodyStyle={{ height: '100vh', overflow: 'auto' }}
+        bodyStyle={{ height: "100vh", overflow: "auto" }}
       >
         <embed src={pdfURL} type="application/pdf" width="100%" height="100%" />
       </Modal>

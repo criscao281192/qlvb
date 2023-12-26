@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Input, Col, Select, DatePicker, Button, TreeSelect } from "antd";
+import {
+  Form,
+  Row,
+  Input,
+  Col,
+  Select,
+  DatePicker,
+  Button,
+} from "antd";
 import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
-import { XAY_DUNG_VAN_BAN } from "../shared/constants/index";
 
 const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
   const [form] = Form.useForm();
@@ -80,7 +87,10 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
       label: "NGÀY KÝ",
       render: () => {
         return (
-          <DatePicker.RangePicker style={{ width: '100%', }} placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]} />
+          <DatePicker.RangePicker
+            style={{ width: "100%" }}
+            placeholder={["TỪ NGÀY", "ĐẾN NGÀY"]}
+          />
         );
       },
     },
@@ -88,14 +98,7 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
       name: "noi_nhan",
       label: "THỰC HIỆN",
       render: () => {
-        return (
-          <TreeSelect
-            treeData={XAY_DUNG_VAN_BAN}
-            placeholder="THỰC HIỆN"
-            treeCheckable={true}
-            treeCheckStrictly={true}
-          />
-        );
+        return <Input placeholder="C.N.Tuyền" />;
       },
     },
   ];
@@ -152,10 +155,7 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
               <Button type="primary" htmlType="submit">
                 TÌM KIẾM
               </Button>
-              <Button
-                style={{ margin: "0 8px" }}
-                onClick={onReset}
-              >
+              <Button style={{ margin: "0 8px" }} onClick={onReset}>
                 XÓA
               </Button>
             </div>

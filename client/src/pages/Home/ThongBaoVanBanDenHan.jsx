@@ -14,7 +14,9 @@ const ThongBaoVanBanDenHan = () => {
   const handleStatusClick = async (recordId) => {
     try {
       const updatedCases = cases.map((caseItem) =>
-        caseItem.id === recordId ? { ...caseItem, trang_thai_van_ban: "XONG" } : caseItem
+        caseItem.id === recordId
+          ? { ...caseItem, trang_thai_van_ban: "XONG" }
+          : caseItem
       );
       setCases(updatedCases);
       await updateStatusInDatabase(recordId, "XONG");
@@ -62,7 +64,8 @@ const ThongBaoVanBanDenHan = () => {
       dataIndex: "ngay_het_han",
       render: (data) => data && moment(data).format("DD/MM/YYYY"),
       sorter: (a, b) => new Date(a.ngay_het_han) - new Date(b.ngay_het_han),
-      sortOrder: sortedInfo.columnKey === 'ngay_het_han' ? sortedInfo.order : 'ascend',
+      sortOrder:
+        sortedInfo.columnKey === "ngay_het_han" ? sortedInfo.order : "ascend",
       align: "center",
     },
     {
@@ -90,7 +93,9 @@ const ThongBaoVanBanDenHan = () => {
       align: "center",
       render: (text, record) => (
         <>
-          <Button danger onClick={() => handleStatusClick(record.id)}>XONG</Button>
+          <Button danger onClick={() => handleStatusClick(record.id)}>
+            XONG
+          </Button>
         </>
       ),
     },
@@ -119,7 +124,9 @@ const ThongBaoVanBanDenHan = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <WarningOutlined style={{ fontSize: "48px", fontWeight: "bold", color: "red" }} />
+      <WarningOutlined
+        style={{ fontSize: "48px", fontWeight: "bold", color: "red" }}
+      />
       {cases.length === 0 ? (
         <Empty description="TẤT CẢ BÁO CÁO ĐẾN HẠN ĐÃ HOÀN THÀNH" />
       ) : (

@@ -199,6 +199,21 @@ export const loginAPI = async (username: string, password: string) => {
   return axios.post(`${API_ENDPOINT}/api/user/login`, { username, password });
 };
 
+
+
+export const checkUser = async (params: any) => {
+  return axios.get(`${API_ENDPOINT}/api/user/checkUser`, {
+    params,
+  });
+}
+
+
+export const getCaseUser = async (params: any) => {
+  return axios.get(`${API_ENDPOINT}/api/user/getCaseUser`, {
+    params,
+  });
+}
+
 export const postCaseUser = async (body: any) => {
   try {
     const response = await axios.post(`${API_ENDPOINT}/api/user/userName`, body);
@@ -208,21 +223,23 @@ export const postCaseUser = async (body: any) => {
   }
 };
 
-export const getCaseUser = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/user/getCaseUser`, {
-    params,
-  });
-}
+export const getCaseUserName = async (caseId: string) => {
+  return axios.get(`${API_ENDPOINT}/api/user/userName/${caseId}`);
+};
 
-export const getUserInfoAPI = async (token: any) => {
+export const updateStatusInCaseUser = async (recordId: any, newStatus: any) => {
   try {
-    const response = await axios.get(`${API_ENDPOINT}/api/user/infor`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+    const response = await getCaseUserName(recordId);
+    const currentCase = response.data;
+    currentCase.phan_quyen = newStatus;
+    await postCaseUser(currentCase);
   } catch (error) {
+    console.error("LỖI THÊM DỮ LIỆU:", error);
     throw error;
   }
+};
+
+export const getConfigUsers = async () => {
+  const configUsers = await axios.get(`${API_ENDPOINT}/api/configUser`);
+  return configUsers.data;
 };

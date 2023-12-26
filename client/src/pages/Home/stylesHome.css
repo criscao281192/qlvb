@@ -1,36 +1,36 @@
 * .warning-row {
-    background-color: rgb(252, 255, 48);
+  background-color: rgb(252, 255, 48);
 }
 
 .st-warning-row {
-    background-color: #83ffff;
+  background-color: #83ffff;
 }
 
 .st-warning-row-final {
-    background-color: #CCFFFF;
+  background-color: #ccffff;
 }
 
 .warning-row-error {
-    animation: blinker 2.5s linear infinite
+  animation: blinker 2.5s linear infinite;
 }
 
 @keyframes blinker {
-    50% {
-        opacity: 2;
-        background-color: #07643d;
-    }
+  50% {
+    opacity: 2;
+    background-color: #07643d;
+  }
 }
 
 .events {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .events .ant-badge-status {
-    width: 100%;
-    overflow: hidden;
-    font-size: 12px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

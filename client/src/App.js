@@ -20,7 +20,6 @@ import NewUserForm from "./pages/Cases/userName";
 
 import "./stylesApp.css";
 import moment from "moment";
-import {} from "react-router-dom";
 
 const AppContainer = styled.div`
   display: grid;
@@ -35,6 +34,10 @@ const HeaderContainer = styled.div`
 `;
 
 const MainContainer = styled.div`
+  padding: 20px;
+`;
+
+const MainContainerSignIn = styled.div`
   padding: 20px;
 `;
 
@@ -61,11 +64,9 @@ function App() {
   const [isHovered, setIsHovered] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [isTableVisible, setIsTableVisible] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
 
-  const handleLoginSuccess = (username) => {
+  const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     sessionStorage.setItem("isLoggedIn", "true");
   };
@@ -156,15 +157,15 @@ function App() {
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_ban_hanh
                                     ? moment(notification.ngay_ban_hanh).format(
-                                        "DD/MM/YYYY"
-                                      )
+                                      "DD/MM/YYYY"
+                                    )
                                     : "-"}
                                 </td>
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_tiep_nhan
                                     ? moment(
-                                        notification.ngay_tiep_nhan
-                                      ).format("DD/MM/YYYY")
+                                      notification.ngay_tiep_nhan
+                                    ).format("DD/MM/YYYY")
                                     : "-"}
                                 </td>
                               </tr>
@@ -216,12 +217,26 @@ function App() {
                 <Route path="/userName">
                   <NewUserForm />
                 </Route>
+                <Route path="/userName/edit/:id">
+                  <NewUserForm />
+                </Route>
               </Switch>
             </MainContainer>
           </>
         ) : (
           <>
-            <Login onLogin={handleLoginSuccess} />
+            <MainContainerSignIn>
+              <div className="user-signin">
+                <Switch>
+                  <Route path="/userName">
+                    <NewUserForm />
+                  </Route>
+                  <Route path="/">
+                    <Login onLogin={handleLoginSuccess} />
+                  </Route>
+                </Switch>
+              </div>
+            </MainContainerSignIn>
           </>
         )}
       </AppContainer>

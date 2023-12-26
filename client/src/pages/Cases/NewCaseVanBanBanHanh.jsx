@@ -9,12 +9,10 @@ import {
   message,
   Upload,
 } from "antd";
-import { UploadOutlined, AudioTwoTone } from "@ant-design/icons";
+import { UploadOutlined, AudioTwoTone } from "@ant-design/icons"; 
 import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCaseUser } from "../../api/index";
-
-import { getCase, getConfigs, lay_so_van_ban_di, postCase } from "../../api";
+import { getCase, getConfigs, lay_so_van_ban_di, postCase, getCaseUser } from "../../api";
 
 const NewCaseVanBanBanHanh = () => {
   const [form] = Form.useForm();
@@ -70,7 +68,7 @@ const NewCaseVanBanBanHanh = () => {
       console.log(decodedToken);
       getCaseUser(decodedToken.userId)
         .then((response) => {
-          console.log("User from API:", response);
+          console.log("NGƯỜI DÙNG:", response);
           const matchingUser = response.data.result.find(
             (user) => user.id === decodedToken.userId
           );
@@ -81,11 +79,11 @@ const NewCaseVanBanBanHanh = () => {
               noi_nhan: matchingUser.fullname,
             });
           } else {
-            console.error("No user data found in the response.");
+            console.error("KHÔNG TÌM THẤY DỮ LIỆU NGƯỜI DÙNG.");
           }
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          console.error("LỖI TRUY VẤN DỮ LIỆU NGƯỜI DÙNG:", error);
         });
     }
   }, [form]);
@@ -152,7 +150,7 @@ const NewCaseVanBanBanHanh = () => {
       const recognition = new window.webkitSpeechRecognition();
       recognition.lang = "vi-VN";
       recognition.onresult = (event) => {
-        console.log("Speech Recognition Result:", event.results);
+        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
         const transcript = event.results[0][0].transcript;
         setSpokenText(transcript);
         if (transcript) {
@@ -164,7 +162,7 @@ const NewCaseVanBanBanHanh = () => {
       };
       recognition.start();
     } else {
-      console.error("Trình duyệt không hỗ trợ nhận dạng giọng nói.");
+      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
     }
   };
 
@@ -373,7 +371,7 @@ const NewCaseVanBanBanHanh = () => {
     },
     {
       name: "noi_nhan",
-      label: "XÂY DỰNG VĂN BẢN",
+      label: "SOẠN THẢO VĂN BẢN",
       render: () => {
         return (
           <Input

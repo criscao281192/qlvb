@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message, TreeSelect } from "antd";
-import { postCaseUser } from "../../api";
-import { useHistory } from "react-router-dom";
+import { checkUser, postCaseUser } from "../../api";
+import { useHistory, Redirect } from "react-router-dom";
+import "./styles.css";
 
 const NewUserForm = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const [redirectHome, setRedirectHome] = useState(false);
   const onFinish = async (values) => {
     try {
       setLoading(true);
       await postCaseUser(values);
-      message.success("Tạo tài khoản thành công!");
+      message.success("ĐÃ GỬI YÊU CẦU TẠO TÀI KHOẢN!");
       form.resetFields();
       history.push("/indexUserName");
     } catch (error) {
-      console.error("Lỗi khi tạo tài khoản:", error);
+      console.error("LỖI KHI TẠO TÀI KHOẢN:", error);
       message.error(
-        error.response?.data?.message || "Đã xảy ra lỗi khi tạo tài khoản."
+        error.response?.data?.message || "ĐÃ XẢY RA LỖI KHI TẠO TÀI KHOẢN."
       );
     } finally {
       setLoading(false);
@@ -28,131 +30,179 @@ const NewUserForm = () => {
     console.log("Failed:", errorInfo);
   };
 
-  return (
-    <Form
-      form={form}
-      name="newUserForm"
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      labelCol={{
-        span: 6,
-      }}
-      wrapperCol={{
-        span: 12,
-      }}
-    >
-      <Form.Item
-        name="username"
-        label="TÊN ĐĂNG NHẬP"
-        rules={[
-          {
-            required: true,
-            message: "HÃY TẠO TÀI KHOẢN!",
-          },
-        ]}
-        style={{ marginTop: 10 }}
-      >
-        <Input />
-      </Form.Item>
+  if (redirectHome) {
+    return <Redirect to="/" />;
+  }
 
-      <Form.Item
-        name="password"
-        label="MẬT KHẨU"
-        rules={[
-          {
-            required: true,
-            message: "THIẾU MẬT KHẨU!",
+  const userControls = [
+    {
+      name: "id",
+      render: () => {
+        return <Input style={{ display: "none" }} />;
+      },
+    },
+    {
+      name: "username",
+      label: "TÊN ĐĂNG NHẬP",
+      render: () => {
+        return <Input placeholder=" " />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+        ({ getFieldValue }) => ({
+          async validator(_, value) {
+            const result = await checkUser({
+              username_id: value,
+              id: getFieldValue("id"),
+            });
+            if (result.data.result) {
+              return Promise.reject(new Error("TÀI KHOẢN ĐÃ ĐĂNG KÝ RỒI!"));
+            }
+            return Promise.resolve();
           },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+        }),
+      ],
+    },
+    {
+      name: "password",
+      label: "MẬT KHẨU",
+      render: () => {
+        return <Input.Password />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "fullname",
+      label: "HỌ VÀ TÊN",
+      render: () => {
+        return <Input placeholder="Nguyễn Văn A" />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "don_vi",
+      label: "ĐƠN VỊ CÔNG TÁC",
+      render: () => {
+        return (
+          <TreeSelect
+            style={{ width: "100%" }}
+            treeData={[
+              {
+                title: "Đội Tham mưu",
+                value: "1",
+              },
+              {
+                title: "Đội Khám nghiệm hiện trường",
+                value: "2",
+              },
+              {
+                title: "Đội Giám định KTHS truyền thống và tài liệu",
+                value: "3",
+              },
+              {
+                title: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
+                value: "4",
+              },
+              {
+                title: "Đội Kỹ thuật phòng, chống tội phạm",
+                value: "5",
+              },
+            ]}
+          />
+        );
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
 
-      <Form.Item
-        name="fullname"
-        label="HỌ VÀ TÊN"
-        rules={[
-          {
-            required: true,
-            message: "THIẾU HỌ VÀ TÊN!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="don_vi"
-        label="ĐƠN VỊ CÔNG TÁC"
-        rules={[
-          {
-            required: true,
-            message: "THIẾU ĐƠN VỊ CÔNG TÁC!",
-          },
-        ]}
-      >
-        <TreeSelect
-          style={{ width: "100%" }}
-          treeData={[
-            {
-              title: "Đội Tham mưu",
-              value: "1",
-            },
-            {
-              title: "Đội Khám nghiệm hiện trường",
-              value: "2",
-            },
-            {
-              title: "Đội Giám định KTHS truyền thống và tài liệu",
-              value: "3",
-            },
-            {
-              title: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
-              value: "4",
-            },
-            {
-              title: "Đội Kỹ thuật phòng, chống tội phạm",
-              value: "5",
-            },
-          ]}
-        />
-      </Form.Item>
-
-      <Form.Item
-        name="phan_quyen"
-        label="CẤP QUYỀN"
-        rules={[]}
-      >
-        <TreeSelect
-          style={{ width: "100%" }}
-          treeData={[
-            {
-              title: "ADMIN",
-              value: "1",
-            },
-            {
-              title: "USER",
-              value: "2",
-            },
-          ]}
-        />
-      </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          offset: 6,
-          span: 12,
-        }}
-      >
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={loading}
-          disabled={loading}
+  ];
+  const getFields = () => {
+    return userControls.map((control, i) => {
+      return (
+        <Form.Item
+          name={control.name}
+          label={control.label}
+          rules={control.rules}
+          validateTrigger="onBlur"
         >
-          TẠO TÀI KHOẢN MỚI
-        </Button>
-      </Form.Item>
-    </Form>
+          {control.render()}
+        </Form.Item>
+      );
+    });
+  };
+
+  return (
+    <div >
+      <div style={{
+        textAlign: "center",
+        background: "url('./LOGOKTHS.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "90vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#006d75", margin: "0" }}>
+          ĐĂNG KÝ TÀI KHOẢN
+        </div>
+
+        <Form
+          form={form}
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          labelCol={{
+            span: 24,
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
+          style={{ maxWidth: "500px", margin: "0 auto" }}
+        >
+          {getFields()}
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={loading}
+            style={{ marginRight: 60 }}
+          >
+            TẠO TÀI KHOẢN MỚI
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => setRedirectHome(true)}
+            loading={loading}
+            disabled={loading}
+            style={{ margin: 0 }}
+            class="button-userName"
+          >
+            TRANG CHỦ
+          </Button>
+        </Form>
+      </div>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { countCasesVanBanDen } from "../../api";
-import './ThongKeVanBanDen.css';
+import "./ThongKeVanBanDen.css";
 
 const ThongKeVanBanDen = () => {
   const [caseVanBanDens, setCaseVanBanDens] = useState([]);
@@ -42,7 +42,9 @@ const ThongKeVanBanDen = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: "32px", fontWeight: "bold", color: '#237804' }}>THỐNG KÊ VĂN BẢN ĐẾN</div>
+      <div style={{ fontSize: "32px", fontWeight: "bold", color: "#237804" }}>
+        THỐNG KÊ VĂN BẢN ĐẾN
+      </div>
       <br />
       {hasData ? (
         <>
@@ -52,11 +54,23 @@ const ThongKeVanBanDen = () => {
             pagination={false}
             className="custom-table"
           />
-          <Button type="primary" onClick={handleMoreInfo}>CHI TIẾT</Button>
+          <Button type="primary" onClick={handleMoreInfo}>
+            CHI TIẾT
+          </Button>
         </>
       ) : (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#00474f" }}>KHÔNG CÓ DỮ LIỆU</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{ fontSize: "32px", fontWeight: "bold", color: "#00474f" }}
+          >
+            KHÔNG CÓ DỮ LIỆU
+          </div>
         </div>
       )}
     </div>

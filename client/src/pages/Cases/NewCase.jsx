@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Select, DatePicker, Button, Radio, TreeSelect, Upload, message } from "antd";
-import { MinusSquareTwoTone, PlusSquareTwoTone, AudioTwoTone, UploadOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Button,
+  Radio,
+  TreeSelect,
+  Upload,
+  message,
+} from "antd";
+import {
+  MinusSquareTwoTone,
+  PlusSquareTwoTone,
+  AudioTwoTone,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import "./styles.css";
@@ -13,7 +28,7 @@ const NewCase = () => {
   let { id } = useParams();
 
   const [selectedTendonvi, setSelectedTendonvi] = useState([]);
-  const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
+  const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
   const [spokenText, setSpokenText] = useState("");
   const [trichYeu, setTrichYeu] = useState("");
   const [soVanBan, setSoVanBan] = useState("");
@@ -29,15 +44,21 @@ const NewCase = () => {
     }
 
     if (Array.isArray(values.ten_don_vi)) {
-      values.ten_don_vi = values.ten_don_vi.map((item) => item.value).join(", ");
+      values.ten_don_vi = values.ten_don_vi
+        .map((item) => item.value)
+        .join(", ");
     }
 
     if (values.ngay_ban_hanh) {
-      values.ngay_ban_hanh = moment(values.ngay_ban_hanh).format("YYYY-MM-DDT13:00:00.000Z");
+      values.ngay_ban_hanh = moment(values.ngay_ban_hanh).format(
+        "YYYY-MM-DDT13:00:00.000Z"
+      );
     }
 
     if (values.ngay_tiep_nhan) {
-      values.ngay_tiep_nhan = moment(values.ngay_tiep_nhan).format("YYYY-MM-DDT13:00:00.000Z");
+      values.ngay_tiep_nhan = moment(values.ngay_tiep_nhan).format(
+        "YYYY-MM-DDT13:00:00.000Z"
+      );
     }
 
     values.isChangedFile = isChangedFile;
@@ -100,7 +121,7 @@ const NewCase = () => {
       const recognition = new window.webkitSpeechRecognition();
       recognition.lang = "vi-VN";
       recognition.onresult = (event) => {
-        console.log("Speech Recognition Result:", event.results);
+        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
         const transcript = event.results[0][0].transcript;
         setSpokenText(transcript);
         if (transcript) {
@@ -113,7 +134,7 @@ const NewCase = () => {
       };
       recognition.start();
     } else {
-      console.error("Trình duyệt không hỗ trợ nhận dạng giọng nói.");
+      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
     }
   };
 
@@ -122,7 +143,7 @@ const NewCase = () => {
       const recognition = new window.webkitSpeechRecognition();
       recognition.lang = "vi-VN";
       recognition.onresult = (event) => {
-        console.log("Speech Recognition Result:", event.results);
+        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
         const transcript = event.results[0][0].transcript;
         setSpokenText(transcript);
         if (transcript) {
@@ -135,7 +156,7 @@ const NewCase = () => {
       };
       recognition.start();
     } else {
-      console.error("Trình duyệt không hỗ trợ nhận dạng giọng nói.");
+      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
     }
   };
 
@@ -152,15 +173,15 @@ const NewCase = () => {
     },
     fileList,
     onChange(info) {
-      console.log(info)
-      if (info.file.status !== 'uploading') {
+      console.log(info);
+      if (info.file.status !== "uploading") {
         console.log(info.file, info.fileList);
-        setFileList(info.fileList)
+        setFileList(info.fileList);
         setIsChangeFile(true);
       }
-      if (info.file.status === 'done') {
+      if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
+      } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
@@ -171,16 +192,16 @@ const NewCase = () => {
       van_ban_den_id: van_ban_den_id,
     });
     if (result.data.result) {
-      console.log(result.data.result)
-    };
+      console.log(result.data.result);
+    }
 
     let tenviettatvanbanden = "";
     switch (van_ban_den_id) {
       case 1:
-        tenviettatvanbanden = "/TLT"
+        tenviettatvanbanden = "/TLT";
         break;
       case 2:
-        tenviettatvanbanden = "/TLM"
+        tenviettatvanbanden = "/TLM";
         break;
       default:
         break;
@@ -189,10 +210,10 @@ const NewCase = () => {
     let domatvanban = "";
     switch (van_ban_den_id) {
       case 1:
-        domatvanban = "THƯỜNG"
+        domatvanban = "THƯỜNG";
         break;
       case 2:
-        domatvanban = "MẬT"
+        domatvanban = "MẬT";
         break;
       default:
         break;
@@ -201,10 +222,10 @@ const NewCase = () => {
     let dokhanvanban = "";
     switch (van_ban_den_id) {
       case 1:
-        dokhanvanban = "THƯỜNG"
+        dokhanvanban = "THƯỜNG";
         break;
       case 2:
-        dokhanvanban = "THƯỜNG"
+        dokhanvanban = "THƯỜNG";
         break;
       default:
         break;
@@ -213,10 +234,10 @@ const NewCase = () => {
     let trangthaivanban = "";
     switch (van_ban_den_id) {
       case 1:
-        trangthaivanban = "ĐANG XỬ LÝ"
+        trangthaivanban = "ĐANG XỬ LÝ";
         break;
       case 2:
-        trangthaivanban = "ĐANG XỬ LÝ"
+        trangthaivanban = "ĐANG XỬ LÝ";
         break;
       default:
         break;
@@ -227,7 +248,7 @@ const NewCase = () => {
       do_mat: `${domatvanban}`,
       do_khan: `${dokhanvanban}`,
       trang_thai_van_ban: `${trangthaivanban}`,
-    })
+    });
   };
 
   const searchControls = [
@@ -323,7 +344,9 @@ const NewCase = () => {
                 onClick={() => setShowCustomInput(true)}
                 style={{ cursor: "pointer" }}
               >
-                <i className="icon"><PlusSquareTwoTone /></i>
+                <i className="icon">
+                  <PlusSquareTwoTone />
+                </i>
               </span>
             )}
             {showCustomInput && (
@@ -331,7 +354,9 @@ const NewCase = () => {
                 onClick={() => setShowCustomInput(false)}
                 style={{ cursor: "pointer" }}
               >
-                <i className="icon"><MinusSquareTwoTone /></i>
+                <i className="icon">
+                  <MinusSquareTwoTone />
+                </i>
               </span>
             )}
           </div>
@@ -416,7 +441,8 @@ const NewCase = () => {
       render: () => {
         return (
           <div className="input-with-icon">
-            <TextArea rows={3}
+            <TextArea
+              rows={3}
               value={trichYeu}
               onChange={(e) => {
                 setTrichYeu(e.target.value);
@@ -443,7 +469,7 @@ const NewCase = () => {
       label: "TRẠNG THÁI",
       render: () => {
         return (
-          <Radio.Group buttonStyle="solid" >
+          <Radio.Group buttonStyle="solid">
             <Radio.Button value="LƯU">LƯU</Radio.Button>
             <Radio.Button value="ĐANG XỬ LÝ">ĐANG XỬ LÝ</Radio.Button>
             <Radio.Button value="XONG">XONG</Radio.Button>
@@ -468,7 +494,7 @@ const NewCase = () => {
         );
       },
       rules: [],
-    }
+    },
   ];
 
   const getFields = () => {
@@ -491,7 +517,6 @@ const NewCase = () => {
   };
 
   return (
-
     <Form
       form={form}
       name="basic"
@@ -523,7 +548,7 @@ const NewCase = () => {
           RESET
         </Button>
       </Form.Item>
-    </Form >
+    </Form>
   );
 };
 

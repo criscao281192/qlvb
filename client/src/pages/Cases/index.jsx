@@ -9,7 +9,7 @@ import {
   SyncOutlined,
   CloudDownloadOutlined,
   TeamOutlined,
-  FileDoneOutlined
+  FileDoneOutlined,
 } from "@ant-design/icons";
 import { searchCases, bangVanBanDen } from "../../api";
 import moment from "moment";
@@ -17,7 +17,6 @@ import { useHistory } from "react-router-dom";
 import "./styles.css";
 
 const Cases = () => {
-
   const [cases, setCases] = useState([]);
   const [searchCondition, setSearchCondition] = useState();
   const [selectedDateRange, setSelectedDateRange] = useState(null);
@@ -26,8 +25,6 @@ const Cases = () => {
   const [noi_nhan, setNoiNhan] = useState("");
   const [noi_dung_van_ban, setTrichYeu] = useState("");
   const [trang_thai_van_ban, setTrangThai] = useState("");
-  const [sortedInfo] = useState({});
-
 
   let history = useHistory();
 
@@ -51,6 +48,7 @@ const Cases = () => {
       },
       align: "center",
       width: 15,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "ĐƠN VỊ",
@@ -118,12 +116,21 @@ const Cases = () => {
       width: 100,
       render: (text, record) => (
         <>
-          {text === "ĐANG XỬ LÝ" && <SyncOutlined spin className="icon-wrapper-load" />}
+          {text === "ĐANG XỬ LÝ" && (
+            <SyncOutlined spin className="icon-wrapper-load" />
+          )}
           {text === "LƯU" && <SaveTwoTone className="icon-wrapper" />}
-          {text === "XONG" && <CheckCircleTwoTone className="icon-wrapper" twoToneColor="#52c41a" />}
+          {text === "XONG" && (
+            <CheckCircleTwoTone
+              className="icon-wrapper"
+              twoToneColor="#52c41a"
+            />
+          )}
           <EditOutlined
             className="icon-wrapper-2"
-            onClick={() => history.push(`/quan-ly-van-ban/editmember/${record.id}`)}
+            onClick={() =>
+              history.push(`/quan-ly-van-ban/editmember/${record.id}`)
+            }
           />
         </>
       ),
@@ -140,7 +147,7 @@ const Cases = () => {
           if (caseData && caseData.file_van_ban) {
             const pdfData = caseData.file_van_ban.data;
             const blobData = new Blob([new Uint8Array(pdfData).buffer], {
-              type: 'application/pdf',
+              type: "application/pdf",
             });
             const pdfURL = URL.createObjectURL(blobData);
             openPDFModal(pdfURL);
@@ -155,9 +162,7 @@ const Cases = () => {
             />
           );
         } else {
-          return (
-            <></>
-          );
+          return <></>;
         }
       },
     },
@@ -177,23 +182,123 @@ const Cases = () => {
           ) : (
             <TeamOutlined
               className="icon-wrapper-1"
-              onClick={() => history.push(`/quan-ly-van-ban/edithandle/${record.id}`)}
+              onClick={() =>
+                history.push(`/quan-ly-van-ban/edithandle/${record.id}`)
+              }
             />
           )}
           <EditOutlined
             className="icon-wrapper-2"
-            onClick={() => history.push(`/quan-ly-van-ban/edithandle/${record.id}`)}
+            onClick={() =>
+              history.push(`/quan-ly-van-ban/edithandle/${record.id}`)
+            }
           />
         </>
       ),
     },
   ];
 
+  const DownloadColumns = [
+    {
+      title: "VĂN BẢN ĐẾN",
+      dataIndex: "van_ban_den",
+      key: "van_ban_den",
+      render: (data) => data && data.name,
+    },
+    {
+      title: "ĐƠN VỊ",
+      dataIndex: "ten_don_vi",
+      key: "ten_don_vi",
+    },
+    {
+      title: "SỐ ĐẾN",
+      dataIndex: "van_ban_den_so",
+      key: "van_ban_den_so",
+    },
+    {
+      title: "SỐ VĂN BẢN",
+      dataIndex: "so_van_ban",
+      key: "so_van_ban",
+    },
+    {
+      title: "NGÀY KÝ",
+      dataIndex: "ngay_ban_hanh",
+      key: "ngay_ban_hanh",
+      render: (data) => data && moment(data).format("DD/MM/YYYY"),
+    },
+    {
+      title: "NGÀY NHẬN",
+      key: "ngay_tiep_nhan",
+      dataIndex: "ngay_tiep_nhan",
+      render: (data) => data && moment(data).format("DD/MM/YYYY"),
+    },
+    {
+      title: "TRÍCH YẾU",
+      key: "noi_dung_van_ban",
+      dataIndex: "noi_dung_van_ban",
+    },
+    {
+      title: "NƠI NHẬN",
+      key: "noi_nhan",
+      dataIndex: "noi_nhan",
+    },
+    {
+      title: "THỜI HẠN",
+      key: "ngay_het_han",
+      dataIndex: "ngay_het_han",
+      render: (data) => data && moment(data).format("DD/MM/YYYY"),
+    },
+    {
+      title: "TRẠNG THÁI",
+      key: "trang_thai_van_ban",
+      dataIndex: "trang_thai_van_ban",
+    },
+    {
+      title: "ĐỀ XUẤT",
+      key: "de_xuat",
+      dataIndex: "de_xuat",
+    },
+  ];
+
+  const onDownloadVanBanDen = () => {
+    const csvHeader =
+      DownloadColumns.map(({ title }) => title).join("###") + "\r\n";
+
+    const csvBody = cases.reduce((body, c) => {
+      c.van_ban_den = c.van_ban_den.name;
+      c.ngay_ban_hanh = moment(c.ngay_ban_hanh).format("DD/MM/YYYY");
+      c.ngay_tiep_nhan = moment(c.ngay_tiep_nhan).format("DD/MM/YYYY");
+      c.ngay_het_han = moment(c.ngay_het_han).format("DD/MM/YYYY");
+      return (body +=
+        DownloadColumns.map(({ key }) => {
+          return c[key] === 0 ? c[key] : c[key] ? `${c[key]}` : "-";
+        }).join("###") + "\r\n");
+    }, "");
+
+    const csvContent = csvHeader + csvBody;
+
+    console.log(csvContent);
+
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "danh_sach_van_ban.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const onPrint = (record) => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow.printContentAdded) {
       const currentDate = new Date();
-      const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+      const formattedDate = `${currentDate.getDate()}/${
+        currentDate.getMonth() + 1
+      }/${currentDate.getFullYear()}`;
       printWindow.document.open();
       printWindow.document.write(`
       <html>
@@ -289,17 +394,31 @@ const Cases = () => {
             <table class="border-white">
               <tbody>
                 <tr>
-                  <td class="left-section">SỐ ĐẾN: <strong>${record.van_ban_den_so || "-"}</strong></td>
-                  <td class="middle-section">ĐƠN VỊ: <strong>${record.ten_don_vi || "-"}</strong></td>
-                  <td class="right-section">VĂN BẢN SỐ: <strong>${record.so_van_ban || "-"}</strong></td>
+                  <td class="left-section">SỐ ĐẾN: <strong>${
+                    record.van_ban_den_so || "-"
+                  }</strong></td>
+                  <td class="middle-section">ĐƠN VỊ: <strong>${
+                    record.ten_don_vi || "-"
+                  }</strong></td>
+                  <td class="right-section">VĂN BẢN SỐ: <strong>${
+                    record.so_van_ban || "-"
+                  }</strong></td>
                 </tr>
               </tbody>
             </table>
             <table>
               <tbody>
                 <tr>
-                  <td class="left-section">NGÀY KÝ: <strong>${record.ngay_ban_hanh ? moment(record.ngay_ban_hanh).format("DD/MM/YYYY") : "-"}</strong></td>
-                  <td class="middle-section no-border">NGÀY NHẬN: <strong>${record.ngay_tiep_nhan ? moment(record.ngay_tiep_nhan).format("DD/MM/YYYY") : "-"}</strong></td>
+                  <td class="left-section">NGÀY KÝ: <strong>${
+                    record.ngay_ban_hanh
+                      ? moment(record.ngay_ban_hanh).format("DD/MM/YYYY")
+                      : "-"
+                  }</strong></td>
+                  <td class="middle-section no-border">NGÀY NHẬN: <strong>${
+                    record.ngay_tiep_nhan
+                      ? moment(record.ngay_tiep_nhan).format("DD/MM/YYYY")
+                      : "-"
+                  }</strong></td>
                   <td class="right-section">NGÀY IN PHIẾU: <strong>${formattedDate}</strong></td>
                 </tr>
               </tbody>
@@ -332,14 +451,24 @@ const Cases = () => {
                 <div class="proposal-section">
                   <strong>Ý KIẾN ĐỀ XUẤT CỦA ĐỘI THAM MƯU</strong>
                   <div class="summary-column">
-                    <div class="summary-content">Tóm tắt: <strong>${record.noi_dung_van_ban || "-"}.</strong></div>
+                    <div class="summary-content">Tóm tắt: <strong>${
+                      record.noi_dung_van_ban || "-"
+                    }.</strong></div>
                   </div>
                   <div class="summary-column">
-                    <div class="summary-content">Đề xuất: <em>${(record.de_xuat || "-").replace(/;/g, '<br>')}.</em></div>
+                    <div class="summary-content">Đề xuất: <em>${(
+                      record.de_xuat || "-"
+                    ).replace(/;/g, "<br>")}.</em></div>
                   </div>
                   <div class="summary-column">
                   <div class="summary-content">
-                    ${record.ngay_het_han ? `Hạn B/C: <em>${moment(record.ngay_het_han).format("DD/MM/YYYY")}</em>` : "Lưu"}
+                    ${
+                      record.ngay_het_han
+                        ? `Hạn B/C: <em>${moment(record.ngay_het_han).format(
+                            "DD/MM/YYYY"
+                          )}</em>`
+                        : "Lưu"
+                    }
                   </div>
                   </div>
                   <div class="proposal-section">
@@ -417,7 +546,8 @@ const Cases = () => {
     setItemsPerPage(pagination.pageSize);
   };
 
-  const [van_ban_den_content, setVanBanDenContent] = useState("CÔNG VĂN CÁC LOẠI");
+  const [van_ban_den_content, setVanBanDenContent] =
+    useState("CÔNG VĂN CÁC LOẠI");
   const vanBanDenContentMapping = {
     1: "TÀI LIỆU 'THƯỜNG'",
     2: "TÀI LIỆU 'MẬT'",
@@ -425,8 +555,16 @@ const Cases = () => {
   };
 
   const onSearch = (searchParams) => {
-    const { van_ban_den_id, ten_don_vi, noi_nhan, noi_dung_van_ban, trang_thai_van_ban } = searchParams;
-    setVanBanDenContent(vanBanDenContentMapping[van_ban_den_id] || "CÔNG VĂN CÁC LOẠI");
+    const {
+      van_ban_den_id,
+      ten_don_vi,
+      noi_nhan,
+      noi_dung_van_ban,
+      trang_thai_van_ban,
+    } = searchParams;
+    setVanBanDenContent(
+      vanBanDenContentMapping[van_ban_den_id] || "CÔNG VĂN CÁC LOẠI"
+    );
     setSearchCondition(searchParams);
     setSelectedDateRange(searchParams.ngay_tiep_nhan);
     setSelectedDateOut(searchParams.ngay_het_han);
@@ -434,7 +572,7 @@ const Cases = () => {
     setNoiNhan(noi_nhan);
     setTrichYeu(noi_dung_van_ban);
     setTrangThai(trang_thai_van_ban);
-  }
+  };
 
   const currentDate = moment().format("DD/MM/YYYY");
   const currentMonthStartDate = moment().startOf("month").format("DD/MM/YYYY");
@@ -442,35 +580,76 @@ const Cases = () => {
   let displayContent = "";
 
   if (selectedDateOut) {
-    const dateText = `TỪ NGÀY ${selectedDateOut && selectedDateOut[0] ? selectedDateOut[0].format("DD/MM/YYYY") : currentMonthStartDate} 
-  ĐẾN NGÀY ${selectedDateOut && selectedDateOut[1] ? selectedDateOut[1].format("DD/MM/YYYY") : currentDate}`;
+    const dateText = `TỪ NGÀY ${
+      selectedDateOut && selectedDateOut[0]
+        ? selectedDateOut[0].format("DD/MM/YYYY")
+        : currentMonthStartDate
+    } 
+  ĐẾN NGÀY ${
+    selectedDateOut && selectedDateOut[1]
+      ? selectedDateOut[1].format("DD/MM/YYYY")
+      : currentDate
+  }`;
 
     if (totalItems === 0) {
       displayContent = `PC09-HN KHÔNG CÒN ${van_ban_den_content} 
-    ${noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ''} ĐẾN HẠN BÁO CÁO TRONG KHOẢNG THỜI GIAN NÀY!`;
+    ${
+      noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ""
+    } ĐẾN HẠN BÁO CÁO TRONG KHOẢNG THỜI GIAN NÀY!`;
     } else {
-      displayContent = `PC09-HN CÓ ${totalItems} ${van_ban_den_content} ${noi_dung_van_ban ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"` : ""}
-    ${noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ""} ĐẾN HẠN BÁO CÁO
-    ${trang_thai_van_ban ? `CÓ TRẠNG THÁI "${trang_thai_van_ban.toUpperCase()}"` : ""}`;
+      displayContent = `PC09-HN CÓ ${totalItems} ${van_ban_den_content} ${
+        noi_dung_van_ban
+          ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
+          : ""
+      }
+    ${
+      noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ""
+    } ĐẾN HẠN BÁO CÁO
+    ${
+      trang_thai_van_ban
+        ? `CÓ TRẠNG THÁI "${trang_thai_van_ban.toUpperCase()}"`
+        : ""
+    }`;
       displayContent = `${dateText} ${displayContent}`;
     }
   } else {
-    const dateText = `TỪ NGÀY ${selectedDateRange && selectedDateRange[0] ? selectedDateRange[0].format("DD/MM/YYYY") : currentMonthStartDate} 
-  ĐẾN NGÀY ${selectedDateRange && selectedDateRange[1] ? selectedDateRange[1].format("DD/MM/YYYY") : currentDate}`;
+    const dateText = `TỪ NGÀY ${
+      selectedDateRange && selectedDateRange[0]
+        ? selectedDateRange[0].format("DD/MM/YYYY")
+        : currentMonthStartDate
+    } 
+  ĐẾN NGÀY ${
+    selectedDateRange && selectedDateRange[1]
+      ? selectedDateRange[1].format("DD/MM/YYYY")
+      : currentDate
+  }`;
 
     if (totalItems === 0) {
-      displayContent = "KHÔNG CÒN VĂN BẢN NÀO ĐƯỢC TIẾP NHẬN TRONG KHOẢNG THỜI GIAN NÀY!";
+      displayContent =
+        "KHÔNG CÒN VĂN BẢN NÀO ĐƯỢC TIẾP NHẬN TRONG KHOẢNG THỜI GIAN NÀY!";
     } else {
-      displayContent = `PC09-HN ĐÃ TIẾP NHẬN ${totalItems} ${van_ban_den_content} ${ten_don_vi ? `TỪ ${ten_don_vi.toUpperCase()}` : ""}
-    ${noi_dung_van_ban ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"` : ""}
-    ${noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} XỬ LÝ THEO PHIẾU GIAO VIỆC!` : ""}`;
+      displayContent = `PC09-HN ĐÃ TIẾP NHẬN ${totalItems} ${van_ban_den_content} ${
+        ten_don_vi ? `TỪ ${ten_don_vi.toUpperCase()}` : ""
+      }
+    ${
+      noi_dung_van_ban
+        ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
+        : ""
+    }
+    ${
+      noi_nhan
+        ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} XỬ LÝ THEO PHIẾU GIAO VIỆC!`
+        : ""
+    }`;
       displayContent = `${dateText} ${displayContent}`;
     }
   }
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: "32px", fontWeight: "bold", color: '#237804' }}>QUẢN LÝ VĂN BẢN ĐẾN</div>
+      <div style={{ fontSize: "32px", fontWeight: "bold", color: "#237804" }}>
+        QUẢN LÝ VĂN BẢN ĐẾN
+      </div>
       <br />
       <SearchCase
         onSearch={onSearch}
@@ -478,13 +657,14 @@ const Cases = () => {
         ten_don_vi={ten_don_vi}
         noi_nhan={noi_nhan}
         noi_dung_van_ban={noi_dung_van_ban}
+        onDownloadVanBanDen={onDownloadVanBanDen}
       />
       <div>
         <p style={{ display: "flex", alignItems: "center" }}>
-          <CloudDownloadOutlined style={{ fontSize: "28px", marginRight: "8px" }} />
-          <span style={{ fontWeight: "bold" }}>
-            {displayContent}
-          </span>
+          <CloudDownloadOutlined
+            style={{ fontSize: "28px", marginRight: "8px" }}
+          />
+          <span style={{ fontWeight: "bold" }}>{displayContent}</span>
         </p>
       </div>
       <Table
@@ -501,7 +681,11 @@ const Cases = () => {
           showSizeChanger: false,
           showQuickJumper: false,
         }}
-        rowClassName={(record) => (record.noi_nhan === null || record.noi_nhan === undefined) ? 'blinking-row' : ''}
+        rowClassName={(record) =>
+          record.noi_nhan === null || record.noi_nhan === undefined
+            ? "blinking-row"
+            : ""
+        }
       />
       <Modal
         visible={isPdfModalVisible}
@@ -509,7 +693,7 @@ const Cases = () => {
         footer={null}
         width={1800}
         style={{ top: 0, right: 0, left: 0 }}
-        bodyStyle={{ height: '100vh', overflow: 'auto' }}
+        bodyStyle={{ height: "100vh", overflow: "auto" }}
       >
         <embed src={pdfURL} type="application/pdf" width="100%" height="100%" />
       </Modal>

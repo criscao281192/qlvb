@@ -7,7 +7,6 @@ const router = express.Router();
  * HÀM TÌM KIẾM
  */
 router.get("/", async (req: Request, res: Response) => {
-
   const loaitailieus = await LoaiTaiLieu.findAll();
 
   const vanbandens = await VanBanDen.findAll();
@@ -16,7 +15,6 @@ router.get("/", async (req: Request, res: Response) => {
     loai_tai_lieu: loaitailieus,
     van_ban_den: vanbandens,
   });
-
 });
 
 export { router as configRouter };

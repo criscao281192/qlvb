@@ -5,7 +5,7 @@ import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
 import { NOI_NHAN } from "../shared/constants/index";
 
-const SearchCase = ({ onSearch, cases }) => {
+const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
   const [form] = Form.useForm();
   let history = useHistory();
 
@@ -330,6 +330,13 @@ const SearchCase = ({ onSearch, cases }) => {
               onClick={onPrint}
             >
               SỔ GIAO NHẬN CÔNG VĂN
+            </Button>
+            <Button
+              onClick={onDownloadVanBanDen}
+              type="primary"
+              style={{ marginBottom: 16, marginLeft: 8 }}
+            >
+              TẢI DANH SÁCH
             </Button>
           </Col>
           <Col span={12} style={{ textAlign: "right" }}>

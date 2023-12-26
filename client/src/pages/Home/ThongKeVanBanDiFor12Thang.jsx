@@ -56,8 +56,7 @@ const ThongKeVanBanDiFor12Thang = () => {
             <XAxis dataKey="month" />
             <YAxis />
             <Legend />
-            <Tooltip
-              contentStyle={{ fontWeight: "bold" }} />
+            <Tooltip contentStyle={{ fontWeight: "bold" }} />
             {renderAreas()}
           </AreaChart>
         </Col>

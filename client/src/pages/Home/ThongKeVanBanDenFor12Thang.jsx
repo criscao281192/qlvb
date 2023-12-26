@@ -7,7 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   Area,
-  Legend
+  Legend,
 } from "recharts";
 import { countCasesVanBanDenFor12 } from "../../api";
 
@@ -40,7 +40,6 @@ const ThongKeVanBanDenFor12Thang = () => {
     );
   };
 
-
   return (
     <div style={{ textAlign: "center" }}>
       <br />
@@ -57,8 +56,7 @@ const ThongKeVanBanDenFor12Thang = () => {
             <XAxis dataKey="month" />
             <YAxis />
             <Legend />
-            <Tooltip
-              contentStyle={{ fontWeight: "bold" }} />
+            <Tooltip contentStyle={{ fontWeight: "bold" }} />
             {renderAreas()}
           </AreaChart>
         </Col>

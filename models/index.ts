@@ -45,7 +45,7 @@ const TaiLieu = dbConfig.define("tai_lieu", {
   },
   file_van_ban: {
     type: DataTypes.BLOB,
-  }
+  },
 });
 
 const LoaiTaiLieu = dbConfig.define("loai_tai_lieu", {
@@ -74,4 +74,3 @@ TaiLieu.belongsTo(LoaiTaiLieu, { foreignKey: "loai_tai_lieu_id" });
 TaiLieu.belongsTo(VanBanDen, { foreignKey: "van_ban_den_id" });
 
 export { LoaiTaiLieu, VanBanDen, TaiLieu };
-

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Col } from "antd";
-import { getCaseUser } from "../../api";
-import { Link, useHistory } from "react-router-dom";
+import { getCaseUser, updateStatusInCaseUser } from "../../api";
+import { useHistory } from "react-router-dom";
 import "./styles.css";
 
 const CaseUserNames = () => {
@@ -10,16 +10,30 @@ const CaseUserNames = () => {
   const [error, setError] = useState(null);
   const history = useHistory();
 
+  const handleCaseUser = async (recordId) => {
+    try {
+      const updatedCases = cases.map((caseItem) =>
+        caseItem.id === recordId
+          ? { ...caseItem, phan_quyen: "2" }
+          : caseItem
+      );
+      setCases(updatedCases);
+      await updateStatusInCaseUser(recordId, "2");
+      history.go(0);
+    } catch (error) {
+      console.error("LỖI THÊM DỮ LIỆU:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const response = await getCaseUser();
         setCases(response.data.result);
       } catch (err) {
-        setError(err.message || "Đã xảy ra lỗi khi tải dữ liệu.");
+        setError(err.message || "LỖI TẢI DỮ LIỆU.");
         setCases([]);
       } finally {
         setLoading(false);
@@ -40,7 +54,7 @@ const CaseUserNames = () => {
         return index + 1;
       },
       align: "center",
-      width: 100,
+      width: 50,
     },
     {
       title: "TÀI KHOẢN",
@@ -62,16 +76,33 @@ const CaseUserNames = () => {
       key: "don_vi",
       align: "center",
       width: 200,
+      render: (text) => {
+        return text === "1" ? "Đội Tham mưu" :
+          text === "2" ? "Đội Khám nghiệm hiện trường" :
+            text === "3" ? "Đội Giám định KTHS truyền thống và tài liệu" :
+              text === "4" ? "Đội Giám định hoá, KTPL và pháp y, sinh vật" :
+                "Đội Kỹ thuật phòng, chống tội phạm";
+      },
     },
     {
-      title: "PHÂN QUYỀN",
+      title: "QUYỀN TRUY CẬP",
       dataIndex: "phan_quyen",
       key: "phan_quyen",
       align: "center",
       width: 200,
-      render: (text) => {
-        return text === "1" ? "Admin" : text === "2" ? "User" : "Unknown Role";
-      },
+      render: (text, record) => (
+        <>
+          {text === "1" ? (
+            "ADMIN"
+          ) : text === "2" ? (
+            "USER"
+          ) : (
+            <Button danger onClick={() => handleCaseUser(record.id)}>
+              XONG
+            </Button>
+          )}
+        </>
+      ),
     },
   ];
 
@@ -91,7 +122,6 @@ const CaseUserNames = () => {
           {error}
         </Modal>
       )}
-
       <Table
         rowKey={(record, index) => index.toString()}
         columns={CaseColumns}

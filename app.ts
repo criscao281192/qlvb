@@ -22,7 +22,7 @@ app.use(express.json());
 app.post("/api/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const bcrypt = require("bcrypt")
+    const bcrypt = require("bcrypt");
     const user: any = await UserLogin.findOne({
       where: { username: username },
     });

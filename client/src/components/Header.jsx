@@ -7,7 +7,6 @@ import {
   SendOutlined,
   ClockCircleOutlined,
   FolderOpenOutlined,
-  CommentOutlined,
   LogoutOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
@@ -118,27 +117,23 @@ const Header = ({ onLogout }) => {
       console.log(decodedToken);
       getCaseUser(decodedToken.userId)
         .then((response) => {
-          console.log("User from API:", response);
+          console.log("API USER:", response);
           const matchingUser = response.data.result.find(
-            (user) => user.id === decodedToken.userId,
+            (user) => user.id === decodedToken.userId
           );
-          console.log(matchingUser)
+          console.log(matchingUser);
           if (matchingUser) {
             setUserFullName(matchingUser.fullname);
             setShowLeverAccount(matchingUser.phan_quyen === "1");
           } else {
-            console.error("No user data found in the response.");
+            console.error("KHÔNG TÌM THẤY DỮ LIỆU NGƯỜI DÙNG.");
           }
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          console.error("LỖI TRUY VẤN DỮ LIỆU:", error);
         });
     }
   }, []);
-
-  useEffect(() => {
-    console.log("Value of userFullName:", userFullName);
-  }, [userFullName]);
 
   const handleLogout = () => {
     onLogout();
@@ -198,12 +193,12 @@ const Header = ({ onLogout }) => {
               </span>
             </Link>
           </MenuItem>
-          <MenuItem className="custom-menu-item">
+          {/* <MenuItem className="custom-menu-item">
             <Link to="/ChatCase">
               <CommentOutlined style={{ fontSize: "18px", color: "Red" }} />
               <span style={{ fontSize: "18px", color: "black" }}>NHẮN TIN</span>
             </Link>
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem className="custom-menu-item">
             <a
               href="http://192.168.1.28/vanban/"
