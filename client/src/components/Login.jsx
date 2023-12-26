@@ -120,19 +120,19 @@ const Login = ({ onLogin }) => {
         const userData = response.data;
         console.log("userData", userData);
 
-        const caseUserResponse = await getCaseUser();
+        // const caseUserResponse = await getCaseUser();
 
-        const userExists = caseUserResponse.data.result.some(
-          (user) => user.username === username && user.phan_quyen
-        );
+        // const userExists = caseUserResponse.data.result.some(
+        //   (user) => user.username === username && user.phan_quyen
+        // );
 
-        if (userExists) {
-          localStorage.setItem("accessToken", userData.token);
-          onLogin(username, userData);
-          window.location.href = "/";
-        } else {
-          message.error("BẠN CHƯA ĐƯỢC CẤP QUYỀN TRUY CẬP");
-        }
+        // if (userExists) {
+        localStorage.setItem("accessToken", userData.token);
+        onLogin(username, userData);
+        window.location.href = "/";
+        // } else {
+        //   message.error("BẠN CHƯA ĐƯỢC CẤP QUYỀN TRUY CẬP");
+        // }
       } else {
         message.error("ĐĂNG NHẬP KHÔNG THÀNH CÔNG!");
       }

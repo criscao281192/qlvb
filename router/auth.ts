@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { UserLogin } from "../models/user";
+import { SECRET_KEY } from "../utils/constants";
 const router = express.Router();
 
 /**
@@ -18,13 +19,14 @@ router.post("/whoami", async (req: Request, res: Response) => {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (passwordMatch) {
-        const secretKey = "caongoctuyen";
+        
         const token = jwt.sign(
           {
             userId: user.id,
             phan_quyen: user.phan_quyen,
+            fullname: user.fullname,
           },
-          secretKey,
+          SECRET_KEY,
           { expiresIn: "1h", algorithm: "HS256" }
         );
         console.log(token)

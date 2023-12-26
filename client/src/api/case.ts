@@ -1,66 +1,65 @@
-import axios from "axios";
-import { API_ENDPOINT } from "./constants";
+import { axiosInstance } from "./constants";
 
 export const getConfigs = async () => {
-  const configs = await axios.get(`${API_ENDPOINT}/api/configs`);
+  const configs = await axiosInstance.get(`/api/configs`);
   return configs.data;
 };
 
 export const searchCases = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases`, {
+  return axiosInstance.get(`/api/cases`, {
     params,
   });
 };
 
 export const getCase = async (caseId: string) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/${caseId}`);
+  return axiosInstance.get(`/api/cases/${caseId}`);
 };
 
 export const deleteCase = async (caseId: string) => {
-  return axios.delete(`${API_ENDPOINT}/api/cases/${caseId}`);
+  return axiosInstance.delete(`/api/cases/${caseId}`);
 };
 
 // QUẢN LÝ VĂN BẢN
 
 export const countCasesVanBanDi = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDi`, {
+  return axiosInstance.get(`/api/cases/countVanBanDi`, {
     params,
   });
 };
 
 
 export const countCasesVanBanDen = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDen`, {
+  return axiosInstance.get(`/api/cases/countVanBanDen`, {
     params,
   });
 };
 
 export const countCasesVanBanDenFor12 = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDenFor12Months`, {
+  return axiosInstance.get(`/api/cases/countVanBanDenFor12Months`, {
     params,
   });
 };
 
 export const countVanBanDenForComparison = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDenForComparison`, {
+  return axiosInstance.get(`/api/cases/countVanBanDenForComparison`, {
     params,
   });
 };
 
 export const countVanBanDiForComparison = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDiForComparison`, {
+  return axiosInstance.get(`/api/cases/countVanBanDiForComparison`, {
     params,
   });
 };
 
 export const countCasesVanBanDenDay = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDenForRecentDays`, {
+  return axiosInstance.get(`/api/cases/countVanBanDenForRecentDays`, {
     params,
   });
 };
 
 export const countCasesVanBanDiFor12 = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/countVanBanDiFor12Months`, {
+  return axiosInstance.get(`/api/cases/countVanBanDiFor12Months`, {
     params,
   });
 };
@@ -140,7 +139,7 @@ export const postCase = async (body: any) => {
 
 
   try {
-    const response = await axios.post(`${API_ENDPOINT}/api/cases`, formData, {
+    const response = await axiosInstance.post(`/api/cases`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -153,31 +152,31 @@ export const postCase = async (body: any) => {
 };
 
 export const lay_so_van_ban_den = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/laysoVanBanDen`, {
+  return axiosInstance.get(`/api/cases/laysoVanBanDen`, {
     params,
   });
 }
 
 export const lay_so_van_ban_di = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/laysoVanBanDi`, {
+  return axiosInstance.get(`/api/cases/laysoVanBanDi`, {
     params,
   });
 }
 
 export const bangVanBanDenHan = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/bangVanBanDenHan`, {
+  return axiosInstance.get(`/api/cases/bangVanBanDenHan`, {
     params,
   });
 }
 
 export const bangVanBanDen = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/bangVanBanDen`, {
+  return axiosInstance.get(`/api/cases/bangVanBanDen`, {
     params,
   });
 }
 
 export const bangVanBanBanHanh = async (params: any) => {
-  return axios.get(`${API_ENDPOINT}/api/cases/bangVanBanBanHanh`, {
+  return axiosInstance.get(`/api/cases/bangVanBanBanHanh`, {
     params,
   });
 }
