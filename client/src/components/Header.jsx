@@ -216,7 +216,7 @@ const Header = ({ onLogout }) => {
                   <hr />
                   {showLeverAccount && (
                     <MenuItemUser className="custom-menu-item-user">
-                      <Link to="/indexUserName">
+                      <Link to="/quan-ly-tai-khoan">
                         <UserAddOutlined
                           style={{ fontSize: "18px", color: "Red" }}
                         />

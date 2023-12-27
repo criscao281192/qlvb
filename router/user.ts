@@ -33,4 +33,26 @@ userRoutes.get("/:userId", (req: Request, res: Response) => {
     });
 });
 
+/**
+ * GET user by id
+ */
+userRoutes.post("/:userId/updateRole", async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  try {
+    let user = await UserLogin.findByPk(Number(userId));
+    await UserLogin.update({ phan_quyen: req.body.userRoleId }, {
+      where: {
+        id: userId
+      }
+    });
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("XẢY RA LỖI:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "LỖI KHÔNG XÁC ĐỊNH" });
+  }
+});
+
 export default userRoutes;

@@ -7,14 +7,16 @@ export const axiosInstance = axios.create({
   baseURL: API_ENDPOINT,
 });
 
+
 axiosInstance.interceptors.request.use(
   function (config) {
-    const storedToken = localStorage.getItem("accessToken");
-
-    config.headers = {
-      Authorization: `Bearer ${storedToken}`,
-      ...config.headers,
-    };
+    if (config.url?.includes('/api')) {
+      const storedToken = localStorage.getItem("accessToken");
+      config.headers = {
+        Authorization: `Bearer ${storedToken}`,
+        ...config.headers,
+      };
+    }
 
     return config;
   },

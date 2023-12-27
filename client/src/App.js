@@ -7,7 +7,7 @@ import { BellTwoTone } from "@ant-design/icons";
 import Header from "./components/Header";
 import Cases from "./pages/Cases";
 import CaseVanBanBanHanhs from "./pages/Cases/indexVanBanBanHanh";
-import CaseUserNames from "./pages/Cases/indexUserName";
+import UserList from "./pages/Users/UserList";
 import NewCase from "./pages/Cases/NewCase";
 import NewCaseHandle from "./pages/Cases/NewCaseHandle";
 import NewCaseMember from "./pages/Cases/NewCaseMember";
@@ -16,7 +16,7 @@ import ThongBaoVanBanDenHan from "./pages/Home/ThongBaoVanBanDenHan";
 import ChatCase from "./pages/Cases/ChatCase";
 import Home from "./pages/Home/ThongKe";
 import Login from "./components/Login";
-import NewUserForm from "./pages/Cases/userName";
+import NewUserForm from "./pages/Users/Create";
 
 import "./stylesApp.css";
 import moment from "moment";
@@ -211,14 +211,14 @@ function App() {
                 <Route path="/quan-ly-van-ban-ban-hanh">
                   <CaseVanBanBanHanhs />
                 </Route>
-                <Route path="/indexUserName">
-                  <CaseUserNames />
-                </Route>
-                <Route path="/userName">
+                <Route path="/quan-ly-tai-khoan/tao-moi">
                   <NewUserForm />
                 </Route>
-                <Route path="/userName/edit/:id">
+                <Route path="/quan-ly-tai-khoan/edit/:id">
                   <NewUserForm />
+                </Route>
+                <Route path="/quan-ly-tai-khoan">
+                  <UserList />
                 </Route>
               </Switch>
             </MainContainer>
@@ -228,7 +228,7 @@ function App() {
             <MainContainerSignIn>
               <div className="user-signin">
                 <Switch>
-                  <Route path="/userName">
+                  <Route path="/dang-ky-tai-khoan">
                     <NewUserForm />
                   </Route>
                   <Route path="/">

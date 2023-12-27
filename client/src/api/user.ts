@@ -1,3 +1,4 @@
+import axios from "axios";
 import { axiosInstance } from "./constants";
 
 export const loginAPI = async (username: string, password: string) => {
@@ -16,9 +17,18 @@ export const getCaseUser = async (params: any) => {
   });
 };
 
-export const postCaseUser = async (body: any) => {
+export const registerUser = async (body: any) => {
   try {
     const response = await axiosInstance.post(`/auth/register`, body);
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserRole = async (userId: string, userRoleId: string) => {
+  try {
+    const response = await axiosInstance.post(`/api/users/${userId}/updateRole`, { userRoleId });
     console.log(response.data);
   } catch (error) {
     console.log(error);
@@ -34,7 +44,7 @@ export const updateStatusInCaseUser = async (recordId: any, newStatus: any) => {
     const response = await getCaseUserName(recordId);
     const currentCase = response.data;
     currentCase.phan_quyen = newStatus;
-    await postCaseUser(currentCase);
+    await registerUser(currentCase);
   } catch (error) {
     console.error("LỖI THÊM DỮ LIỆU:", error);
     throw error;

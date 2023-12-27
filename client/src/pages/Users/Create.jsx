@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message, TreeSelect } from "antd";
-import { checkUser, postCaseUser } from "../../api";
+import { checkUser, registerUser } from "../../api";
 import { useHistory, Redirect } from "react-router-dom";
 import "./styles.css";
 
@@ -12,10 +12,10 @@ const NewUserForm = () => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      await postCaseUser(values);
+      await registerUser(values);
       message.success("ĐÃ GỬI YÊU CẦU TẠO TÀI KHOẢN!");
       form.resetFields();
-      history.push("/indexUserName");
+      history.push("/quan-ly-tai-khoan");
     } catch (error) {
       console.error("LỖI KHI TẠO TÀI KHOẢN:", error);
       message.error(

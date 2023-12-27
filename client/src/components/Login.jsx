@@ -141,10 +141,6 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handleRegister = () => {
-    window.location.href = "/userName";
-  };
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleLogin();
@@ -185,8 +181,8 @@ const Login = ({ onLogin }) => {
         {serverError && <div style={{ color: "red" }}>{serverError}</div>}
         <LoginButton onClick={handleLogin}>ĐĂNG NHẬP</LoginButton>
         <br />
-        <NavLink to="/userName">
-          <RegisterButton register onClick={handleRegister}>
+        <NavLink to="/dang-ky-tai-khoan">
+          <RegisterButton>
             ĐĂNG KÝ
           </RegisterButton>
         </NavLink>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Col } from "antd";
-import { getCaseUser, updateStatusInCaseUser } from "../../api";
+import { getCaseUser, updateUserRole, } from "../../api";
 import { useHistory } from "react-router-dom";
-import "./styles.css";
 
-const CaseUserNames = () => {
+const UserList = () => {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +17,7 @@ const CaseUserNames = () => {
           : caseItem
       );
       setCases(updatedCases);
-      await updateStatusInCaseUser(recordId, newRole);
+      await updateUserRole(recordId, newRole);
       history.go(0);
     } catch (error) {
       console.error("LỖI THÊM DỮ LIỆU:", error);
@@ -44,7 +43,7 @@ const CaseUserNames = () => {
   }, []);
 
   const handleButtonClick = () => {
-    history.push("/userName");
+    history.push("/quan-ly-tai-khoan/tao-moi");
   };
 
   const CaseColumns = [
@@ -80,12 +79,12 @@ const CaseUserNames = () => {
         return text === "1"
           ? "Đội Tham mưu"
           : text === "2"
-          ? "Đội Khám nghiệm hiện trường"
-          : text === "3"
-          ? "Đội Giám định KTHS truyền thống và tài liệu"
-          : text === "4"
-          ? "Đội Giám định hoá, KTPL và pháp y, sinh vật"
-          : "Đội Kỹ thuật phòng, chống tội phạm";
+            ? "Đội Khám nghiệm hiện trường"
+            : text === "3"
+              ? "Đội Giám định KTHS truyền thống và tài liệu"
+              : text === "4"
+                ? "Đội Giám định hoá, KTPL và pháp y, sinh vật"
+                : "Đội Kỹ thuật phòng, chống tội phạm";
       },
     },
     {
@@ -149,4 +148,4 @@ const CaseUserNames = () => {
   );
 };
 
-export default CaseUserNames;
+export default UserList;
