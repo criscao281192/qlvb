@@ -10,7 +10,6 @@ import CaseVanBanBanHanhs from "./pages/Cases/indexVanBanBanHanh";
 import UserList from "./pages/Users/UserList";
 import NewCase from "./pages/Cases/NewCase";
 import NewCaseHandle from "./pages/Cases/NewCaseHandle";
-import NewCaseMember from "./pages/Cases/NewCaseMember";
 import NewCaseVanBanBanHanh from "./pages/Cases/NewCaseVanBanBanHanh";
 import ThongBaoVanBanDenHan from "./pages/Home/ThongBaoVanBanDenHan";
 import ChatCase from "./pages/Cases/ChatCase";
@@ -184,28 +183,25 @@ function App() {
                 <Route path="/ChatCase">
                   <ChatCase />
                 </Route>
-                <Route path="/ThongBaoVanBanDenHan">
+                <Route path="/thong-bao">
                   <ThongBaoVanBanDenHan />
                 </Route>
-                <Route path="/quan-ly-van-ban/new">
+                <Route path="/quan-ly-van-ban/tao-moi">
                   <NewCase />
                 </Route>
-                <Route path="/quan-ly-van-ban/edit/:id">
+                <Route path="/quan-ly-van-ban/chinh-sua/:id">
                   <NewCase />
                 </Route>
-                <Route path="/quan-ly-van-ban/edithandle/:id">
+                <Route path="/quan-ly-van-ban/xu-ly-van-ban/:id">
                   <NewCaseHandle />
-                </Route>
-                <Route path="/quan-ly-van-ban/editmember/:id">
-                  <NewCaseMember />
                 </Route>
                 <Route path="/quan-ly-van-ban">
                   <Cases />
                 </Route>
-                <Route path="/quan-ly-van-ban-ban-hanh/new-van-ban-ban-hanh">
+                <Route path="/quan-ly-van-ban-ban-hanh/tao-moi">
                   <NewCaseVanBanBanHanh />
                 </Route>
-                <Route path="/quan-ly-van-ban-ban-hanh/edit/:id">
+                <Route path="/quan-ly-van-ban-ban-hanh/chinh-sua/:id">
                   <NewCaseVanBanBanHanh />
                 </Route>
                 <Route path="/quan-ly-van-ban-ban-hanh">
@@ -214,7 +210,7 @@ function App() {
                 <Route path="/quan-ly-tai-khoan/tao-moi">
                   <NewUserForm />
                 </Route>
-                <Route path="/quan-ly-tai-khoan/edit/:id">
+                <Route path="/quan-ly-tai-khoan/chinh-sua/:id">
                   <NewUserForm />
                 </Route>
                 <Route path="/quan-ly-tai-khoan">

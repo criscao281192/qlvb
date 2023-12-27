@@ -168,19 +168,13 @@ const Header = ({ onLogout }) => {
             </Link>
           </MenuItem>
           <MenuItem className="custom-menu-item">
-            <Link to="/ThongBaoVanBanDenHan">
+            <Link to="/thong-bao">
               <ClockCircleOutlined style={{ fontSize: "18px", color: "Red" }} />
               <span style={{ fontSize: "18px", color: "black" }}>
                 NHẮC VIỆC
               </span>
             </Link>
           </MenuItem>
-          {/* <MenuItem className="custom-menu-item">
-            <Link to="/ChatCase">
-              <CommentOutlined style={{ fontSize: "18px", color: "Red" }} />
-              <span style={{ fontSize: "18px", color: "black" }}>NHẮN TIN</span>
-            </Link>
-          </MenuItem> */}
           <MenuItem className="custom-menu-item">
             <a
               href="http://192.168.1.28/vanban/"

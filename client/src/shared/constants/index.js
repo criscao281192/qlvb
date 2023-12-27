@@ -399,24 +399,24 @@ export const NOI_NHAN = [
     value: "ĐẢNG UỶ VIÊN",
     children: [
       {
-        title: "Đ/c K.Tuyến ĐUV",
-        value: "Đ/c k.Tuyến ĐUV",
+        title: "Đ/c Lê Thị Kim Tuyến",
+        value: "Đ/c Lê Thị Kim Tuyến",
       },
       {
-        title: "Đ/c Thái ĐUV",
-        value: "Đ/c Thái ĐUV",
+        title: "Đ/c Phùng Huy Thái",
+        value: "Đ/c Phùng Huy Thái",
       },
       {
-        title: "Đ/c Loan ĐUV",
-        value: "Đ/c Loan ĐUV",
+        title: "Đ/c Tô Thị Loan",
+        value: "Đ/c Tô Thị Loan",
       },
       {
-        title: "Đ/c Quân ĐUV",
-        value: "Đ/c Quân ĐUV",
+        title: "Đ/c Nguyễn Hồng Quân",
+        value: "Đ/c Nguyễn Hồng Quân",
       },
       {
-        title: "Đ/c Hà ĐUV",
-        value: "Đ/c Hà ĐUV",
+        title: "Đ/c Nguyễn Văn Hà",
+        value: "Đ/c Nguyễn Văn Hà",
       },
     ],
   },
@@ -425,44 +425,44 @@ export const NOI_NHAN = [
     value: "Đội 1",
     children: [
       {
-        title: "Đ/c L.K.Tuyến",
-        value: "Đ/c L.K.Tuyến",
+        title: "Lê Thị Kim Tuyến",
+        value: "Lê Thị Kim Tuyến",
       },
       {
-        title: "Đ/c Đ.Ngọc Anh",
-        value: "Đ/c Đ.Ngọc Anh",
+        title: "Đỗ Ngọc Anh",
+        value: "Đỗ Ngọc Anh",
       },
       {
-        title: "Đ/c N.Huy Anh",
-        value: "Đ/c N.Huy Anh",
+        title: "Nguyễn Huy Anh",
+        value: "Nguyễn Huy Anh",
       },
       {
-        title: "Đ/c H.C.Kiên",
-        value: "Đ/c H.C.Kiên",
+        title: "Hồ Chí Kiên",
+        value: "Hồ Chí Kiên",
       },
       {
-        title: "Đ/c N.T.Quyên",
-        value: "Đ/c N.T.Quyên",
+        title: "Nguyễn Thị Quyên",
+        value: "Nguyễn Thị Quyên",
       },
       {
-        title: "Đ/c N.A.Tuấn",
-        value: "Đ/c N.A.Tuấn",
+        title: "Ngô Anh Tuấn",
+        value: "Ngô Anh Tuấn",
       },
       {
-        title: "Đ/c N.H.Hùng",
-        value: "Đ/c N.H.Hùng",
+        title: "Ngô Huy Hùng",
+        value: "Ngô Huy Hùng",
       },
       {
-        title: "Đ/c N.T.Anh",
-        value: "Đ/c N.T.Anh",
+        title: "Nguyễn Tuấn Anh",
+        value: "Nguyễn Tuấn Anh",
       },
       {
-        title: "Đ/c C.N.Tuyền",
-        value: "Đ/c C.N.Tuyền",
+        title: "Cao Ngọc Tuyền",
+        value: "Cao Ngọc Tuyền",
       },
       {
-        title: "Đ/c T.Q.Tuyển",
-        value: "Đ/c T.Q.Tuyển",
+        title: "Tô Quang Tuyển",
+        value: "Tô Quang Tuyển",
       },
     ],
   },
@@ -556,5 +556,54 @@ export const XAY_DUNG_VAN_BAN = [
   {
     title: "HPN",
     value: "Hội Phụ nữ",
+  },
+];
+
+export const CHUC_VU = [
+  {
+    title: "Trưởng phòng",
+    value: "1",
+  },
+  {
+    title: "Phó Trưởng phòng",
+    value: "2",
+  },
+  {
+    title: "Đội trưởng",
+    value: "3",
+  },
+  {
+    title: "Phó Đội trưởng",
+    value: "4",
+  },
+  {
+    title: "Cán bộ",
+    value: "5",
+  },
+];
+export const DON_VI = [
+  {
+    title: "Chỉ huy Phòng",
+    value: "Ban Chỉ huy Phòng",
+  },
+  {
+    title: "Đội 1",
+    value: "Đội Tham mưu",
+  },
+  {
+    title: "Đội 2",
+    value: "Đội Khám nghiệm hiện trường",
+  },
+  {
+    title: "Đội 3",
+    value: "Đội Giám định KTHS truyền thống và tài liệu",
+  },
+  {
+    title: "Đội 4",
+    value: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
+  },
+  {
+    title: "Đội 5",
+    value: "Đội Kỹ thuật phòng, chống tội phạm",
   },
 ];

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { axiosInstance } from "./constants";
 
 export const loginAPI = async (username: string, password: string) => {

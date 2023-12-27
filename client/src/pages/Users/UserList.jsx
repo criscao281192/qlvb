@@ -70,6 +70,13 @@ const UserList = () => {
       width: 100,
     },
     {
+      title: "CHỨC VỤ",
+      dataIndex: "chuc_vu",
+      key: "chuc_vu",
+      align: "center",
+      width: 100,
+    },
+    {
       title: "ĐƠN VỊ CÔNG TÁC",
       dataIndex: "don_vi",
       key: "don_vi",

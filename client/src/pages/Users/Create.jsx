@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, message, TreeSelect } from "antd";
 import { checkUser, registerUser } from "../../api";
 import { useHistory, Redirect } from "react-router-dom";
+import { CHUC_VU, DON_VI } from "../../shared/constants";
 import "./styles.css";
 
 const NewUserForm = () => {
@@ -43,9 +44,8 @@ const NewUserForm = () => {
     },
     {
       name: "username",
-      label: "TÊN ĐĂNG NHẬP",
       render: () => {
-        return <Input placeholder=" " />;
+        return <Input placeholder="TÊN ĐĂNG NHẬP" />;
       },
       rules: [
         {
@@ -54,6 +54,10 @@ const NewUserForm = () => {
         },
         ({ getFieldValue }) => ({
           async validator(_, value) {
+            if (!/^[a-z]{4,}$/.test(value)) {
+              return Promise.reject(new Error("TÊN ĐĂNG NHẬP KHÔNG HỢP LỆ!"));
+            }
+
             const result = await checkUser({
               username_id: value,
               id: getFieldValue("id"),
@@ -68,9 +72,8 @@ const NewUserForm = () => {
     },
     {
       name: "password",
-      label: "MẬT KHẨU",
       render: () => {
-        return <Input.Password />;
+        return <Input.Password placeholder="MẬT KHẨU" />;
       },
       rules: [
         {
@@ -81,9 +84,26 @@ const NewUserForm = () => {
     },
     {
       name: "fullname",
-      label: "HỌ VÀ TÊN",
       render: () => {
-        return <Input placeholder="Nguyễn Văn A" />;
+        return <Input placeholder="HỌ VÀ TÊN" />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "chuc_vu",
+      render: () => {
+        return (
+          <TreeSelect
+            style={{ width: "100%", textAlign: "left" }}
+            treeData={CHUC_VU}
+            placeholder="CHỨC VỤ"
+          />
+        );
       },
       rules: [
         {
@@ -94,33 +114,12 @@ const NewUserForm = () => {
     },
     {
       name: "don_vi",
-      label: "ĐƠN VỊ CÔNG TÁC",
       render: () => {
         return (
           <TreeSelect
-            style={{ width: "100%" }}
-            treeData={[
-              {
-                title: "Đội Tham mưu",
-                value: "1",
-              },
-              {
-                title: "Đội Khám nghiệm hiện trường",
-                value: "2",
-              },
-              {
-                title: "Đội Giám định KTHS truyền thống và tài liệu",
-                value: "3",
-              },
-              {
-                title: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
-                value: "4",
-              },
-              {
-                title: "Đội Kỹ thuật phòng, chống tội phạm",
-                value: "5",
-              },
-            ]}
+            style={{ width: "100%", textAlign: "left" }}
+            treeData={DON_VI}
+            placeholder="ĐƠN VỊ CÔNG TÁC"
           />
         );
       },
@@ -133,14 +132,17 @@ const NewUserForm = () => {
     },
     {
       name: "phoneuser",
-      label: "SỐ ĐIỆN THOẠI",
       render: () => {
-        return <Input placeholder="0936342326" />;
+        return <Input placeholder="SỐ ĐIỆN THOẠI" />;
       },
       rules: [
         {
           required: true,
           message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+        {
+          pattern: /^0\d{9}$/,
+          message: "SỐ ĐIỆN THOẠI PHẢI CÓ 9 SỐ",
         },
       ],
     },

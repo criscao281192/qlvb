@@ -16,6 +16,9 @@ const UserLogin = dbConfig.define("user_login", {
   fullname: {
     type: Sequelize.STRING,
   },
+  chuc_vu: {
+    type: Sequelize.STRING,
+  },
   don_vi: {
     type: Sequelize.STRING,
   },

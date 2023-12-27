@@ -108,7 +108,7 @@ const CaseVanBanBanHanhs = () => {
         <>
           <EditOutlined
             onClick={() =>
-              history.push(`/quan-ly-van-ban-ban-hanh/edit/${record.id}`)
+              history.push(`/quan-ly-van-ban-ban-hanh/chinh-sua/${record.id}`)
             }
           />
         </>

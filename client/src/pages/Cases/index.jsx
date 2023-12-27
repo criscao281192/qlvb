@@ -126,12 +126,6 @@ const Cases = () => {
               twoToneColor="#52c41a"
             />
           )}
-          <EditOutlined
-            className="icon-wrapper-2"
-            onClick={() =>
-              history.push(`/quan-ly-van-ban/editmember/${record.id}`)
-            }
-          />
         </>
       ),
     },
@@ -183,14 +177,14 @@ const Cases = () => {
             <TeamOutlined
               className="icon-wrapper-1"
               onClick={() =>
-                history.push(`/quan-ly-van-ban/edithandle/${record.id}`)
+                history.push(`/quan-ly-van-ban/xu-ly-van-ban/${record.id}`)
               }
             />
           )}
           <EditOutlined
             className="icon-wrapper-2"
             onClick={() =>
-              history.push(`/quan-ly-van-ban/edithandle/${record.id}`)
+              history.push(`/quan-ly-van-ban/xu-ly-van-ban/${record.id}`)
             }
           />
         </>

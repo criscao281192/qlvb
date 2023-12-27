@@ -127,7 +127,7 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
           <Col span={12} style={{ textAlign: "left" }}>
             <Button
               onClick={() => {
-                history.push("/quan-ly-van-ban-ban-hanh/new-van-ban-ban-hanh");
+                history.push("/quan-ly-van-ban-ban-hanh/tao-moi");
               }}
               type="primary"
               style={{ marginBottom: 16, marginLeft: 8 }}

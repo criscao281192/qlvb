@@ -27,6 +27,7 @@ router.post("/whoami", async (req: Request, res: Response) => {
               userId: user.id,
               phan_quyen: user.phan_quyen,
               fullname: user.fullname,
+              chuc_vu: user.chuc_vu,
             },
             SECRET_KEY,
             { expiresIn: "1h", algorithm: "HS256" }
@@ -72,6 +73,7 @@ router.post("/register", async (req, res) => {
       username: body.username,
       password: await bcrypt.hash(body.password, 10),
       fullname: body.fullname,
+      chuc_vu: body.chuc_vu,
       don_vi: body.don_vi,
       phan_quyen: body.phan_quyen,
       phoneuser: body.phoneuser,
