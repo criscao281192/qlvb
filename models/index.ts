@@ -43,6 +43,18 @@ const TaiLieu = dbConfig.define("tai_lieu", {
   trang_thai_van_ban: {
     type: Sequelize.STRING,
   },
+  createdAt: {
+    type: Sequelize.DATE,
+  },
+  createdBy: {
+    type: Sequelize.STRING,
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+  },
+  updatedBy: {
+    type: Sequelize.STRING,
+  },
   file_van_ban: {
     type: DataTypes.BLOB,
   },

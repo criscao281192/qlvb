@@ -139,6 +139,25 @@ export const postCase = async (body: any) => {
     formData.append("ngay_het_han", "null");
   }
 
+  if (body.createdBy !== null && body.createdBy !== undefined) {
+    formData.append("createdBy", body.createdBy);
+  }
+  if (body.updatedBy !== null && body.updatedBy !== undefined) {
+    formData.append("updatedBy", body.updatedBy);
+  }
+  const ngaycreatedAt = new Date(body.createdAt);
+  if (!isNaN(ngaycreatedAt.getTime())) {
+    formData.append("createdAt", ngaycreatedAt.toISOString());
+  } else {
+    console.error("NGÀY TIẾP NHẬN KHÔNG HỢP LỆ");
+  }
+  const ngayupdatedAt = new Date(body.updatedAt);
+  if (!isNaN(ngayupdatedAt.getTime())) {
+    formData.append("updatedAt", ngayupdatedAt.toISOString());
+  } else {
+    console.error("NGÀY TIẾP NHẬN KHÔNG HỢP LỆ");
+  }
+
   try {
     const response = await axiosInstance.post(`/api/cases`, formData, {
       headers: {

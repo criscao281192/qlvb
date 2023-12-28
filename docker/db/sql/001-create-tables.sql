@@ -55,6 +55,10 @@ CREATE TABLE IF NOT EXISTS tai_lieus(
     noi_nhan VARCHAR(500),
     de_xuat VARCHAR(500),
     trang_thai_van_ban VARCHAR(100),
+    createdAt DATETIME, 
+    createdBy VARCHAR(500), 
+    updatedAt DATETIME, 
+    updatedBy VARCHAR(500),
     file_van_ban LONGBLOB,
 
     PRIMARY KEY (id),
@@ -73,3 +77,21 @@ CREATE TABLE IF NOT EXISTS user_logins (
     phan_quyen VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );
+
+{
+  /* <Form.Item name="updatedBy" rules={[]} validateTrigger="onBlur">
+<Input
+  style={{ display: "none" }}
+  placeholder={`(${userFullName})`}
+  disabled
+/>
+</Form.Item>
+<Form.Item name="updatedAt" rules={[]} validateTrigger="onBlur">
+<DatePicker
+  style={{ display: "none" }}
+  format={dateFormatList}
+  defaultValue={moment()}
+  disabled
+/>
+</Form.Item> */
+}

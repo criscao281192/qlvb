@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Col } from "antd";
-import { getCaseUser, updateUserRole, } from "../../api";
+import { getCaseUser, updateUserRole } from "../../api";
 import { useHistory } from "react-router-dom";
 
 const UserList = () => {
@@ -75,6 +75,17 @@ const UserList = () => {
       key: "chuc_vu",
       align: "center",
       width: 100,
+      render: (text) => {
+        return text === "1"
+          ? "Trưởng phòng"
+          : text === "2"
+          ? "Phó Trưởng phòng"
+          : text === "3"
+          ? "Đội trưởng"
+          : text === "4"
+          ? "Phó Đội trưởng"
+          : "Cán bộ";
+      },
     },
     {
       title: "ĐƠN VỊ CÔNG TÁC",
@@ -86,12 +97,12 @@ const UserList = () => {
         return text === "1"
           ? "Đội Tham mưu"
           : text === "2"
-            ? "Đội Khám nghiệm hiện trường"
-            : text === "3"
-              ? "Đội Giám định KTHS truyền thống và tài liệu"
-              : text === "4"
-                ? "Đội Giám định hoá, KTPL và pháp y, sinh vật"
-                : "Đội Kỹ thuật phòng, chống tội phạm";
+          ? "Đội Khám nghiệm hiện trường"
+          : text === "3"
+          ? "Đội Giám định KTHS truyền thống và tài liệu"
+          : text === "4"
+          ? "Đội Giám định hoá, KTPL và pháp y, sinh vật"
+          : "Đội Kỹ thuật phòng, chống tội phạm";
       },
     },
     {

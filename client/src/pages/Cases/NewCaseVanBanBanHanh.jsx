@@ -8,17 +8,14 @@ import {
   Radio,
   message,
   Upload,
+  TreeSelect,
 } from "antd";
 import { UploadOutlined, AudioTwoTone } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import moment from "moment";
-import {
-  getCase,
-  getConfigs,
-  lay_so_van_ban_di,
-  postCase,
-  getCaseUser,
-} from "../../api";
+import { XAY_DUNG_VAN_BAN } from "../../shared/constants";
+import { getCase, getConfigs, lay_so_van_ban_di, postCase } from "../../api";
 
 const NewCaseVanBanBanHanh = () => {
   const [form] = Form.useForm();
@@ -48,6 +45,11 @@ const NewCaseVanBanBanHanh = () => {
     if (Array.isArray(values.noi_nhan)) {
       values.noi_nhan = values.noi_nhan.map((item) => item.value).join(", ");
     }
+
+    const currentDate = moment();
+    values.createdAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
+    values.createdBy = userFullName;
+
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
       values.file_van_ban = fileList[0].originFileObj;
@@ -64,35 +66,14 @@ const NewCaseVanBanBanHanh = () => {
   };
 
   const [config, setConfig] = useState();
+
   const [userFullName, setUserFullName] = useState(null);
-
   useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-
-    if (storedToken) {
-      const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
-      console.log(decodedToken);
-      getCaseUser(decodedToken.userId)
-        .then((response) => {
-          console.log("NGƯỜI DÙNG:", response);
-          const matchingUser = response.data.result.find(
-            (user) => user.id === decodedToken.userId
-          );
-
-          if (matchingUser) {
-            setUserFullName(matchingUser.fullname);
-            form.setFieldsValue({
-              noi_nhan: matchingUser.fullname,
-            });
-          } else {
-            console.error("KHÔNG TÌM THẤY DỮ LIỆU NGƯỜI DÙNG.");
-          }
-        })
-        .catch((error) => {
-          console.error("LỖI TRUY VẤN DỮ LIỆU NGƯỜI DÙNG:", error);
-        });
+    const userInfo = jwtDecode(localStorage.getItem("accessToken"));
+    if (userInfo) {
+      setUserFullName(userInfo.fullname);
     }
-  }, [form]);
+  }, []);
 
   useEffect(() => {
     getConfigs().then((data) => {
@@ -116,6 +97,10 @@ const NewCaseVanBanBanHanh = () => {
           ngay_het_han: moment(res.data.ngay_het_han),
           noi_nhan: res.data.noi_nhan,
           trang_thai_van_ban: res.data.trang_thai_van_ban,
+          createdAt: res.data.createdAt,
+          createdBy: res.data.createdBy,
+          updatedAt: res.data.updatedAt,
+          updatedBy: res.data.updatedBy,
         });
         setTrichYeu(res.data.noi_dung_van_ban);
       });
@@ -380,9 +365,11 @@ const NewCaseVanBanBanHanh = () => {
       label: "SOẠN THẢO VĂN BẢN",
       render: () => {
         return (
-          <Input
-            placeholder="CÁN BỘ/ĐỘI SOẠN THẢO VĂN BẢN"
-            disabled={userFullName !== "Cao Ngọc Tuyền"}
+          <TreeSelect
+            treeData={XAY_DUNG_VAN_BAN}
+            placeholder="SOẠN THẢO VĂN BẢN"
+            treeCheckable={true}
+            treeCheckStrictly={true}
           />
         );
       },

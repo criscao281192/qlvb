@@ -21,6 +21,7 @@ import moment from "moment";
 import "./styles.css";
 import { getCase, getConfigs, lay_so_van_ban_den, postCase } from "../../api";
 import { NOI_PHAT_HANH } from "../../shared/constants";
+import { jwtDecode } from "jwt-decode";
 
 const NewCase = () => {
   const [form] = Form.useForm();
@@ -61,6 +62,10 @@ const NewCase = () => {
       );
     }
 
+    const currentDate = moment();
+    values.createdAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
+    values.createdBy = userFullName;
+
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
       values.file_van_ban = fileList[0].originFileObj;
@@ -77,6 +82,15 @@ const NewCase = () => {
   };
 
   const [config, setConfig] = useState();
+
+  const [userFullName, setUserFullName] = useState(null);
+  useEffect(() => {
+    const userInfo = jwtDecode(localStorage.getItem("accessToken"));
+    console.log(userInfo);
+    if (userInfo) {
+      setUserFullName(userInfo.fullname);
+    }
+  }, []);
 
   useEffect(() => {
     getConfigs().then((data) => {
@@ -101,6 +115,10 @@ const NewCase = () => {
           noi_nhan: res.data.noi_nhan,
           de_xuat: res.data.de_xuat,
           trang_thai_van_ban: res.data.trang_thai_van_ban,
+          createdAt: res.data.createdAt,
+          createdBy: res.data.createdBy,
+          updatedAt: res.data.updatedAt,
+          updatedBy: res.data.updatedBy,
         });
         setTrichYeu(res.data.noi_dung_van_ban);
         setSoVanBan(res.data.so_van_ban);

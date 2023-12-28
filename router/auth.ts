@@ -30,7 +30,7 @@ router.post("/whoami", async (req: Request, res: Response) => {
               chuc_vu: user.chuc_vu,
             },
             SECRET_KEY,
-            { expiresIn: "1h", algorithm: "HS256" }
+            { expiresIn: "30d", algorithm: "HS256" }
           );
           console.log(token);
           res.status(200).json({

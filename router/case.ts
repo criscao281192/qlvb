@@ -712,6 +712,10 @@ router.post("/", (req: Request, res: Response) => {
             noi_nhan: body.noi_nhan,
             trang_thai_van_ban: body.trang_thai_van_ban,
             de_xuat: body.de_xuat,
+            createdAt: body.createdAt,
+            createdBy: body.createdBy,
+            updatedAt: body.updatedAt,
+            updatedBy: body.updatedBy,
             file_van_ban: data,
           };
           if (body.id) {
@@ -745,6 +749,10 @@ router.post("/", (req: Request, res: Response) => {
         noi_nhan: body.noi_nhan,
         trang_thai_van_ban: body.trang_thai_van_ban,
         de_xuat: body.de_xuat,
+        createdAt: body.createdAt,
+        createdBy: body.createdBy,
+        updatedAt: body.updatedAt,
+        updatedBy: body.updatedBy,
       };
       if (body.id) {
         TaiLieu.update(record, { where: { id: body.id } })
@@ -776,6 +784,10 @@ router.post("/", (req: Request, res: Response) => {
       noi_nhan: body.noi_nhan,
       trang_thai_van_ban: body.trang_thai_van_ban,
       de_xuat: body.de_xuat,
+      createdAt: body.createdAt,
+      createdBy: body.createdBy,
+      updatedAt: body.updatedAt,
+      updatedBy: body.updatedBy,
     };
     if (body.id) {
       TaiLieu.update(record, { where: { id: body.id } })

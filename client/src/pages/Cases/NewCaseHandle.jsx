@@ -19,12 +19,12 @@ import "./styles.css";
 import { getCase, getConfigs, postCase, lay_so_van_ban_den } from "../../api";
 import { NOI_NHAN } from "../../shared/constants";
 
-const NewCaseMember = () => {
+const NewCaseHandle = () => {
   const [form] = Form.useForm();
   let history = useHistory();
   let { id } = useParams();
   const { TextArea } = Input;
-  
+
   const [selectedNoiNhan, setSelectedNoiNhan] = useState([]);
 
   const [isChangedFile, setIsChangeFile] = useState(false);
@@ -65,6 +65,10 @@ const NewCaseMember = () => {
       );
     }
 
+    const currentDate = moment();
+    values.updatedAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
+    values.updatedBy = userFullName;
+
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
       values.file_van_ban = fileList[0].originFileObj;
@@ -73,6 +77,7 @@ const NewCaseMember = () => {
     }
     postCase(values).then((res) => {
       history.push("/quan-ly-van-ban");
+      window.location.href = "/quan-ly-van-ban";
     });
   };
 
@@ -91,6 +96,15 @@ const NewCaseMember = () => {
       if (userInfo) {
         setShowLeverAccount(userInfo.chuc_vu === "5");
       }
+    }
+  }, []);
+
+  const [userFullName, setUserFullName] = useState(null);
+  useEffect(() => {
+    const userInfo = jwtDecode(localStorage.getItem("accessToken"));
+    console.log(userInfo);
+    if (userInfo) {
+      setUserFullName(userInfo.fullname);
     }
   }, []);
 
@@ -118,6 +132,10 @@ const NewCaseMember = () => {
           noi_nhan: res.data.noi_nhan,
           de_xuat: res.data.de_xuat,
           trang_thai_van_ban: res.data.trang_thai_van_ban,
+          createdAt: res.data.createdAt,
+          createdBy: res.data.createdBy,
+          updatedAt: res.data.updatedAt,
+          updatedBy: res.data.updatedBy,
         });
       });
     }
@@ -479,4 +497,4 @@ const NewCaseMember = () => {
   );
 };
 
-export default NewCaseMember;
+export default NewCaseHandle;

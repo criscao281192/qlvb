@@ -584,26 +584,27 @@ export const CHUC_VU = [
 export const DON_VI = [
   {
     title: "Chỉ huy Phòng",
-    value: "Ban Chỉ huy Phòng",
+    value: "0",
   },
   {
     title: "Đội 1",
-    value: "Đội Tham mưu",
+    value: "1",
   },
   {
     title: "Đội 2",
-    value: "Đội Khám nghiệm hiện trường",
+    value: "2",
   },
   {
     title: "Đội 3",
-    value: "Đội Giám định KTHS truyền thống và tài liệu",
+    value: "3",
   },
   {
     title: "Đội 4",
-    value: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
+    value: "4",
   },
   {
     title: "Đội 5",
-    value: "Đội Kỹ thuật phòng, chống tội phạm",
+    value: "5",
   },
 ];
+

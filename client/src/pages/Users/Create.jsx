@@ -13,6 +13,12 @@ const NewUserForm = () => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
+      values.username = values.username.toLowerCase();
+      values.fullname = values.fullname
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
       await registerUser(values);
       message.success("ĐÃ GỬI YÊU CẦU TẠO TÀI KHOẢN!");
       form.resetFields();
@@ -54,10 +60,11 @@ const NewUserForm = () => {
         },
         ({ getFieldValue }) => ({
           async validator(_, value) {
-            if (!/^[a-z]{4,}$/.test(value)) {
-              return Promise.reject(new Error("TÊN ĐĂNG NHẬP KHÔNG HỢP LỆ!"));
+            if (value.length < 4) {
+              return Promise.reject(
+                new Error("TÊN ĐĂNG NHẬP PHẢI CÓ ÍT NHẤT 4 KÍ TỰ!")
+              );
             }
-
             const result = await checkUser({
               username_id: value,
               id: getFieldValue("id"),
