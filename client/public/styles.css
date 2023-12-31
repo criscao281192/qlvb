@@ -1,8 +1,8 @@
   .copyright-text {
     position: fixed;
     bottom: 10px;
-    left: 10px;
-    text-align: left;
+    right: 10px;
+    text-align: right;
     color: #888;
     font-size: 15px;
   }

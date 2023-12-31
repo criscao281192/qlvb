@@ -9,6 +9,8 @@ import {
   FolderOpenOutlined,
   LogoutOutlined,
   UserAddOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
 import "./stylesHeader.css";
@@ -21,6 +23,18 @@ const Menu = styled.div`
   left: 0;
   bottom: 0;
   width: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1;
+`;
+
+const MenuMini = styled.div`
+  background-color: #defdda;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -108,6 +122,7 @@ const Header = ({ onLogout }) => {
   const [userFullName, setUserFullName] = useState(null);
   const [showLeverAccount, setShowLeverAccount] = useState(false);
   const [isAccountMenuVisible, setAccountMenuVisible] = useState(false);
+  const [isFullMenuVisible, setFullMenuVisible] = useState(true);
 
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
@@ -125,9 +140,13 @@ const Header = ({ onLogout }) => {
     setAccountMenuVisible(!isAccountMenuVisible);
   };
 
+  const toggleFullMenu = () => {
+    setFullMenuVisible(!isFullMenuVisible);
+  };
+
   return (
-    <div className="menu-container">
-      <Menu>
+    <div className={`menu-container ${isFullMenuVisible ? 'full-menu' : 'collapsed-menu'}`}>
+      <Menu style={{ display: isFullMenuVisible ? 'flex' : 'none' }}>
         <MenuList>
           <img src={logoImage} alt="Logo" className="logo" />
           <MenuItem
@@ -187,6 +206,11 @@ const Header = ({ onLogout }) => {
               </span>
             </a>
           </MenuItem>
+          <MenuItem className="custom-menu-item" onClick={toggleFullMenu} >
+            <div className="icon-container">
+              <MenuFoldOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </div>
+          </MenuItem>
         </MenuList>
         <BottomLeftContainer>
           {userFullName && (
@@ -230,6 +254,44 @@ const Header = ({ onLogout }) => {
           )}
         </BottomLeftContainer>
       </Menu>
+      <div className="icons-container" style={{ display: isFullMenuVisible ? 'none' : 'flex' }}>
+        <MenuMini>
+          <MenuItem className="custom-menu-item">
+            <Link to="/">
+              <HomeOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </Link>
+          </MenuItem>
+          <MenuItem className="custom-menu-item">
+            <Link to="/quan-ly-van-ban">
+              <CloudUploadOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </Link>
+          </MenuItem>
+          <MenuItem className="custom-menu-item">
+            <Link to="/quan-ly-van-ban-ban-hanh">
+              <SendOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </Link>
+          </MenuItem>
+          <MenuItem className="custom-menu-item">
+            <Link to="/thong-bao">
+              <ClockCircleOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </Link>
+          </MenuItem>
+          <MenuItem className="custom-menu-item">
+            <a
+              href="http://192.168.1.28/vanban/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <FolderOpenOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </a>
+          </MenuItem>
+          <MenuItem className="custom-menu-item" onClick={toggleFullMenu} >
+            <div className="icon-container">
+              <MenuUnfoldOutlined style={{ fontSize: "18px", color: "Red" }} />
+            </div>
+          </MenuItem>
+        </MenuMini>
+      </div>
     </div>
   );
 };

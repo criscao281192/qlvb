@@ -51,3 +51,22 @@ th {
 .NotificationPopup.visible {
   display: block;
 }
+
+.collapsed-menu .menu-container {
+  width: 50px;
+}
+
+.collapsed-menu .menu-container .logo {
+  display: none;
+}
+
+.collapsed-menu .main-container {
+  margin-left: 50px;
+}
+
+.menu-container,
+.menu-container .menu-list,
+.menu-container .menu-item,
+.menu-container .bottom-left-container {
+  transition: width 0.3s ease;
+}

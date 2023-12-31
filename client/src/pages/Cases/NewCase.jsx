@@ -64,7 +64,7 @@ const NewCase = () => {
 
     const currentDate = moment();
     values.createdAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
-    values.createdBy = userFullName;
+    values.createdBy = userUserId;
 
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
@@ -83,12 +83,12 @@ const NewCase = () => {
 
   const [config, setConfig] = useState();
 
-  const [userFullName, setUserFullName] = useState(null);
+  const [userUserId, setuserUserId] = useState(null);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
     console.log(userInfo);
     if (userInfo) {
-      setUserFullName(userInfo.fullname);
+      setuserUserId(userInfo.userId);
     }
   }, []);
 

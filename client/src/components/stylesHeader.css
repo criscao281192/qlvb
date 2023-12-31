@@ -30,3 +30,42 @@
 .menu-icon:hover {
   cursor: pointer;
 }
+
+.menu-container {
+  transition: width 0.5s;
+}
+
+.full-menu {
+  width: 210px;
+}
+
+.collapsed-menu {
+  width: 18px;
+}
+
+.icons-container {
+  display: flex;
+  transition: width 0.5s;
+}
+
+.full-menu-icons {
+  width: 210px;
+}
+
+.collapsed-menu-icons {
+  width: 18px;
+}
+
+.icons-container {
+  width: 210px;
+  /* Set the initial width to the same as the expanded menu */
+  overflow: hidden;
+  /* Hide the content when collapsed */
+  transition: width 0.5s;
+  /* Add transition effect for smooth animation */
+}
+
+.collapsed-menu .icons-container {
+  width: 0;
+  /* Collapse the icons when the menu is collapsed */
+}
