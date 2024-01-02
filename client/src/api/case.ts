@@ -5,8 +5,14 @@ export const getConfigs = async () => {
   return configs.data;
 };
 
-export const searchCases = async (params: any) => {
-  return axiosInstance.get(`/api/cases`, {
+export const searchVanBanDen = async (params: any) => {
+  return axiosInstance.get(`/api/cases/timVanBanDen`, {
+    params,
+  });
+};
+
+export const searchVanBanDi= async (params: any) => {
+  return axiosInstance.get(`/api/cases/timVanBanDi`, {
     params,
   });
 };
@@ -151,6 +157,7 @@ export const postCase = async (body: any) => {
   } else {
     console.error("NGÀY TIẾP NHẬN KHÔNG HỢP LỆ");
   }
+  
   const ngayupdatedAt = new Date(body.updatedAt);
   if (!isNaN(ngayupdatedAt.getTime())) {
     formData.append("updatedAt", ngayupdatedAt.toISOString());

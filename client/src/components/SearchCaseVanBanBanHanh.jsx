@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Input, Col, Select, DatePicker, Button } from "antd";
+import { Form, Row, Input, Col, Select, DatePicker, Button, TreeSelect } from "antd";
 import { getConfigs } from "../api";
 import { useHistory } from "react-router-dom";
+import { XAY_DUNG_VAN_BAN } from "../shared/constants/index";
 
 const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
   const [form] = Form.useForm();
@@ -88,9 +89,16 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
     },
     {
       name: "noi_nhan",
-      label: "THỰC HIỆN",
+      label: "SOẠN THẢO VĂN BẢN",
       render: () => {
-        return <Input placeholder="C.N.Tuyền" />;
+        return (
+          <TreeSelect
+            treeData={XAY_DUNG_VAN_BAN}
+            placeholder="NƠI NHẬN"
+            treeCheckable={true}
+            treeCheckStrictly={true}
+          />
+        );
       },
     },
   ];

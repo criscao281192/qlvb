@@ -148,16 +148,47 @@ const buildQuery = (req: Request) => {
 /**
  * TÌM KIẾM
  */
-router.get("/", (req: Request, res: Response) => {
-  const whereCon = buildQuery(req);
+router.get("/timVanBanDen", (req: Request, res: Response) => {
+  const vanBanDenSoOptions = ["TLT", "TLM"];
+  const whereCon = {
+    van_ban_den_so: {
+      [Op.or]: vanBanDenSoOptions.map((vanBanDenSo) => ({
+        [Op.like]: `%${vanBanDenSo}%`,
+      })),
+    },
+  };
 
   TaiLieu.findAll({
     include: [
       {
-        model: LoaiTaiLieu,
-      },
-      {
         model: VanBanDen,
+      },
+    ],
+    where: whereCon,
+  })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((e) => {
+      console.log(e);
+      res.json({ error: 200 });
+    });
+});
+
+/**
+ * TÌM KIẾM
+ */
+router.get("/timVanBanDi", (req: Request, res: Response) => {
+  const donViBanHanh = ["PC09"];
+  const whereCon = {
+    ten_don_vi: {
+      [Op.in]: donViBanHanh,
+    },
+  };
+  TaiLieu.findAll({
+    include: [
+      {
+        model: LoaiTaiLieu,
       },
     ],
     where: whereCon,

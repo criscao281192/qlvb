@@ -30,8 +30,7 @@ const AppLogoWrapper = styled.div`
   margin-top: 64px;
 `;
 
-const LogoImage = styled.img`
-`;
+const LogoImage = styled.img``;
 
 const MenuTitle = styled.span`
   font-size: 18px;
@@ -42,7 +41,7 @@ const MenuTitle = styled.span`
 
 const iconStyle = {
   fontSize: "18px",
-  color: 'red',
+  color: "red",
 };
 
 let MENUS = [
@@ -73,7 +72,7 @@ let MENUS = [
   {
     name: "Văn bản lưu",
     icon: <FolderOpenOutlined style={iconStyle} />,
-    link: 'http://192.168.1.28/vanban/',
+    link: "http://192.168.1.28/vanban/",
     outside: true,
   },
 ];
@@ -84,42 +83,50 @@ const Header = ({ isFold }) => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
     if (userInfo) {
       if (userInfo.phan_quyen === "1") {
-        setMenus([...menus, {
-          name: "Quản lý tài khoản",
-          icon: (
-            <SolutionOutlined style={iconStyle} />
-          ),
-          link: "/quan-ly-tai-khoan",
-          outside: false,
-        }]);
+        setMenus([
+          ...menus,
+          {
+            name: "Tài khoản",
+            icon: <SolutionOutlined style={iconStyle} />,
+            link: "/quan-ly-tai-khoan",
+            outside: false,
+          },
+        ]);
       }
     }
   }, []);
 
   return (
-    <Layout.Sider trigger={null} collapsible collapsed={isFold} style={{ background: '#defdda' }}>
+    <Layout.Sider
+      trigger={null}
+      collapsible
+      collapsed={isFold}
+      style={{ background: "#defdda", height: "100vh" }}
+    >
       <AppLogoWrapper>
-        <LogoImage src={logoImage} alt="Logo" className="logo"
-          width={isFold ? '30px' : '110px'}
+        <LogoImage
+          src={logoImage}
+          alt="Logo"
+          className="logo"
+          width={isFold ? "30px" : "110px"}
         />
       </AppLogoWrapper>
-      <MenuWrapper mode="inline" style={{ backgroundColor: '#defdda' }}>
+      <MenuWrapper
+        mode="inline"
+        style={{ backgroundColor: "#defdda", height: "calc(100vh - 64px)" }}
+      >
         {menus.map((menu, index) => {
           return (
             <Menu.Item key={index}>
               {menu.outside ? (
-                <a href={menu.link} target="_blank">
+                <a href={menu.link} target="_blank" rel="noreferrer">
                   {menu.icon}
-                  <MenuTitle>
-                    {menu.name}
-                  </MenuTitle>
+                  <MenuTitle>{menu.name}</MenuTitle>
                 </a>
               ) : (
                 <Link to={menu.link}>
                   {menu.icon}
-                  <MenuTitle>
-                    {menu.name}
-                  </MenuTitle>
+                  <MenuTitle>{menu.name}</MenuTitle>
                 </Link>
               )}
             </Menu.Item>

@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
-import { BellOutlined, LogoutOutlined, MenuFoldOutlined } from '@ant-design/icons'
-import styled from 'styled-components'
-import { Avatar, Badge } from 'antd';
+import React, { useState, useEffect } from "react";
+import {
+  BellOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+} from "@ant-design/icons";
+import styled from "styled-components";
+import { Avatar, Badge } from "antd";
 import { useHistory } from "react-router-dom";
-import NotificationTable from './NotificationTable';
+import NotificationTable from "./NotificationTable";
+import { jwtDecode } from "jwt-decode";
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding:0 20px;
+  padding: 0 20px;
   height: 100%;
 `;
 
@@ -31,17 +36,42 @@ const MenuItem = styled.li`
 
 const iconStyle = {
   fontSize: "20px",
-  color: "#000"
+  color: "#000",
 };
 
+const getRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 const Header = ({ notifications, toggleSidebar, onLogout }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [userInitials, setUserInitials] = useState("");
+  const [avatarBackgroundColor, setAvatarBackgroundColor] = useState("");
   const history = useHistory();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const userInfo = jwtDecode(accessToken);
+      if (userInfo && userInfo.fullname) {
+        const initials = userInfo.fullname
+          .split(" ")
+          .map((word) => word[0])
+          .join("");
+        setUserInitials(initials);
+        setAvatarBackgroundColor(getRandomColor());
+      }
+    }
+  }, []);
 
   const onAccountHandler = () => {
     history.push("/trang-ca-nhan");
-  }
+  };
 
   return (
     <Wrapper>
@@ -54,26 +84,33 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
           }}
         >
           <Badge count={notifications.length}>
-            <BellOutlined
-              style={iconStyle}
-            />
+            <BellOutlined style={iconStyle} />
           </Badge>
         </MenuItem>
         <MenuItem onClick={onAccountHandler}>
-          <Avatar src="/avatar.jpg" />
+          <Avatar
+            style={{
+              backgroundColor: avatarBackgroundColor,
+              color: "#fff",
+            }}
+          >
+            {userInitials}
+          </Avatar>
         </MenuItem>
-
         <MenuItem onClick={onLogout}>
           <LogoutOutlined style={iconStyle} />
         </MenuItem>
       </MenuList>
       {isHovered && (
-        <NotificationTable notifications={[...notifications, ...notifications, ...notifications]} onClickItem={() => {
-          setIsHovered(false);
-        }} />
+        <NotificationTable
+          notifications={[...notifications]}
+          onClickItem={() => {
+            setIsHovered(false);
+          }}
+        />
       )}
     </Wrapper>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

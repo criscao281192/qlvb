@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal } from "antd";
 import { EditOutlined, EyeFilled, SendOutlined } from "@ant-design/icons";
-import { searchCases, bangVanBanBanHanh } from "../../api";
+import { searchVanBanDi, bangVanBanBanHanh } from "../../api";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import SearchCaseVanBanBanHanh from "../../components/SearchCaseVanBanBanHanh";
@@ -191,7 +191,7 @@ const CaseVanBanBanHanhs = () => {
   };
   useEffect(() => {
     if (searchCondition) {
-      searchCases(searchCondition)
+      searchVanBanDi(searchCondition)
         .then((response) => {
           setTotalItems(response.data.length);
           setCurrentRowNumber((currentPage - 1) * itemsPerPage);

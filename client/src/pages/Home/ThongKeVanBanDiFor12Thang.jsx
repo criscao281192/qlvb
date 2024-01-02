@@ -45,7 +45,7 @@ const ThongKeVanBanDiFor12Thang = () => {
       <br />
       <Row justify="center" align="middle">
         <Col span={24}>
-          <AreaChart width={800} height={300} data={caseVanBanDiForThangs}>
+          <AreaChart width={700} height={250} data={caseVanBanDiForThangs}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#391085" stopOpacity={0.8} />

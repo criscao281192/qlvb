@@ -11,7 +11,7 @@ import {
   TeamOutlined,
   FileDoneOutlined,
 } from "@ant-design/icons";
-import { searchCases, bangVanBanDen } from "../../api";
+import { searchVanBanDen, bangVanBanDen } from "../../api";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import "./styles.css";
@@ -513,7 +513,7 @@ const Cases = () => {
 
   useEffect(() => {
     if (searchCondition) {
-      searchCases(searchCondition)
+      searchVanBanDen(searchCondition)
         .then((response) => {
           setTotalItems(response.data.length);
           setCurrentRowNumber((currentPage - 1) * itemsPerPage);

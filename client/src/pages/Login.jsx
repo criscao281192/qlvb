@@ -160,10 +160,10 @@ const Login = ({ onLogin }) => {
       <LogoImage src={logoImage} alt="Logo" 
       />
 
-      <LoginTitle>Hệ thống quản lý văn bản</LoginTitle>
+      <LoginTitle>HỆ THỐNG QUẢN LÝ VĂN BẢN</LoginTitle>
 
       <LoginForm>
-        <FormTitle>Đăng nhập hệ thống</FormTitle>
+        <FormTitle>ĐĂNG NHẬP HỆ THỐNG</FormTitle>
         <InputContainer>
           <LoginInput
             size="large"
@@ -188,7 +188,7 @@ const Login = ({ onLogin }) => {
         <LoginButton onClick={handleLogin} loading={loading}>Đăng nhập</LoginButton>
         <br />
         <RegisterButton onClick={register}>
-          Đăng ký tài khoản
+          ĐĂNG KÝ TÀI KHOẢN
         </RegisterButton>
       </LoginForm>
     </LoginContainer>

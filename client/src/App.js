@@ -9,8 +9,7 @@ import "./stylesApp.css";
 import PrivateRoute from "./shared/routes/PrivateRoute";
 import PublicRoute from "./shared/routes/PublicRoute";
 
-const AppContainer = styled.div`
-`;
+const AppContainer = styled.div``;
 
 const MainContainerSignIn = styled.div`
   background-color: rgb(230 100 100);
@@ -26,8 +25,6 @@ const LayoutContent = styled(Layout.Content)`
   padding: 24px;
   background-color: #fff;
 `;
-
-
 
 function App() {
   const [notifications, setNotifications] = useState([]);
@@ -47,7 +44,6 @@ function App() {
   const handleApiError = (error, message) => {
     console.error(`${message}:`, error);
   };
-
 
   useEffect(() => {
     const fetchDataVanBanDen = async () => {
@@ -71,15 +67,15 @@ function App() {
 
   const toggleSidebar = () => {
     setIsFold(!isFold);
-  }
+  };
 
   return (
     <Router>
       <AppContainer>
         {isLoggedIn ? (
-          <Layout style={{ background: 'white' }}>
+          <Layout style={{ background: "white" }}>
             <Sidebar isFold={isFold} />
-            <Layout style={{ background: 'white' }}>
+            <Layout style={{ background: "white" }}>
               <LayoutHeader>
                 <Header
                   notifications={notifications}
