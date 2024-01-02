@@ -9,7 +9,7 @@ import NewCaseHandle from "../../pages/Cases/NewCaseHandle";
 import NewCaseVanBanBanHanh from "../../pages/Cases/NewCaseVanBanBanHanh";
 import ThongBaoVanBanDenHan from "../../pages/Home/ThongBaoVanBanDenHan";
 import ChatCase from "../../pages/Cases/ChatCase";
-import Home from "../../pages/Home/ThongKe";
+import Home from "../../pages/Home";
 import NewUserForm from "../../pages/Users/Create";
 import Profile from '../../pages/Users/Profile';
 

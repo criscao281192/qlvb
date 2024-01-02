@@ -62,7 +62,7 @@ const ThongKeVanBanDi = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: "center", minHeight: 350 }}>
       <div style={{ fontSize: "32px", fontWeight: "bold", color: "#0958d9" }}>
         THỐNG KÊ VĂN BẢN ĐI
       </div>

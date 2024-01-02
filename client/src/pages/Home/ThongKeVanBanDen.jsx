@@ -41,7 +41,7 @@ const ThongKeVanBanDen = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: "center", minHeight: 350 }}>
       <div style={{ fontSize: "32px", fontWeight: "bold", color: "#237804" }}>
         THỐNG KÊ VĂN BẢN ĐẾN
       </div>

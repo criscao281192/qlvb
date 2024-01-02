@@ -12,7 +12,6 @@ import PublicRoute from "./shared/routes/PublicRoute";
 const AppContainer = styled.div`
 `;
 
-
 const MainContainerSignIn = styled.div`
   background-color: rgb(230 100 100);
 `;
@@ -24,10 +23,8 @@ const LayoutHeader = styled(Layout.Header)`
 `;
 
 const LayoutContent = styled(Layout.Content)`
-  margin: 24px 16px;
   padding: 24px;
   background-color: #fff;
-  min-height: 280px;
 `;
 
 
