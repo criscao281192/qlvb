@@ -5,20 +5,14 @@ import styled from "styled-components";
 import { Badge } from "antd";
 import { BellTwoTone } from "@ant-design/icons";
 import Header from "./components/Header";
-import Cases from "./pages/Cases";
-import CaseVanBanBanHanhs from "./pages/Cases/indexVanBanBanHanh";
-import UserList from "./pages/Users/UserList";
-import NewCase from "./pages/Cases/NewCase";
-import NewCaseHandle from "./pages/Cases/NewCaseHandle";
-import NewCaseVanBanBanHanh from "./pages/Cases/NewCaseVanBanBanHanh";
-import ThongBaoVanBanDenHan from "./pages/Home/ThongBaoVanBanDenHan";
-import ChatCase from "./pages/Cases/ChatCase";
-import Home from "./pages/Home/ThongKe";
-import Login from "./components/Login";
+
+import Login from "./pages/Login";
 import NewUserForm from "./pages/Users/Create";
 
 import "./stylesApp.css";
 import moment from "moment";
+import PrivateRoute from "./shared/routes/PrivateRoute";
+import PublicRoute from "./shared/routes/PublicRoute";
 
 const AppContainer = styled.div`
   display: grid;
@@ -156,15 +150,15 @@ function App() {
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_ban_hanh
                                     ? moment(notification.ngay_ban_hanh).format(
-                                        "DD/MM/YYYY"
-                                      )
+                                      "DD/MM/YYYY"
+                                    )
                                     : "-"}
                                 </td>
                                 <td style={{ fontSize: "10px" }}>
                                   {notification.ngay_tiep_nhan
                                     ? moment(
-                                        notification.ngay_tiep_nhan
-                                      ).format("DD/MM/YYYY")
+                                      notification.ngay_tiep_nhan
+                                    ).format("DD/MM/YYYY")
                                     : "-"}
                                 </td>
                               </tr>
@@ -176,61 +170,14 @@ function App() {
                   )}
                 </div>
               </div>
-              <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route path="/ChatCase">
-                  <ChatCase />
-                </Route>
-                <Route path="/thong-bao">
-                  <ThongBaoVanBanDenHan />
-                </Route>
-                <Route path="/quan-ly-van-ban/tao-moi">
-                  <NewCase />
-                </Route>
-                <Route path="/quan-ly-van-ban/chinh-sua/:id">
-                  <NewCase />
-                </Route>
-                <Route path="/quan-ly-van-ban/xu-ly-van-ban/:id">
-                  <NewCaseHandle />
-                </Route>
-                <Route path="/quan-ly-van-ban">
-                  <Cases />
-                </Route>
-                <Route path="/quan-ly-van-ban-ban-hanh/tao-moi">
-                  <NewCaseVanBanBanHanh />
-                </Route>
-                <Route path="/quan-ly-van-ban-ban-hanh/chinh-sua/:id">
-                  <NewCaseVanBanBanHanh />
-                </Route>
-                <Route path="/quan-ly-van-ban-ban-hanh">
-                  <CaseVanBanBanHanhs />
-                </Route>
-                <Route path="/quan-ly-tai-khoan/tao-moi">
-                  <NewUserForm />
-                </Route>
-                <Route path="/quan-ly-tai-khoan/chinh-sua/:id">
-                  <NewUserForm />
-                </Route>
-                <Route path="/quan-ly-tai-khoan">
-                  <UserList />
-                </Route>
-              </Switch>
+              <PrivateRoute />
             </MainContainer>
           </>
         ) : (
           <>
             <MainContainerSignIn>
               <div className="user-signin">
-                <Switch>
-                  <Route path="/dang-ky-tai-khoan">
-                    <NewUserForm />
-                  </Route>
-                  <Route path="/">
-                    <Login onLogin={handleLoginSuccess} />
-                  </Route>
-                </Switch>
+                <PublicRoute handleLoginSuccess={handleLoginSuccess} />
               </div>
             </MainContainerSignIn>
           </>
