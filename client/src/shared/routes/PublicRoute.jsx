@@ -12,6 +12,9 @@ const PublicRoute = ({ handleLoginSuccess }) => {
       <Route path="/">
         <Login onLogin={handleLoginSuccess} />
       </Route>
+      <Route path="*">
+        <div>404</div>
+      </Route>
     </Switch>
   )
 }
