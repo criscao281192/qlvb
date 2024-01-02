@@ -26,7 +26,7 @@ const LoginContainer = styled.div`
 `;
 
 const LogoImage = styled.img`
-  width: 120px;
+  width: 96px;
 `;
 
 const LoginForm = styled.div`
@@ -40,14 +40,14 @@ const LoginForm = styled.div`
 `;
 
 const LoginTitle = styled.h1`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   color: #fff;
   font-weight: bold;
   font-size: 48px;
 `;
 
 const FormTitle = styled.h2`
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   color: #000;
   font-weight: bold;
   font-size: 32px;
@@ -105,12 +105,15 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [serverError, setServerError] = useState(null);
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!username || !password) {
       message.error("HÃY ĐIỀN ĐẦY ĐỦ TÀI KHOẢN VÀ MẬT KHẨU");
       return;
     }
+
+    setLoading(true);
 
     try {
       const response = await loginAPI(username, password);
@@ -119,12 +122,15 @@ const Login = ({ onLogin }) => {
         const userData = response.data;
         localStorage.setItem("accessToken", userData.token);
         onLogin(username, userData);
+        setLoading(false);
         window.location.href = "/";
       } else {
         const errorMessage = response.data && response.data.message;
         setServerError(errorMessage || "ĐĂNG NHẬP KHÔNG THÀNH CÔNG!");
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       console.log("Login API Error:", error);
 
       if (error.response) {
@@ -179,7 +185,7 @@ const Login = ({ onLogin }) => {
           />
         </InputContainer>
         {serverError && <div style={{ color: "red" }}>{serverError}</div>}
-        <LoginButton onClick={handleLogin}>Đăng nhập</LoginButton>
+        <LoginButton onClick={handleLogin} loading={loading}>Đăng nhập</LoginButton>
         <br />
         <RegisterButton onClick={register}>
           Đăng ký tài khoản

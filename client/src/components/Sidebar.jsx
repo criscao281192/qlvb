@@ -98,7 +98,7 @@ const Header = ({ isFold }) => {
           width={isFold ? '50px' : '110px'}
         />
       </AppLogoWrapper>
-      <MenuWrapper mode="inline" inlineCollapsed={isFold} style={{ backgroundColor: '#defdda' }}>
+      <MenuWrapper mode="inline" collapsed={isFold} style={{ backgroundColor: '#defdda' }}>
         {MENUS.map((menu, index) => {
           return (
             <Menu.Item className="custom-menu-item" key={index}>
