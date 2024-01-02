@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import {
   UserOutlined,
   LockOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
 } from "@ant-design/icons";
-import { message } from "antd";
+import { Button, Input, message } from "antd";
 import styled from "styled-components";
 import { loginAPI } from "../api";
+import { useHistory } from "react-router-dom";
+import logoImage from "../assets/img/Logo.png";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -17,7 +16,7 @@ const LoginContainer = styled.div`
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background-image: url("/LOGOKTHS.png");
+  background-image: url("/bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -26,87 +25,86 @@ const LoginContainer = styled.div`
   position: relative;
 `;
 
-const LoginForm = styled.div`
-  background: rgba(0, 0, 0, 0);
-  padding: 20px;
-  border-radius: 10px;
-  height: 50vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
+const LogoImage = styled.img`
+  width: 120px;
 `;
 
-const LoginTitle = styled.h2`
-  margin-bottom: 20px;
-  color: red;
+const LoginForm = styled.div`
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  height: 400px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 540px;
+`;
+
+const LoginTitle = styled.h1`
+  margin-bottom: 32px;
+  color: #fff;
   font-weight: bold;
-  font-size: 54px;
+  font-size: 48px;
+`;
+
+const FormTitle = styled.h2`
+  margin-bottom: 32px;
+  color: #000;
+  font-weight: bold;
+  font-size: 32px;
 `;
 
 const InputContainer = styled.div`
   position: relative;
 `;
 
-const Icon = styled.span`
-  position: absolute;
-  top: 35%;
-  transform: translateY(-50%);
-  left: 10px;
-  color: rgba(0, 0, 0, 1);
-`;
-
-const PasswordIcon = styled.span`
-  position: absolute;
-  top: 35%;
-  transform: translateY(-50%);
-  right: 10px;
-  color: rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-`;
-
-const LoginInput = styled.input`
+const LoginInput = styled(Input)`
   width: 100%;
-  padding: 10px 30px 10px 40px;
   margin-bottom: 25px;
-  box-sizing: border-box;
-  color: black;
-  border: ${(props) => (props.error ? "1px solid red" : "none")};
 `;
 
-const LoginButton = styled.button`
-  background-color: #4caf50;
-  color: white;
-  padding: 20px;
-  border: none;
+const StyledButton = styled(Button)`
+  width: 100%;
+  margin-top: 25px;
+
   border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  display: inline-block;
-  width: ${(props) => (props.register ? "calc(50% - 5px)" : "50%")};
+  height: 48px;
+  font-weight: bold;
+  
+
   &:hover {
-    background-color: #45a049;
+    outline: none;
+    border: none;
+  }
+
+`;
+
+
+const LoginButton = styled(StyledButton)`
+  background-color: #d71920;
+  color: white;
+  border: none;
+
+  &:hover {
+    background-color: #d71920;
+    color: white;
   }
 `;
 
-const RegisterButton = styled.button`
-  background-color: #2196f3;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 50px;
-  display: inline-block;
-  width: calc(50% - 5px);
+const RegisterButton = styled(StyledButton)`
+  background-color: white;
+  color: black;
+
   &:hover {
     background-color: #0b7dda;
+    color: white;
   }
 `;
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState(null);
+  const history = useHistory();
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -147,16 +145,23 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  const register = () => {
+    history.push("/dang-ky-tai-khoan");
+  }
+
   return (
     <LoginContainer>
+      <LogoImage src={logoImage} alt="Logo" 
+      />
+
+      <LoginTitle>Hệ thống quản lý văn bản</LoginTitle>
+
       <LoginForm>
-        <LoginTitle>QUẢN LÝ VĂN BẢN</LoginTitle>
+        <FormTitle>Đăng nhập hệ thống</FormTitle>
         <InputContainer>
-          <Icon>
-            <UserOutlined />
-          </Icon>
           <LoginInput
-            type="text"
+            size="large"
+            prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="TÊN ĐĂNG NHẬP"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -164,28 +169,21 @@ const Login = ({ onLogin }) => {
           />
         </InputContainer>
         <InputContainer>
-          <Icon>
-            <LockOutlined />
-          </Icon>
-          <LoginInput
-            type={showPassword ? "text" : "password"}
+          <Input.Password
+            size="large"
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="MẬT KHẨU"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-          </PasswordIcon>
         </InputContainer>
         {serverError && <div style={{ color: "red" }}>{serverError}</div>}
-        <LoginButton onClick={handleLogin}>ĐĂNG NHẬP</LoginButton>
+        <LoginButton onClick={handleLogin}>Đăng nhập</LoginButton>
         <br />
-        <NavLink to="/dang-ky-tai-khoan">
-          <RegisterButton>
-            ĐĂNG KÝ
-          </RegisterButton>
-        </NavLink>
+        <RegisterButton onClick={register}>
+          Đăng ký tài khoản
+        </RegisterButton>
       </LoginForm>
     </LoginContainer>
   );

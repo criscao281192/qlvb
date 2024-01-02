@@ -8,6 +8,7 @@ import {
   ClockCircleOutlined,
   FolderOpenOutlined,
   UserAddOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
 import { jwtDecode } from "jwt-decode";
@@ -27,6 +28,7 @@ const AppLogoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 64px;
 `;
 
 const LogoImage = styled.img`
@@ -80,7 +82,7 @@ const Header = ({ isFold }) => {
         MENUS.push({
           name: "Quản lý tài khoản",
           icon: (
-            <UserAddOutlined style={{ fontSize: "18px", color: "Red" }} />
+            <SolutionOutlined style={{ fontSize: "18px", color: "Red" }} />
           ),
           link: "/quan-ly-tai-khoan",
           outside: false,
@@ -93,7 +95,7 @@ const Header = ({ isFold }) => {
     <Layout.Sider trigger={null} collapsible collapsed={isFold} style={{ background: '#defdda' }}>
       <AppLogoWrapper>
         <LogoImage src={logoImage} alt="Logo" className="logo"
-          width={isFold ? '60px' : '150px'}
+          width={isFold ? '50px' : '110px'}
         />
       </AppLogoWrapper>
       <MenuWrapper mode="inline" inlineCollapsed={isFold} style={{ backgroundColor: '#defdda' }}>

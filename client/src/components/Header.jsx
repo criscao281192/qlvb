@@ -40,7 +40,7 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
 
   return (
     <Wrapper>
-      <MenuFoldOutlined style={{ fontSize: "24px", color: "#000" }} onClick={toggleSidebar} />
+      <MenuFoldOutlined style={{ fontSize: "20px", color: "#000" }} onClick={toggleSidebar} />
 
       <MenuList>
         <MenuItem
@@ -50,27 +50,23 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
         >
           <Badge count={notifications.length}>
             <BellOutlined
-              style={{ fontSize: "24px", color: "#000" }}
+              style={{ fontSize: "20px", color: "#000" }}
             />
           </Badge>
         </MenuItem>
         <MenuItem onClick={onAccountHandler}>
-          <Avatar src="avatar.jpg" />
+          <Avatar src="/avatar.jpg" />
         </MenuItem>
 
         <MenuItem onClick={onLogout}>
-          <LogoutOutlined style={{ fontSize: "24px", color: "#000" }} />
+          <LogoutOutlined style={{ fontSize: "20px", color: "#000" }} />
         </MenuItem>
       </MenuList>
-      <div className="notification-container">
-        <div>
-          {isHovered && (
-            <NotificationTable notifications={[...notifications, ...notifications, ...notifications]} onClickItem={() => {
-              setIsHovered(false);
-            }} />
-          )}
-        </div>
-      </div>
+      {isHovered && (
+        <NotificationTable notifications={[...notifications, ...notifications, ...notifications]} onClickItem={() => {
+          setIsHovered(false);
+        }} />
+      )}
     </Wrapper>
   )
 }

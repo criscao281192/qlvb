@@ -14,7 +14,7 @@ const AppContainer = styled.div`
 
 
 const MainContainerSignIn = styled.div`
-  padding: 20px;
+  background-color: rgb(230 100 100);
 `;
 
 const LayoutHeader = styled(Layout.Header)`
