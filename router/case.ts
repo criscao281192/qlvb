@@ -149,13 +149,19 @@ const buildQuery = (req: Request) => {
  * TÌM KIẾM
  */
 router.get("/timVanBanDen", (req: Request, res: Response) => {
+  const queryCondition = buildQuery(req);
+
   const vanBanDenSoOptions = ["TLT", "TLM"];
-  const whereCon = {
+  const vanBanDenSoCondition = {
     van_ban_den_so: {
       [Op.or]: vanBanDenSoOptions.map((vanBanDenSo) => ({
         [Op.like]: `%${vanBanDenSo}%`,
       })),
     },
+  };
+
+  const whereCon = {
+    [Op.and]: [queryCondition, vanBanDenSoCondition],
   };
 
   TaiLieu.findAll({
@@ -179,12 +185,17 @@ router.get("/timVanBanDen", (req: Request, res: Response) => {
  * TÌM KIẾM
  */
 router.get("/timVanBanDi", (req: Request, res: Response) => {
+  const queryCondition = buildQuery(req);
   const donViBanHanh = ["PC09"];
-  const whereCon = {
+  const vanBanDiSoCondition = {
     ten_don_vi: {
       [Op.in]: donViBanHanh,
     },
   };
+  const whereCon = {
+    [Op.and]: [queryCondition, vanBanDiSoCondition],
+  };
+
   TaiLieu.findAll({
     include: [
       {

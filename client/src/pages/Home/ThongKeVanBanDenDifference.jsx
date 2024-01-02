@@ -1,4 +1,3 @@
-import { Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,

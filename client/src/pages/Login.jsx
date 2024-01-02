@@ -185,7 +185,7 @@ const Login = ({ onLogin }) => {
           />
         </InputContainer>
         {serverError && <div style={{ color: "red" }}>{serverError}</div>}
-        <LoginButton onClick={handleLogin} loading={loading}>Đăng nhập</LoginButton>
+        <LoginButton onClick={handleLogin} loading={loading}>ĐĂNG NHẬP</LoginButton>
         <br />
         <RegisterButton onClick={register}>
           ĐĂNG KÝ TÀI KHOẢN

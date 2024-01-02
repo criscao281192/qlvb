@@ -1,5 +1,5 @@
-import React from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Switch, Route } from "react-router-dom";
 import NewUserForm from "../../pages/Users/Create";
 import Login from "../../pages/Login";
 
@@ -12,8 +12,11 @@ const PublicRoute = ({ handleLoginSuccess }) => {
       <Route path="/">
         <Login onLogin={handleLoginSuccess} />
       </Route>
+      <Route path="*">
+        <div>404</div>
+      </Route>
     </Switch>
-  )
-}
+  );
+};
 
-export default PublicRoute
+export default PublicRoute;

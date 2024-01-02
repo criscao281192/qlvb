@@ -12,6 +12,7 @@ import {
 import logoImage from "../assets/img/Logo.png";
 import { jwtDecode } from "jwt-decode";
 import { Layout, Menu } from "antd";
+import { Roles } from "../shared/constants/roles";
 
 const MenuWrapper = styled(Menu)`
   &&& .ant-menu-item-selected {
@@ -44,55 +45,57 @@ const iconStyle = {
   color: "red",
 };
 
-let MENUS = [
+let menus = [
   {
     name: "Trang chủ",
     icon: <HomeOutlined style={iconStyle} />,
     link: "/",
     outside: false,
+    roles: [Roles.Admin, Roles.User],
   },
   {
     name: "Văn bản đến",
     icon: <CloudUploadOutlined style={iconStyle} />,
     link: "/quan-ly-van-ban",
     outside: false,
+    roles: [Roles.Admin, Roles.User],
   },
   {
     name: "Văn bản đi",
     icon: <SendOutlined style={iconStyle} />,
     link: "/quan-ly-van-ban-ban-hanh",
     outside: false,
+    roles: [Roles.Admin, Roles.User],
   },
   {
     name: "Nhắc việc",
     icon: <ClockCircleOutlined style={iconStyle} />,
     link: "/thong-bao",
     outside: false,
+    roles: [Roles.Admin, Roles.User],
   },
   {
     name: "Văn bản lưu",
     icon: <FolderOpenOutlined style={iconStyle} />,
     link: "http://192.168.1.28/vanban/",
     outside: true,
+    roles: [Roles.Admin, Roles.User],
+  },
+  {
+    name: "Quản lý tài khoản",
+    icon: <SolutionOutlined style={iconStyle} />,
+    link: "/quan-ly-tai-khoan",
+    outside: false,
+    roles: [Roles.Admin],
   },
 ];
 
 const Header = ({ isFold }) => {
-  const [menus, setMenus] = useState(MENUS);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
     if (userInfo) {
-      if (userInfo.phan_quyen === "1") {
-        setMenus([
-          ...menus,
-          {
-            name: "Tài khoản",
-            icon: <SolutionOutlined style={iconStyle} />,
-            link: "/quan-ly-tai-khoan",
-            outside: false,
-          },
-        ]);
-      }
+      setUser(userInfo);
     }
   }, []);
 
