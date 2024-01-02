@@ -11,6 +11,7 @@ import ThongBaoVanBanDenHan from "../../pages/Home/ThongBaoVanBanDenHan";
 import ChatCase from "../../pages/Cases/ChatCase";
 import Home from "../../pages/Home/ThongKe";
 import NewUserForm from "../../pages/Users/Create";
+import Profile from '../../pages/Users/Profile';
 
 const PrivateRoute = () => {
   return (
@@ -53,6 +54,9 @@ const PrivateRoute = () => {
       </Route>
       <Route path="/quan-ly-tai-khoan">
         <UserList />
+      </Route>
+      <Route path="/trang-ca-nhan">
+        <Profile />
       </Route>
     </Switch>
   )
