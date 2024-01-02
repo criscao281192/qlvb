@@ -29,6 +29,11 @@ const MenuItem = styled.li`
   }
 `;
 
+const iconStyle = {
+  fontSize: "20px",
+  color: "#000"
+};
+
 
 const Header = ({ notifications, toggleSidebar, onLogout }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +45,7 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
 
   return (
     <Wrapper>
-      <MenuFoldOutlined style={{ fontSize: "20px", color: "#000" }} onClick={toggleSidebar} />
+      <MenuFoldOutlined style={iconStyle} onClick={toggleSidebar} />
 
       <MenuList>
         <MenuItem
@@ -50,7 +55,7 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
         >
           <Badge count={notifications.length}>
             <BellOutlined
-              style={{ fontSize: "20px", color: "#000" }}
+              style={iconStyle}
             />
           </Badge>
         </MenuItem>
@@ -59,7 +64,7 @@ const Header = ({ notifications, toggleSidebar, onLogout }) => {
         </MenuItem>
 
         <MenuItem onClick={onLogout}>
-          <LogoutOutlined style={{ fontSize: "20px", color: "#000" }} />
+          <LogoutOutlined style={iconStyle} />
         </MenuItem>
       </MenuList>
       {isHovered && (

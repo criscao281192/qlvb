@@ -7,7 +7,6 @@ import {
   SendOutlined,
   ClockCircleOutlined,
   FolderOpenOutlined,
-  UserAddOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
@@ -41,52 +40,58 @@ const MenuTitle = styled.span`
   font-weight: 600;
 `;
 
+const iconStyle = {
+  fontSize: "18px",
+  color: 'red',
+};
+
 let MENUS = [
   {
     name: "Trang chủ",
-    icon: <HomeOutlined style={{ fontSize: "18px", color: "Red" }} />,
+    icon: <HomeOutlined style={iconStyle} />,
     link: "/",
     outside: false,
   },
   {
     name: "Văn bản đến",
-    icon: <CloudUploadOutlined style={{ fontSize: "18px", color: "Red" }} />,
+    icon: <CloudUploadOutlined style={iconStyle} />,
     link: "/quan-ly-van-ban",
     outside: false,
   },
   {
     name: "Văn bản đi",
-    icon: <SendOutlined style={{ fontSize: "18px", color: "Red" }} />,
+    icon: <SendOutlined style={iconStyle} />,
     link: "/quan-ly-van-ban-ban-hanh",
     outside: false,
   },
   {
     name: "Nhắc việc",
-    icon: <ClockCircleOutlined style={{ fontSize: "18px", color: "Red" }} />,
+    icon: <ClockCircleOutlined style={iconStyle} />,
     link: "/thong-bao",
     outside: false,
   },
   {
     name: "Văn bản lưu",
-    icon: <FolderOpenOutlined style={{ fontSize: "18px", color: "Red" }} />,
+    icon: <FolderOpenOutlined style={iconStyle} />,
     link: 'http://192.168.1.28/vanban/',
     outside: true,
   },
 ];
 
 const Header = ({ isFold }) => {
+  const [menus, setMenus] = useState(MENUS);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
     if (userInfo) {
       if (userInfo.phan_quyen === "1") {
-        MENUS.push({
+        setMenus([...menus, {
           name: "Quản lý tài khoản",
           icon: (
-            <SolutionOutlined style={{ fontSize: "18px", color: "Red" }} />
+            <SolutionOutlined style={iconStyle} />
           ),
           link: "/quan-ly-tai-khoan",
           outside: false,
-        })
+        }]);
       }
     }
   }, []);
@@ -95,19 +100,28 @@ const Header = ({ isFold }) => {
     <Layout.Sider trigger={null} collapsible collapsed={isFold} style={{ background: '#defdda' }}>
       <AppLogoWrapper>
         <LogoImage src={logoImage} alt="Logo" className="logo"
-          width={isFold ? '50px' : '110px'}
+          width={isFold ? '30px' : '110px'}
         />
       </AppLogoWrapper>
-      <MenuWrapper mode="inline" collapsed={isFold} style={{ backgroundColor: '#defdda' }}>
-        {MENUS.map((menu, index) => {
+      <MenuWrapper mode="inline" style={{ backgroundColor: '#defdda' }}>
+        {menus.map((menu, index) => {
           return (
-            <Menu.Item className="custom-menu-item" key={index}>
-              <Link to={menu.link} target={menu.outside ? '_blank' : ''}>
-                {menu.icon}
-                <MenuTitle>
-                  {menu.name}
-                </MenuTitle>
-              </Link>
+            <Menu.Item key={index}>
+              {menu.outside ? (
+                <a href={menu.link} target="_blank">
+                  {menu.icon}
+                  <MenuTitle>
+                    {menu.name}
+                  </MenuTitle>
+                </a>
+              ) : (
+                <Link to={menu.link}>
+                  {menu.icon}
+                  <MenuTitle>
+                    {menu.name}
+                  </MenuTitle>
+                </Link>
+              )}
             </Menu.Item>
           );
         })}
