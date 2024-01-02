@@ -8,6 +8,7 @@ import {
   Tooltip,
   Line,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 import { countVanBanDiForComparison } from "../../api";
 
@@ -31,31 +32,28 @@ const ThongKeVanBanDiDifference = () => {
   }, []);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <br />
-      <Row justify="center" align="middle">
-        <Col span={24}>
-          <LineChart width={800} height={350} data={caseVanBanDiDifference}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Legend />
-            <Tooltip contentStyle={{ fontWeight: "bold" }} />
-            <Line
-              type="monotone"
-              dataKey="countCurrentYear"
-              name={`NĂM ${currentYear}`}
-              stroke="#0958d9"
-            />
-            <Line
-              type="monotone"
-              dataKey="countLastYear"
-              name={`NĂM ${currentYear - 1}`}
-              stroke="#13c2c2"
-            />
-          </LineChart>
-        </Col>
-      </Row>
+    <div >
+      <ResponsiveContainer width="100%" height={350}>
+        <LineChart width={800} height={350} data={caseVanBanDiDifference}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Legend />
+          <Tooltip contentStyle={{ fontWeight: "bold" }} />
+          <Line
+            type="monotone"
+            dataKey="countCurrentYear"
+            name={`NĂM ${currentYear}`}
+            stroke="#0958d9"
+          />
+          <Line
+            type="monotone"
+            dataKey="countLastYear"
+            name={`NĂM ${currentYear - 1}`}
+            stroke="#13c2c2"
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
