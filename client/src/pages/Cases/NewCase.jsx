@@ -74,6 +74,7 @@ const NewCase = () => {
     }
     postCase(values).then((res) => {
       history.push("/quan-ly-van-ban");
+      window.location.href = "/quan-ly-van-ban";
     });
   };
 

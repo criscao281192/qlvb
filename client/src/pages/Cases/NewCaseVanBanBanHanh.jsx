@@ -58,6 +58,7 @@ const NewCaseVanBanBanHanh = () => {
     }
     postCase(values).then((res) => {
       history.push("/quan-ly-van-ban-ban-hanh");
+      window.location.href = "/quan-ly-van-ban-ban-hanh";
     });
   };
 

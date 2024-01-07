@@ -78,20 +78,19 @@ CREATE TABLE IF NOT EXISTS user_logins (
     PRIMARY KEY (id)
 );
 
-{
-  /* <Form.Item name="updatedBy" rules={[]} validateTrigger="onBlur">
-<Input
-  style={{ display: "none" }}
-  placeholder={`(${userFullName})`}
-  disabled
-/>
-</Form.Item>
-<Form.Item name="updatedAt" rules={[]} validateTrigger="onBlur">
-<DatePicker
-  style={{ display: "none" }}
-  format={dateFormatList}
-  defaultValue={moment()}
-  disabled
-/>
-</Form.Item> */
-}
+CREATE TABLE IF NOT EXISTS can_bos(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ho_ten VARCHAR(100),
+    que_quan VARCHAR(100),
+    so_hieu VARCHAR(100),
+    ngay_sinh DATETIME,
+    ngay_vao_nganh DATETIME,
+    ngay_vao_dang DATETIME,
+    doi_cong_tac VARCHAR(100),
+    linh_vuc_cong_tac VARCHAR(100),
+    chuc_vu VARCHAR(100),
+    ngay_bo_nhiem DATETIME,
+    trinh_do_ly_luan VARCHAR(100),
+    trinh_do_dao_tao VARCHAR(100),
+    trinh_do_cong_an VARCHAR(100),
+)

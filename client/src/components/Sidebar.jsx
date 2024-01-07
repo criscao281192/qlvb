@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   HomeOutlined,
   CloudUploadOutlined,
@@ -8,6 +8,7 @@ import {
   ClockCircleOutlined,
   FolderOpenOutlined,
   SolutionOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
 import { jwtDecode } from "jwt-decode";
@@ -82,15 +83,23 @@ let menus = [
     roles: [Roles.Admin, Roles.User],
   },
   {
-    name: "Quản lý tài khoản",
+    name: "Tài khoản",
     icon: <SolutionOutlined style={iconStyle} />,
     link: "/quan-ly-tai-khoan",
     outside: false,
     roles: [Roles.Admin],
   },
+  {
+    name: "Cán bộ",
+    icon: <TeamOutlined style={iconStyle} />,
+    link: "/quan-ly-can-bo",
+    outside: false,
+    roles: [Roles.Admin, Roles.User],
+  },
 ];
 
 const Header = ({ isFold }) => {
+  const history = useHistory();
   const [user, setUser] = useState(null);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
@@ -119,15 +128,27 @@ const Header = ({ isFold }) => {
         style={{ backgroundColor: "#defdda", height: "calc(100vh - 64px)" }}
       >
         {menus.map((menu, index) => {
+          const handleClick = () => {
+            if (menu.link === "/") {
+              window.location.href = "/";
+            } else {
+              history.push(menu.link);
+            }
+          };
           return (
             <Menu.Item key={index}>
               {menu.outside ? (
-                <a href={menu.link} target="_blank" rel="noreferrer">
+                <a
+                  href={menu.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleClick}
+                >
                   {menu.icon}
                   <MenuTitle>{menu.name}</MenuTitle>
                 </a>
               ) : (
-                <Link to={menu.link}>
+                <Link to={menu.link} onClick={handleClick}>
                   {menu.icon}
                   <MenuTitle>{menu.name}</MenuTitle>
                 </Link>

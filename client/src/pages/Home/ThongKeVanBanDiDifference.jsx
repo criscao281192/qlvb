@@ -1,4 +1,3 @@
-import { Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -32,7 +31,7 @@ const ThongKeVanBanDiDifference = () => {
   }, []);
 
   return (
-    <div >
+    <div>
       <ResponsiveContainer width="100%" height={350}>
         <LineChart width={800} height={350} data={caseVanBanDiDifference}>
           <CartesianGrid strokeDasharray="3 3" />

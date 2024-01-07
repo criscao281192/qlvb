@@ -581,6 +581,7 @@ export const CHUC_VU = [
     value: "5",
   },
 ];
+
 export const DON_VI = [
   {
     title: "Chỉ huy Phòng",
@@ -608,3 +609,83 @@ export const DON_VI = [
   },
 ];
 
+export const LINH_VUC = [
+  {
+    title: "Tham mưu - Tổng hợp",
+    value: "Tham mưu - Tổng hợp",
+  },
+  {
+    title: "Văn thư",
+    value: "Văn thư",
+  },
+  {
+    title: "Lái xe",
+    value: "Lái xe",
+  },
+  {
+    title: "Khám nghiệm hiện trường",
+    value: "Khám nghiệm hiện trường",
+  },
+  {
+    title: "Giám định KTHS truyền thống",
+    value: "Giám định KTHS truyền thống",
+  },
+  {
+    title: "Giám định tài liệu",
+    value: "Giám định tài liệu",
+  },
+  {
+    title: "Giám định hoá, KTPL",
+    value: "Giám định hoá, KTPL",
+  },
+  {
+    title: "Giám định pháp y",
+    value: "Giám định pháp y",
+  },
+  {
+    title: "Giám định sinh vật",
+    value: "Giám định sinh vật",
+  },
+  {
+    title: "Kỹ thuật phòng, chống tội phạm",
+    value: "Kỹ thuật phòng, chống tội phạm",
+  },
+]
+
+export const TRINH_DO = [
+  {
+    title: "SƠ CẤP",
+    value: "SƠ CẤP",
+  },
+  {
+    title: "TRUNG CẤP",
+    value: "TRUNG CẤP",
+  },
+  {
+    title: "CAO CẤP",
+    value: "CAO CẤP",
+  },
+]
+
+export const DAO_TAO = [
+  {
+    title: "SƠ CẤP",
+    value: "SƠ CẤP",
+  },
+  {
+    title: "TRUNG CẤP",
+    value: "TRUNG CẤP",
+  },
+  {
+    title: "ĐẠI HỌC",
+    value: "ĐẠI HỌC",
+  },
+  {
+    title: "THẠC SĨ",
+    value: "THẠC SĨ",
+  },
+  {
+    title: "TIẾN SĨ",
+    value: "TIẾN SĨ",
+  },
+]

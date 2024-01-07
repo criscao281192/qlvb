@@ -7,7 +7,6 @@ import {
   SaveTwoTone,
   CheckCircleTwoTone,
   SyncOutlined,
-  CloudDownloadOutlined,
   TeamOutlined,
   FileDoneOutlined,
 } from "@ant-design/icons";
@@ -19,12 +18,6 @@ import "./styles.css";
 const Cases = () => {
   const [cases, setCases] = useState([]);
   const [searchCondition, setSearchCondition] = useState();
-  const [selectedDateRange, setSelectedDateRange] = useState(null);
-  const [selectedDateOut, setSelectedDateOut] = useState(null);
-  const [ten_don_vi, setTenDonVi] = useState("");
-  const [noi_nhan, setNoiNhan] = useState("");
-  const [noi_dung_van_ban, setTrichYeu] = useState("");
-  const [trang_thai_van_ban, setTrangThai] = useState("");
 
   let history = useHistory();
 
@@ -540,104 +533,9 @@ const Cases = () => {
     setItemsPerPage(pagination.pageSize);
   };
 
-  const [van_ban_den_content, setVanBanDenContent] =
-    useState("CÔNG VĂN CÁC LOẠI");
-  const vanBanDenContentMapping = {
-    1: "TÀI LIỆU 'THƯỜNG'",
-    2: "TÀI LIỆU 'MẬT'",
-    3: "TÀI LIỆU KHÁC",
-  };
-
   const onSearch = (searchParams) => {
-    const {
-      van_ban_den_id,
-      ten_don_vi,
-      noi_nhan,
-      noi_dung_van_ban,
-      trang_thai_van_ban,
-    } = searchParams;
-    setVanBanDenContent(
-      vanBanDenContentMapping[van_ban_den_id] || "CÔNG VĂN CÁC LOẠI"
-    );
     setSearchCondition(searchParams);
-    setSelectedDateRange(searchParams.ngay_tiep_nhan);
-    setSelectedDateOut(searchParams.ngay_het_han);
-    setTenDonVi(ten_don_vi);
-    setNoiNhan(noi_nhan);
-    setTrichYeu(noi_dung_van_ban);
-    setTrangThai(trang_thai_van_ban);
   };
-
-  const currentDate = moment().format("DD/MM/YYYY");
-  const currentMonthStartDate = moment().startOf("month").format("DD/MM/YYYY");
-
-  let displayContent = "";
-
-  if (selectedDateOut) {
-    const dateText = `TỪ NGÀY ${
-      selectedDateOut && selectedDateOut[0]
-        ? selectedDateOut[0].format("DD/MM/YYYY")
-        : currentMonthStartDate
-    } 
-  ĐẾN NGÀY ${
-    selectedDateOut && selectedDateOut[1]
-      ? selectedDateOut[1].format("DD/MM/YYYY")
-      : currentDate
-  }`;
-
-    if (totalItems === 0) {
-      displayContent = `PC09-HN KHÔNG CÒN ${van_ban_den_content} 
-    ${
-      noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ""
-    } ĐẾN HẠN BÁO CÁO TRONG KHOẢNG THỜI GIAN NÀY!`;
-    } else {
-      displayContent = `PC09-HN CÓ ${totalItems} ${van_ban_den_content} ${
-        noi_dung_van_ban
-          ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
-          : ""
-      }
-    ${
-      noi_nhan ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} THỰC HIỆN` : ""
-    } ĐẾN HẠN BÁO CÁO
-    ${
-      trang_thai_van_ban
-        ? `CÓ TRẠNG THÁI "${trang_thai_van_ban.toUpperCase()}"`
-        : ""
-    }`;
-      displayContent = `${dateText} ${displayContent}`;
-    }
-  } else {
-    const dateText = `TỪ NGÀY ${
-      selectedDateRange && selectedDateRange[0]
-        ? selectedDateRange[0].format("DD/MM/YYYY")
-        : currentMonthStartDate
-    } 
-  ĐẾN NGÀY ${
-    selectedDateRange && selectedDateRange[1]
-      ? selectedDateRange[1].format("DD/MM/YYYY")
-      : currentDate
-  }`;
-
-    if (totalItems === 0) {
-      displayContent =
-        "KHÔNG CÒN VĂN BẢN NÀO ĐƯỢC TIẾP NHẬN TRONG KHOẢNG THỜI GIAN NÀY!";
-    } else {
-      displayContent = `PC09-HN ĐÃ TIẾP NHẬN ${totalItems} ${van_ban_den_content} ${
-        ten_don_vi ? `TỪ ${ten_don_vi.toUpperCase()}` : ""
-      }
-    ${
-      noi_dung_van_ban
-        ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
-        : ""
-    }
-    ${
-      noi_nhan
-        ? ` GIAO Đ/C ${noi_nhan.toUpperCase()} XỬ LÝ THEO PHIẾU GIAO VIỆC!`
-        : ""
-    }`;
-      displayContent = `${dateText} ${displayContent}`;
-    }
-  }
 
   return (
     <div style={{ textAlign: "center" }}>
@@ -648,19 +546,8 @@ const Cases = () => {
       <SearchCase
         onSearch={onSearch}
         cases={cases}
-        ten_don_vi={ten_don_vi}
-        noi_nhan={noi_nhan}
-        noi_dung_van_ban={noi_dung_van_ban}
         onDownloadVanBanDen={onDownloadVanBanDen}
       />
-      <div>
-        <p style={{ display: "flex", alignItems: "center" }}>
-          <CloudDownloadOutlined
-            style={{ fontSize: "28px", marginRight: "8px" }}
-          />
-          <span style={{ fontWeight: "bold" }}>{displayContent}</span>
-        </p>
-      </div>
       <Table
         rowKey={"id"}
         columns={CaseColumns}
