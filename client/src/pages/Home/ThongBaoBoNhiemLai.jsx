@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Empty, Button } from "antd";
 import { bangBoNhiemLai, updatePersonnelRole } from "../../api/personnel";
-import { WarningOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import "./stylesHome.css";

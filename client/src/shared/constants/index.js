@@ -611,8 +611,12 @@ export const DON_VI = [
 
 export const LINH_VUC = [
   {
-    title: "Tham mưu - Tổng hợp",
-    value: "Tham mưu - Tổng hợp",
+    title: "Phụ trách chung",
+    value: "Phụ trách chung",
+  },
+  {
+    title: "Tham mưu",
+    value: "Tham mưu",
   },
   {
     title: "Văn thư",

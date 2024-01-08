@@ -77,7 +77,14 @@ const PersonnelList = () => {
       dataIndex: "linh_vuc_cong_tac",
       key: "linh_vuc_cong_tac",
       align: "center",
+      render: (text) => {
+        const fields = text
+          .split(";")
+          .map((field, index) => <div key={index}>{field}</div>);
+        return <div style={{ textAlign: "center" }}>{fields}</div>;
+      },
     },
+
     {
       title: "GHI CHÚ",
       key: "",

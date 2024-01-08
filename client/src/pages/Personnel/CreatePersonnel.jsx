@@ -14,8 +14,23 @@ const NewCasePersonnel = () => {
   let history = useHistory();
   let { id } = useParams();
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
+  const [selectedLinhVucCongTac, setSelectedLinhVucCongTac] = useState([]);
 
   const onFinish = (values) => {
+    if (Array.isArray(values.linh_vuc_cong_tac)) {
+      const selectedLinhVucCongTac = values.linh_vuc_cong_tac
+        .map((item) => item.value)
+        .join("; ");
+      if (selectedLinhVucCongTac.trim()) {
+        values.linh_vuc_cong_tac = selectedLinhVucCongTac.replace(
+          /(^\s*,)|(,\s*$)/g,
+          ""
+        );
+      } else {
+        values.linh_vuc_cong_tac = "";
+      }
+    }
+
     if (values.ngay_sinh) {
       values.ngay_sinh = moment(values.ngay_sinh).format(
         "YYYY-MM-DDT13:00:00.000Z"
@@ -73,6 +88,10 @@ const NewCasePersonnel = () => {
       });
     }
   }, [id, form]);
+
+  const handleLinhVucChange = (values) => {
+    setSelectedLinhVucCongTac(values);
+  };
 
   const searchControls = [
     {
@@ -166,9 +185,12 @@ const NewCasePersonnel = () => {
       render: () => {
         return (
           <TreeSelect
-            style={{ width: "100%", textAlign: "left" }}
             treeData={LINH_VUC}
             placeholder="LĨNH VỰC CÔNG TÁC"
+            treeCheckable={true}
+            treeCheckStrictly={true}
+            onChange={handleLinhVucChange}
+            value={selectedLinhVucCongTac}
           />
         );
       },
