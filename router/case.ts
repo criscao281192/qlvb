@@ -931,7 +931,6 @@ router.post("/", upload.single("file_van_ban"), (req, res) => {
   const body = req.body;
 
   if (req.file) {
-    // Kiểm tra nếu có file được tải lên
     const filePath = req.file.path;
 
     fs.writeFile(filePath, req.file.buffer, (err) => {
