@@ -65,6 +65,7 @@ const NewCase = () => {
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
       values.file_van_ban = fileList[0].originFileObj;
+      values.file_van_ban_name = fileList[0].name;
     } else {
       values.file_van_ban = null;
     }
@@ -83,7 +84,6 @@ const NewCase = () => {
   const [userFullName, setUserFullName] = useState(null);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
-    console.log(userInfo);
     if (userInfo) {
       setUserFullName(userInfo.fullname);
     }
@@ -141,9 +141,7 @@ const NewCase = () => {
     },
     fileList,
     onChange(info) {
-      console.log(info);
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
         setFileList(info.fileList);
         setIsChangeFile(true);
       }
@@ -429,18 +427,18 @@ const NewCase = () => {
         },
       ],
     },
-    // {
-    //   name: "file_van_ban",
-    //   label: "PDF",
-    //   render: () => {
-    //     return (
-    //       <Upload {...props}>
-    //         <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
-    //       </Upload>
-    //     );
-    //   },
-    //   rules: [],
-    // },
+    {
+      name: "file_van_ban",
+      label: "PDF",
+      render: () => {
+        return (
+          <Upload {...props}>
+            <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
+          </Upload>
+        );
+      },
+      rules: [],
+    },
   ];
 
   const getFields = () => {

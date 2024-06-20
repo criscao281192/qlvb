@@ -5,6 +5,7 @@ import fs from "fs";
 import moment from "moment";
 import multer from "multer";
 import path from "path";
+import { randomID } from "../utils/common";
 
 const router = express.Router();
 
@@ -566,8 +567,6 @@ router.get("/laysoVanBanDen", async (req: Request, res: Response) => {
     },
   });
 
-  console.log(tailieus);
-
   return res.json({ result: tailieus.length + 1 });
 });
 
@@ -634,8 +633,6 @@ router.get("/bangVanBanDenHan", async (req: Request, res: Response) => {
     },
   });
 
-  console.log(tailieus);
-
   return res.json({ result: tailieus });
 });
 
@@ -672,8 +669,6 @@ router.get("/bangBaoCaoDinhKy", async (req: Request, res: Response) => {
       ...whereCon,
     },
   });
-
-  console.log(tailieus);
 
   return res.json({ result: tailieus });
 });
@@ -800,145 +795,58 @@ router.get("/:caseId", (req: Request, res: Response) => {
 /**
  * TẠO MỚI
  */
-// router.post("/", (req: Request, res: Response) => {
-//   const body = req.body;
-
-//   if (body.isChangedFile) {
-//     if (body.file_van_ban) {
-//       fs.readFile(body.file_van_ban.path, function (err, data) {
-//         if (err) {
-//           console.error("LỖI KHI ĐỌC FILE PDF:", err);
-//         } else {
-//           const record = {
-//             loai_tai_lieu_id: body.loai_tai_lieu,
-//             van_ban_den_id: body.van_ban_den,
-//             van_ban_den_so: body.van_ban_den_so,
-//             ten_don_vi: body.ten_don_vi,
-//             so_van_ban: body.so_van_ban,
-//             ngay_ban_hanh: body.ngay_ban_hanh,
-//             ngay_tiep_nhan: body.ngay_tiep_nhan,
-//             do_mat: body.do_mat,
-//             do_khan: body.do_khan,
-//             noi_dung_van_ban: body.noi_dung_van_ban,
-//             ngay_het_han: body.ngay_het_han,
-//             noi_nhan: body.noi_nhan,
-//             trang_thai_van_ban: body.trang_thai_van_ban,
-//             de_xuat: body.de_xuat,
-//             createdAt: body.createdAt,
-//             createdBy: body.createdBy,
-//             updatedAt: body.updatedAt,
-//             updatedBy: body.updatedBy,
-//             file_van_ban: data,
-//           };
-//           if (body.id) {
-//             TaiLieu.update(record, { where: { id: body.id } })
-//               .then((a) => { })
-//               .catch((e) => {
-//                 console.error("LỖI KHI CẬP NHẬT:", e);
-//               });
-//           } else {
-//             TaiLieu.create(record)
-//               .then((a) => { })
-//               .catch((e) => {
-//                 console.error("LỖI KHI TẠO MỚI:", e);
-//               });
-//           }
-//         }
-//       });
-//     } else {
-//       const record = {
-//         loai_tai_lieu_id: body.loai_tai_lieu,
-//         van_ban_den_id: body.van_ban_den,
-//         van_ban_den_so: body.van_ban_den_so,
-//         ten_don_vi: body.ten_don_vi,
-//         so_van_ban: body.so_van_ban,
-//         ngay_ban_hanh: body.ngay_ban_hanh,
-//         ngay_tiep_nhan: body.ngay_tiep_nhan,
-//         do_mat: body.do_mat,
-//         do_khan: body.do_khan,
-//         noi_dung_van_ban: body.noi_dung_van_ban,
-//         ngay_het_han: body.ngay_het_han,
-//         noi_nhan: body.noi_nhan,
-//         trang_thai_van_ban: body.trang_thai_van_ban,
-//         de_xuat: body.de_xuat,
-//         createdAt: body.createdAt,
-//         createdBy: body.createdBy,
-//         updatedAt: body.updatedAt,
-//         updatedBy: body.updatedBy,
-//       };
-//       if (body.id) {
-//         TaiLieu.update(record, { where: { id: body.id } })
-//           .then((a) => { })
-//           .catch((e) => {
-//             console.error("LỖI KHI CẬP NHẬT:", e);
-//           });
-//       } else {
-//         TaiLieu.create(record)
-//           .then((a) => { })
-//           .catch((e) => {
-//             console.error("LỖI KHI TẠO MỚI:", e);
-//           });
-//       }
-//     }
-//   } else {
-//     const record = {
-//       loai_tai_lieu_id: body.loai_tai_lieu,
-//       van_ban_den_id: body.van_ban_den,
-//       van_ban_den_so: body.van_ban_den_so,
-//       ten_don_vi: body.ten_don_vi,
-//       so_van_ban: body.so_van_ban,
-//       ngay_ban_hanh: body.ngay_ban_hanh,
-//       ngay_tiep_nhan: body.ngay_tiep_nhan,
-//       do_mat: body.do_mat,
-//       do_khan: body.do_khan,
-//       noi_dung_van_ban: body.noi_dung_van_ban,
-//       ngay_het_han: body.ngay_het_han,
-//       noi_nhan: body.noi_nhan,
-//       trang_thai_van_ban: body.trang_thai_van_ban,
-//       de_xuat: body.de_xuat,
-//       createdAt: body.createdAt,
-//       createdBy: body.createdBy,
-//       updatedAt: body.updatedAt,
-//       updatedBy: body.updatedBy,
-//     };
-//     if (body.id) {
-//       TaiLieu.update(record, { where: { id: body.id } })
-//         .then((a) => { })
-//         .catch((e) => {
-//           console.error("LỖI KHI CẬP NHẬT:", e);
-//         });
-//     } else {
-//       TaiLieu.create(record)
-//         .then((a) => { })
-//         .catch((e) => {
-//           console.error("LỖI KHI TẠO MỚI:", e);
-//         });
-//     }
-//   }
-//   return res.json({ a: 1 });
-// });
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage: storage });
-
-router.post("/", upload.single("file_van_ban"), (req, res) => {
+router.post("/", (req: Request, res: Response) => {
   const body = req.body;
-
-  if (req.file) {
-    const filePath = req.file.path;
-
-    fs.writeFile(filePath, req.file.buffer, (err) => {
-      if (err) {
-        console.error("LỖI KHI GHI FILE:", err);
-        return res.status(500).json({ message: "Lỗi khi ghi file." });
-      }
-
+  if (body.isChangedFile) {
+    if (body.file_van_ban) {
+      fs.readFile(body.file_van_ban.path, function (err, data) {
+        const fileName = `./data/van-ban/${randomID(8)}-${body.file_van_ban_name}`;
+        fs.writeFile(fileName, data, (err2) => {
+          if (err2) {
+            console.error("LỖI KHI ĐỌC FILE PDF:", err2);
+          } else {
+            const record = {
+              loai_tai_lieu_id: body.loai_tai_lieu,
+              van_ban_den_id: body.van_ban_den,
+              van_ban_den_so: body.van_ban_den_so,
+              ten_don_vi: body.ten_don_vi,
+              so_van_ban: body.so_van_ban,
+              ngay_ban_hanh: body.ngay_ban_hanh,
+              ngay_tiep_nhan: body.ngay_tiep_nhan,
+              do_mat: body.do_mat,
+              do_khan: body.do_khan,
+              noi_dung_van_ban: body.noi_dung_van_ban,
+              ngay_het_han: body.ngay_het_han,
+              noi_nhan: body.noi_nhan,
+              trang_thai_van_ban: body.trang_thai_van_ban,
+              de_xuat: body.de_xuat,
+              createdAt: body.createdAt,
+              createdBy: body.createdBy,
+              updatedAt: body.updatedAt,
+              updatedBy: body.updatedBy,
+              file_van_ban: fileName,
+            };
+            if (body.id) {
+              TaiLieu.update(record, { where: { id: body.id } })
+                .then((a) => { })
+                .catch((e) => {
+                  console.error("LỖI KHI CẬP NHẬT:", e);
+                });
+            } else {
+              TaiLieu.create(record)
+                .then((a) => { })
+                .catch((e) => {
+                  console.error("LỖI KHI TẠO MỚI:", e);
+                });
+            }
+          }
+        });
+      });
+      
+      fs.readFile(body.file_van_ban.path, function (err, data) {
+        
+      });
+    } else {
       const record = {
         loai_tai_lieu_id: body.loai_tai_lieu,
         van_ban_den_id: body.van_ban_den,
@@ -958,71 +866,70 @@ router.post("/", upload.single("file_van_ban"), (req, res) => {
         createdBy: body.createdBy,
         updatedAt: body.updatedAt,
         updatedBy: body.updatedBy,
-        file_van_ban: filePath,
       };
-
       if (body.id) {
         TaiLieu.update(record, { where: { id: body.id } })
-          .then(() => {
-            res.json({ message: "Cập nhật file thành công." });
-          })
+          .then((a) => { })
           .catch((e) => {
             console.error("LỖI KHI CẬP NHẬT:", e);
-            res.status(500).json({ message: "Lỗi khi cập nhật file." });
           });
       } else {
         TaiLieu.create(record)
-          .then(() => {
-            res.json({ message: "Tạo mới file thành công." });
-          })
+          .then((a) => { })
           .catch((e) => {
             console.error("LỖI KHI TẠO MỚI:", e);
-            res.status(500).json({ message: "Lỗi khi tạo mới file." });
           });
       }
-    });
-  } else {
-    const record = {
-      loai_tai_lieu_id: body.loai_tai_lieu,
-      van_ban_den_id: body.van_ban_den,
-      van_ban_den_so: body.van_ban_den_so,
-      ten_don_vi: body.ten_don_vi,
-      so_van_ban: body.so_van_ban,
-      ngay_ban_hanh: body.ngay_ban_hanh,
-      ngay_tiep_nhan: body.ngay_tiep_nhan,
-      do_mat: body.do_mat,
-      do_khan: body.do_khan,
-      noi_dung_van_ban: body.noi_dung_van_ban,
-      ngay_het_han: body.ngay_het_han,
-      noi_nhan: body.noi_nhan,
-      trang_thai_van_ban: body.trang_thai_van_ban,
-      de_xuat: body.de_xuat,
-      createdAt: body.createdAt,
-      createdBy: body.createdBy,
-      updatedAt: body.updatedAt,
-      updatedBy: body.updatedBy,
-    };
-
-    if (body.id) {
-      TaiLieu.update(record, { where: { id: body.id } })
-        .then(() => {
-          res.json({ message: "Cập nhật bản ghi thành công." });
-        })
-        .catch((e) => {
-          console.error("LỖI KHI CẬP NHẬT:", e);
-          res.status(500).json({ message: "Lỗi khi cập nhật bản ghi." });
-        });
-    } else {
-      TaiLieu.create(record)
-        .then(() => {
-          res.json({ message: "Tạo mới bản ghi thành công." });
-        })
-        .catch((e) => {
-          console.error("LỖI KHI TẠO MỚI:", e);
-          res.status(500).json({ message: "Lỗi khi tạo mới bản ghi." });
-        });
     }
+  } else {
+
+    // write file_van_ban to disk
+    fs.readFile(body.file_van_ban.path, function (err, data) {
+      const fileName = `./data/van-ban/${randomID(8)}-${body.file_van_ban_name}`;
+      fs.writeFile(fileName, data, (err2) => {
+        if (err) {
+          console.error("LỖI KHI GHI FILE:", err);
+        }
+        else {  
+          const record = {
+            loai_tai_lieu_id: body.loai_tai_lieu,
+            van_ban_den_id: body.van_ban_den,
+            van_ban_den_so: body.van_ban_den_so,
+            ten_don_vi: body.ten_don_vi,
+            so_van_ban: body.so_van_ban,
+            ngay_ban_hanh: body.ngay_ban_hanh,
+            ngay_tiep_nhan: body.ngay_tiep_nhan,
+            do_mat: body.do_mat,
+            do_khan: body.do_khan,
+            noi_dung_van_ban: body.noi_dung_van_ban,
+            ngay_het_han: body.ngay_het_han,
+            noi_nhan: body.noi_nhan,
+            trang_thai_van_ban: body.trang_thai_van_ban,
+            de_xuat: body.de_xuat,
+            createdAt: body.createdAt,
+            createdBy: body.createdBy,
+            updatedAt: body.updatedAt,
+            updatedBy: body.updatedBy,
+            file_van_ban: fileName,
+          };
+          if (body.id) {
+            TaiLieu.update(record, { where: { id: body.id } })
+              .then((a) => { })
+              .catch((e) => {
+                console.error("LỖI KHI CẬP NHẬT:", e);
+              });
+          } else {
+            TaiLieu.create(record)
+              .then((a) => { })
+              .catch((e) => {
+                console.error("LỖI KHI TẠO MỚI:", e);
+              });
+          }
+        }
+      });
+    });
   }
+  return res.json({ a: 1 });
 });
 
 //

@@ -115,6 +115,7 @@ export const postCase = async (body: any) => {
 
   if (body.file_van_ban !== null && body.file_van_ban !== undefined) {
     formData.append("file_van_ban", body.file_van_ban);
+    formData.append("file_van_ban_name", encodeURIComponent(body.file_van_ban_name));
   }
 
   if (body.ngay_ban_hanh !== null && body.ngay_ban_hanh !== undefined) {

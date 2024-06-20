@@ -55,9 +55,9 @@ const TaiLieu = dbConfig.define("tai_lieu", {
   updatedBy: {
     type: Sequelize.STRING,
   },
-  // file_van_ban: {
-  //   type: DataTypes.BLOB,
-  // },
+  file_van_ban: {
+    type: Sequelize.STRING,
+  },
 });
 
 const LoaiTaiLieu = dbConfig.define("loai_tai_lieu", {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// export const API_ENDPOINT = "http://localhost:8000";
-export const API_ENDPOINT = "";
+export const API_ENDPOINT = "http://localhost:8000";
+// export const API_ENDPOINT = "";
 
 export const axiosInstance = axios.create({
   baseURL: API_ENDPOINT,
