@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { bangVanBanDen } from "../src/api";
 import styled from "styled-components";
 import { Layout } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import "./stylesApp.css";
@@ -24,6 +25,14 @@ const LayoutHeader = styled(Layout.Header)`
 const LayoutContent = styled(Layout.Content)`
   padding: 24px;
   background-color: #fff;
+`;
+
+const HelpIcon = styled.div`
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 30px;
 `;
 
 function App() {
@@ -49,7 +58,8 @@ function App() {
     const fetchDataVanBanDen = async () => {
       try {
         const response = await bangVanBanDen();
-        setNotifications(response.data.result);
+        const filteredNotifications = response.data.result.filter(item => !item.de_xuat);
+        setNotifications(filteredNotifications);
       } catch (err) {
         handleApiError(err, "LỖI API LẤY DANH SÁCH THÔNG BÁO");
       }
@@ -93,6 +103,11 @@ function App() {
             <PublicRoute handleLoginSuccess={handleLoginSuccess} />
           </MainContainerSignIn>
         )}
+        <HelpIcon>
+          <a href={`${process.env.PUBLIC_URL}/HDSD.pdf`} target="_blank" rel="noopener noreferrer">
+            <QuestionCircleOutlined />
+          </a>
+        </HelpIcon>
       </AppContainer>
     </Router>
   );

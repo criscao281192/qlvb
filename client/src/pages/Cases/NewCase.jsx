@@ -13,7 +13,6 @@ import {
 import {
   MinusSquareTwoTone,
   PlusSquareTwoTone,
-  AudioTwoTone,
   UploadOutlined,
 } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
@@ -30,9 +29,6 @@ const NewCase = () => {
 
   const [selectedTendonvi, setSelectedTendonvi] = useState([]);
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
-  const [spokenText, setSpokenText] = useState("");
-  const [trichYeu, setTrichYeu] = useState("");
-  const [soVanBan, setSoVanBan] = useState("");
   const [isChangedFile, setIsChangeFile] = useState(false);
   const { TextArea } = Input;
 
@@ -64,7 +60,7 @@ const NewCase = () => {
 
     const currentDate = moment();
     values.createdAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
-    values.createdBy = userUserId;
+    values.createdBy = userFullName;
 
     values.isChangedFile = isChangedFile;
     if (fileList.length > 0) {
@@ -84,12 +80,12 @@ const NewCase = () => {
 
   const [config, setConfig] = useState();
 
-  const [userUserId, setuserUserId] = useState(null);
+  const [userFullName, setUserFullName] = useState(null);
   useEffect(() => {
     const userInfo = jwtDecode(localStorage.getItem("accessToken"));
     console.log(userInfo);
     if (userInfo) {
-      setuserUserId(userInfo.userId);
+      setUserFullName(userInfo.fullname);
     }
   }, []);
 
@@ -121,8 +117,6 @@ const NewCase = () => {
           updatedAt: res.data.updatedAt,
           updatedBy: res.data.updatedBy,
         });
-        setTrichYeu(res.data.noi_dung_van_ban);
-        setSoVanBan(res.data.so_van_ban);
       });
     }
   }, [id, form]);
@@ -134,51 +128,6 @@ const NewCase = () => {
   };
 
   const [showCustomInput, setShowCustomInput] = useState(false);
-
-  const handleSpeechRecognitionTrichyeu = () => {
-    if ("webkitSpeechRecognition" in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.lang = "vi-VN";
-      recognition.onresult = (event) => {
-        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
-        const transcript = event.results[0][0].transcript;
-        setSpokenText(transcript);
-        if (transcript) {
-          form.setFieldsValue({
-            noi_dung_van_ban: transcript,
-          });
-          setTrichYeu(transcript);
-          setSpokenText("");
-        }
-      };
-      recognition.start();
-    } else {
-      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
-    }
-  };
-
-  const handleSpeechRecognitionSoVanBan = () => {
-    if ("webkitSpeechRecognition" in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.lang = "vi-VN";
-      recognition.onresult = (event) => {
-        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
-        const transcript = event.results[0][0].transcript;
-        setSpokenText(transcript);
-        if (transcript) {
-          form.setFieldsValue({
-            so_van_ban: transcript,
-          });
-          setSoVanBan(transcript);
-          setSpokenText("");
-        }
-      };
-      recognition.start();
-    } else {
-      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
-    }
-  };
-
   const [fileList, setFileList] = useState([]);
   const props = {
     onRemove: (file) => {
@@ -221,6 +170,9 @@ const NewCase = () => {
         break;
       case 2:
         tenviettatvanbanden = "/TLM";
+        break;
+      case 3:
+        tenviettatvanbanden = "/BCĐK";
         break;
       default:
         break;
@@ -387,22 +339,7 @@ const NewCase = () => {
       name: "so_van_ban",
       label: "SỐ VĂN BẢN",
       render: () => {
-        return (
-          <div className="input-with-icon">
-            <Input
-              value={soVanBan}
-              onChange={(e) => {
-                setSoVanBan(e.target.value);
-              }}
-            />
-            <Button
-              className="icon-button"
-              onClick={() => handleSpeechRecognitionSoVanBan()}
-            >
-              <AudioTwoTone />
-            </Button>
-          </div>
-        );
+        return <Input placeholder="SỐ VĂN BẢN" />;
       },
       rules: [
         {
@@ -461,18 +398,8 @@ const NewCase = () => {
         return (
           <div className="input-with-icon">
             <TextArea
-              rows={3}
-              value={trichYeu}
-              onChange={(e) => {
-                setTrichYeu(e.target.value);
-              }}
+              rows={4}
             />
-            <Button
-              className="icon-button"
-              onClick={() => handleSpeechRecognitionTrichyeu()}
-            >
-              <AudioTwoTone />
-            </Button>
           </div>
         );
       },
@@ -502,18 +429,18 @@ const NewCase = () => {
         },
       ],
     },
-    {
-      name: "file_van_ban",
-      label: "PDF",
-      render: () => {
-        return (
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
-          </Upload>
-        );
-      },
-      rules: [],
-    },
+    // {
+    //   name: "file_van_ban",
+    //   label: "PDF",
+    //   render: () => {
+    //     return (
+    //       <Upload {...props}>
+    //         <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
+    //       </Upload>
+    //     );
+    //   },
+    //   rules: [],
+    // },
   ];
 
   const getFields = () => {

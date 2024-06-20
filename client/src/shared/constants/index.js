@@ -83,6 +83,10 @@ export const NOI_PHAT_HANH = [
         title: "PX05",
         value: "PX05",
       },
+      {
+        title: "PX06",
+        value: "PX06",
+      },
     ],
   },
   {
@@ -110,6 +114,10 @@ export const NOI_PHAT_HANH = [
       {
         title: "PH04",
         value: "PH04",
+      },
+      {
+        title: "PH06",
+        value: "PH06",
       },
       {
         title: "PH10",
@@ -333,11 +341,11 @@ export const NOI_PHAT_HANH = [
   },
   {
     title: "ĐTN",
-    value: "ĐTN CATP",
+    value: "Ban Thanh niên CATP",
   },
   {
     title: "HPN",
-    value: "HPN CATP",
+    value: "Ban Phụ nữ CATP",
   },
   {
     title: "SỞ",
@@ -359,11 +367,11 @@ export const NOI_PHAT_HANH = [
   },
   {
     title: "VIỆN PHÁP Y QUỐC GIA",
-    value: "VIỆN PYQG",
+    value: "Viện Pháp y Quốc gia",
   },
   {
     title: "TRUNG TÂM PHÁP Y HÀ NỘI",
-    value: "TT PYHN",
+    value: "Trung tâm Pháp y Hà Nội",
   },
 ];
 
@@ -392,11 +400,15 @@ export const NOI_NHAN = [
         title: "Đ/c Quyết PTP",
         value: "Đ/c Quyết PTP",
       },
+      {
+        title: "Đ/c Lực PTP",
+        value: "Đ/c Lực PTP",
+      },
     ],
   },
   {
-    title: "ĐẢNG UỶ VIÊN",
-    value: "ĐẢNG UỶ VIÊN",
+    title: "UVBCH ĐẢNG BỘ",
+    value: "UVBCH ĐẢNG BỘ",
     children: [
       {
         title: "Đ/c Lê Thị Kim Tuyến",
@@ -535,19 +547,19 @@ export const XAY_DUNG_VAN_BAN = [
   },
   {
     title: "Đội 2",
-    value: "Đội Khám nghiệm hiện trường",
+    value: "Đội 2",
   },
   {
     title: "Đội 3",
-    value: "Đội Giám định KTHS truyền thống và tài liệu",
+    value: "Đội 3",
   },
   {
     title: "Đội 4",
-    value: "Đội Giám định hoá, KTPL và pháp y, sinh vật",
+    value: "Đội 4",
   },
   {
     title: "Đội 5",
-    value: "Đội Kỹ thuật phòng, chống tội phạm",
+    value: "Đội 5",
   },
   {
     title: "ĐTN",
@@ -584,7 +596,7 @@ export const CHUC_VU = [
 
 export const DON_VI = [
   {
-    title: "Chỉ huy Phòng",
+    title: "Lãnh đạo Phòng",
     value: "0",
   },
   {
@@ -609,87 +621,297 @@ export const DON_VI = [
   },
 ];
 
-export const LINH_VUC = [
+export const TRINH_DO = [
   {
-    title: "Phụ trách chung",
-    value: "Phụ trách chung",
+    title: "Không",
+    value: "Không",
   },
   {
-    title: "Tham mưu",
-    value: "Tham mưu",
+    title: "Sơ cấp",
+    value: "Sơ cấp",
   },
   {
-    title: "Văn thư",
-    value: "Văn thư",
+    title: "Trung cấp",
+    value: "Trung cấp",
   },
   {
-    title: "Lái xe",
-    value: "Lái xe",
-  },
-  {
-    title: "Khám nghiệm hiện trường",
-    value: "Khám nghiệm hiện trường",
-  },
-  {
-    title: "Giám định KTHS truyền thống",
-    value: "Giám định KTHS truyền thống",
-  },
-  {
-    title: "Giám định tài liệu",
-    value: "Giám định tài liệu",
-  },
-  {
-    title: "Giám định hoá, KTPL",
-    value: "Giám định hoá, KTPL",
-  },
-  {
-    title: "Giám định pháp y",
-    value: "Giám định pháp y",
-  },
-  {
-    title: "Giám định sinh vật",
-    value: "Giám định sinh vật",
-  },
-  {
-    title: "Kỹ thuật phòng, chống tội phạm",
-    value: "Kỹ thuật phòng, chống tội phạm",
+    title: "Cao cấp",
+    value: "Cao cấp",
   },
 ]
 
-export const TRINH_DO = [
+export const TRINH_DO_LY_LUAN = [
   {
-    title: "SƠ CẤP",
-    value: "SƠ CẤP",
+    title: "Không",
+    value: "Không",
   },
   {
-    title: "TRUNG CẤP",
-    value: "TRUNG CẤP",
+    title: "Sơ cấp",
+    value: "Sơ cấp",
   },
   {
-    title: "CAO CẤP",
-    value: "CAO CẤP",
+    title: "Trung cấp",
+    value: "Trung cấp",
+  },
+  {
+    title: "Cao cấp",
+    value: "Cao cấp",
   },
 ]
 
 export const DAO_TAO = [
   {
-    title: "SƠ CẤP",
-    value: "SƠ CẤP",
+    title: "Sơ cấp",
+    value: "Sơ cấp",
   },
   {
-    title: "TRUNG CẤP",
-    value: "TRUNG CẤP",
+    title: "Trung cấp",
+    value: "Trung cấp",
   },
   {
-    title: "ĐẠI HỌC",
-    value: "ĐẠI HỌC",
+    title: "Đại học",
+    value: "Đại học",
   },
   {
-    title: "THẠC SĨ",
-    value: "THẠC SĨ",
+    title: "Thạc sĩ",
+    value: "Thạc sĩ",
   },
   {
-    title: "TIẾN SĨ",
-    value: "TIẾN SĨ",
+    title: "Tiến sĩ",
+    value: "Tiến sĩ",
+  },
+]
+
+export const DINH_KY = [
+  {
+    title: "Đ/c Đỗ Ngọc Anh",
+    value: "Đỗ Ngọc Anh",
+  },
+  {
+    title: "Đ/c Nguyễn Huy Anh",
+    value: "Nguyễn Huy Anh",
+  },
+  {
+    title: "Đ/c Hồ Chí Kiên",
+    value: "Hồ Chí Kiên",
+  },
+  {
+    title: "Đ/c Nguyễn Thị Quyên",
+    value: "Nguyễn Thị Quyên",
+  },
+  {
+    title: "Đ/c Ngô Anh Tuấn",
+    value: "Ngô Anh Tuấn",
+  },
+  {
+    title: "Đ/c Ngô Huy Hùng",
+    value: "Ngô Huy Hùng",
+  },
+  {
+    title: "Đ/c Nguyễn Tuấn Anh",
+    value: "Nguyễn Tuấn Anh",
+  },
+  {
+    title: "Đ/c Cao Ngọc Tuyền",
+    value: "Cao Ngọc Tuyền",
+  },
+  {
+    title: "Đ/c Tô Quang Tuyển",
+    value: "Tô Quang Tuyển",
+  },
+]
+
+export const DOAN_THE = [
+  {
+    title: "Đảng viên",
+    value: "Đảng viên",
+  },
+  {
+    title: "Đoàn viên",
+    value: "Đoàn viên",
+  },
+  {
+    title: "Hội viên HPN",
+    value: "Hội viên HPN",
+  },
+]
+
+export const CHUC_VU_DANG = [
+  {
+    title: "Bí thư Đảng uỷ",
+    value: "Bí thư Đảng uỷ",
+  },
+  {
+    title: "Phó Bí thư Đảng uỷ",
+    value: "Phó Bí thư Đảng uỷ",
+  },
+  {
+    title: "Uỷ viên Ban Thường vụ Đảng uỷ",
+    value: "Uỷ viên Ban Thường vụ Đảng uỷ",
+  },
+  {
+    title: "Uỷ viên Ban Chấp hành Đảng bộ",
+    value: "Uỷ viên Ban Chấp hành Đảng bộ",
+  },
+  {
+    title: "Bí thư Chi bộ",
+    value: "Bí thư Chi bộ",
+  },
+  {
+    title: "Phó Bí thư Chi bộ",
+    value: "Phó Bí thư Chi bộ",
+  },
+  {
+    title: "Chi uỷ viên",
+    value: "Chi uỷ viên",
+  },
+  {
+    title: "Bí thư Chi đoàn cơ sở",
+    value: "Bí thư Chi đoàn cơ sở",
+  },
+  {
+    title: "Phó Bí thư Chi đoàn cơ sở",
+    value: "Phó Bí thư Chi đoàn cơ sở",
+  },
+  {
+    title: "Chủ tịch Hội Phụ nữ",
+    value: "Chủ tịch Hội Phụ nữ",
+  },
+  {
+    title: "Phó Chủ tịch Hội Phụ nữ",
+    value: "Phó Chủ tịch Hội Phụ nữ",
+  },
+  {
+    title: "Không",
+    value: "Không",
+  },
+];
+
+export const CHUC_DANH = [
+  {
+    title: "Giám định viên đường vân",
+    value: "Giám định viên đường vân",
+  },
+  {
+    title: "Giám định viên cơ học",
+    value: "Giám định viên cơ học",
+  },
+  {
+    title: "Giám định viên súng, đạn",
+    value: "Giám định viên súng, đạn",
+  },
+  {
+    title: "Giám định viên tài liệu",
+    value: "Giám định viên tài liệu",
+  },
+  {
+    title: "Giám định viên cháy, nổ",
+    value: "Giám định viên cháy, nổ",
+  },
+  {
+    title: "Giám định viên kỹ thuật",
+    value: "Giám định viên kỹ thuật",
+  },
+  {
+    title: "Giám định viên âm thanh",
+    value: "Giám định viên âm thanh",
+  },
+  {
+    title: "Giám định viên sinh học",
+    value: "Giám định viên sinh học",
+  },
+  {
+    title: "Giám định viên hoá học",
+    value: "Giám định viên hoá học",
+  },
+  {
+    title: "Giám định viên kỹ thuật số - điện tử",
+    value: "Giám định viên kỹ thuật số - điện tử",
+  },
+  {
+    title: "Giám định viên pháp y",
+    value: "Giám định viên pháp y",
+  },
+  {
+    title: "(GĐV) ngạch Trung cấp",
+    value: "(GĐV) ngạch Trung cấp",
+  },
+  {
+    title: "Kỹ thuật viên sơ cấp",
+    value: "Kỹ thuật viên sơ cấp",
+  },
+  {
+    title: "Kỹ thuật viên trung cấp",
+    value: "Kỹ thuật viên trung cấp",
+  },
+  {
+    title: "Chuyên viên",
+    value: "Chuyên viên",
+  },
+  {
+    title: "Chuyên viên chính",
+    value: "Chuyên viên chính",
+  },
+  {
+    title: "Không",
+    value: "Không",
+  },
+];
+
+export const GIOI_TINH = [
+  {
+    title: "Nam",
+    value: "Nam",
+  },
+  {
+    title: "Nữ",
+    value: "Nữ",
+  },
+]
+
+export const CAP_BAC = [
+  {
+    title: "Đại tá",
+    value: "Đại tá",
+  },
+  {
+    title: "Thượng tá",
+    value: "Thượng tá",
+  },
+  {
+    title: "Trung tá",
+    value: "Trung tá",
+  },
+  {
+    title: "Thiếu tá",
+    value: "Thiếu tá",
+  },
+  {
+    title: "Đại uý",
+    value: "Đại uý",
+  },
+  {
+    title: "Đại uý CMKT",
+    value: "Đại uý CMKT",
+  },
+  {
+    title: "Thượng uý",
+    value: "Thượng uý",
+  },
+  {
+    title: "Thượng uý CMKT",
+    value: "Thượng uý CMKT",
+  },
+  {
+    title: "Trung uý",
+    value: "Trung uý",
+  },
+  {
+    title: "Trung uý CMKT",
+    value: "Trung uý CMKT",
+  },
+  {
+    title: "Thiếu uý",
+    value: "Thiếu uý",
   },
 ]

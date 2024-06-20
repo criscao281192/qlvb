@@ -20,32 +20,63 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // que_quan
-  if (query.que_quan) {
+  // gioi_tinh
+  if (query.gioi_tinh) {
     whereCon = {
       ...whereCon,
-      que_quan: {
-        [Op.like]: `%${query.que_quan}%`,
+      gioi_tinh: {
+        [Op.like]: `%${query.gioi_tinh}%`,
       },
     };
   }
 
-  // doi_cong_tac
-  if (query.doi_cong_tac) {
+  // doan_the
+  if (query.doan_the) {
     whereCon = {
       ...whereCon,
-      doi_cong_tac: {
-        [Op.like]: `%${query.doi_cong_tac}%`,
+      doan_the: {
+        [Op.like]: `%${query.doan_the}%`,
       },
     };
   }
 
-  // linh_vuc_cong_tac
-  if (query.linh_vuc_cong_tac) {
+  // cap_bac
+  if (query.cap_bac) {
     whereCon = {
       ...whereCon,
-      linh_vuc_cong_tac: {
-        [Op.like]: `%${query.linh_vuc_cong_tac}%`,
+      cap_bac: {
+        [Op.like]: `%${query.cap_bac}%`,
+      },
+    };
+  }
+
+  // chuc_vu
+  if (query.chuc_vu) {
+    whereCon = {
+      ...whereCon,
+      chuc_vu: {
+        [Op.like]: `%${query.chuc_vu}%`,
+      },
+    };
+  }
+
+  // chuc_vu_dang
+  if (query.chuc_vu_dang) {
+    whereCon = {
+      ...whereCon,
+      chuc_vu_dang: {
+        [Op.like]: `%${query.chuc_vu_dang}%`,
+      },
+    };
+  }
+
+  // ngay_bo_nhiem
+  if (query.ngay_bo_nhiem_1 && query.ngay_bo_nhiem_2) {
+    whereCon = {
+      ...whereCon,
+      ngay_bo_nhiem: {
+        [Op.gt]: query.ngay_bo_nhiem_1,
+        [Op.lt]: query.ngay_bo_nhiem_2,
       },
     };
   }
@@ -57,6 +88,36 @@ const buildQuery = (req: Request) => {
       ngay_sinh: {
         [Op.gt]: query.ngay_sinh_1,
         [Op.lt]: query.ngay_sinh_2,
+      },
+    };
+  }
+
+  // que_quan
+  if (query.que_quan) {
+    whereCon = {
+      ...whereCon,
+      que_quan: {
+        [Op.like]: `%${query.que_quan}%`,
+      },
+    };
+  }
+
+  // noi_o_hien_nay
+  if (query.noi_o_hien_nay) {
+    whereCon = {
+      ...whereCon,
+      noi_o_hien_nay: {
+        [Op.like]: `%${query.noi_o_hien_nay}%`,
+      },
+    };
+  }
+
+  // dan_toc
+  if (query.dan_toc) {
+    whereCon = {
+      ...whereCon,
+      dan_toc: {
+        [Op.like]: `%${query.dan_toc}%`,
       },
     };
   }
@@ -83,33 +144,13 @@ const buildQuery = (req: Request) => {
     };
   }
 
-  // ngay_bo_nhiem
-  if (query.ngay_bo_nhiem_1 && query.ngay_bo_nhiem_2) {
+  // ngay_vao_dang_chinh_thuc
+  if (query.ngay_vao_dang_chinh_thuc_1 && query.ngay_vao_dang_chinh_thuc_2) {
     whereCon = {
       ...whereCon,
-      ngay_bo_nhiem: {
-        [Op.gt]: query.ngay_bo_nhiem_1,
-        [Op.lt]: query.ngay_bo_nhiem_2,
-      },
-    };
-  }
-
-  // chuc_vu
-  if (query.chuc_vu) {
-    whereCon = {
-      ...whereCon,
-      chuc_vu: {
-        [Op.like]: `%${query.chuc_vu}%`,
-      },
-    };
-  }
-
-  // so_hieu
-  if (query.so_hieu) {
-    whereCon = {
-      ...whereCon,
-      so_hieu: {
-        [Op.like]: `%${query.so_hieu}%`,
+      ngay_vao_dang_chinh_thuc: {
+        [Op.gt]: query.ngay_vao_dang_chinh_thuc_1,
+        [Op.lt]: query.ngay_vao_dang_chinh_thuc_2,
       },
     };
   }
@@ -143,6 +184,37 @@ const buildQuery = (req: Request) => {
       },
     };
   }
+
+  // chuc_danh
+  if (query.chuc_danh) {
+    whereCon = {
+      ...whereCon,
+      chuc_danh: {
+        [Op.like]: `%${query.chuc_danh}%`,
+      },
+    };
+  }
+
+  // don_vi_cong_tac
+  if (query.don_vi_cong_tac) {
+    whereCon = {
+      ...whereCon,
+      don_vi_cong_tac: {
+        [Op.like]: `%${query.don_vi_cong_tac}%`,
+      },
+    };
+  }
+
+  // so_hieu
+  if (query.so_hieu) {
+    whereCon = {
+      ...whereCon,
+      so_hieu: {
+        [Op.like]: `%${query.so_hieu}%`,
+      },
+    };
+  }
+
   return whereCon;
 };
 
@@ -163,6 +235,54 @@ router.get("/timThongTinCanBo", (req: Request, res: Response) => {
     });
 });
 
+// 
+/**
+ * THỐNG KÊ CÁN BỘ
+ */
+router.get("/countCanBo", async (req: Request, res: Response) => {
+  try {
+    let whereCon: any = {};
+
+    whereCon = {
+      trinh_do_ly_luan: {
+        [Op.like]: `%${req.query.trinh_do_ly_luan}%`,
+      },
+      trinh_do_dao_tao: {
+        [Op.like]: `%${req.query.trinh_do_dao_tao}%`,
+      },
+      trinh_do_cong_an: {
+        [Op.like]: `%${req.query.trinh_do_cong_an}%`,
+      },
+      doan_the: {
+        [Op.like]: `%${req.query.doan_the}%`,
+      },
+      chuc_danh: {
+        [Op.like]: `%${req.query.chuc_danh}%`,
+      },
+      gioi_tinh: {
+        [Op.like]: `%${req.query.gioi_tinh}%`,
+      },
+      cap_bac: {
+        [Op.like]: `%${req.query.cap_bac}%`,
+      },
+    };
+
+    const canbos = await CanBo.findAll({
+      attributes: [
+        [Sequelize.col("don_vi_cong_tac"), "don_vi_cong_tac"],
+        [Sequelize.fn("COUNT", Sequelize.col("id")), "so_luong_can_bo"],
+      ],
+      group: ["don_vi_cong_tac"],
+      where: whereCon,
+    });
+
+    res.json(canbos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "LỖI TRUY VẤN CƠ SỞ DỮ LIỆU" });
+  }
+});
+
 // *
 // // BẢNG THÔNG BÁO BỔ NHIỆM LẠI
 // *
@@ -175,12 +295,12 @@ router.get("/bangBoNhiemLai", async (req: Request, res: Response) => {
       [Op.gt]: new Date(
         currentYear - 5,
         new Date().getMonth() + 3,
-        new Date().getDate() - 10
+        new Date().getDate() - 30
       ),
       [Op.lt]: new Date(
         currentYear - 5,
         new Date().getMonth() + 3,
-        new Date().getDate() + 10
+        new Date().getDate() + 30
       ),
     },
   };
@@ -202,18 +322,30 @@ router.post("/", async (req, res) => {
     const body = req.body;
     const record = {
       ho_ten: body.ho_ten,
-      que_quan: body.que_quan,
+      gioi_tinh: body.gioi_tinh,
+      doan_the: body.doan_the,
+      chuc_vu: body.chuc_vu,
+      chuc_vu_dang: body.chuc_vu_dang,
+      ngay_bo_nhiem: body.ngay_bo_nhiem,
       ngay_sinh: body.ngay_sinh,
-      so_hieu: body.so_hieu,
+      que_quan: body.que_quan,
+      noi_o_hien_nay: body.noi_o_hien_nay,
+      dan_toc: body.dan_toc,
       ngay_vao_nganh: body.ngay_vao_nganh,
       ngay_vao_dang: body.ngay_vao_dang,
-      doi_cong_tac: body.doi_cong_tac,
-      linh_vuc_cong_tac: body.linh_vuc_cong_tac,
-      chuc_vu: body.chuc_vu,
-      ngay_bo_nhiem: body.ngay_bo_nhiem,
+      ngay_vao_dang_chinh_thuc: body.ngay_vao_dang_chinh_thuc,
       trinh_do_ly_luan: body.trinh_do_ly_luan,
       trinh_do_dao_tao: body.trinh_do_dao_tao,
       trinh_do_cong_an: body.trinh_do_cong_an,
+      chuc_danh: body.chuc_danh,
+      don_vi_cong_tac: body.don_vi_cong_tac,
+      so_hieu: body.so_hieu,
+      qua_trinh_cong_tac: body.qua_trinh_cong_tac,
+      qua_trinh_len_luong: body.qua_trinh_len_luong,
+      xep_loai_can_bo: body.xep_loai_can_bo,
+      khen_thuong: body.khen_thuong,
+      ky_luat: body.ky_luat,
+      cap_bac: body.cap_bac,
     };
 
     if (body.id) {

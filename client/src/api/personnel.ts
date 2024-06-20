@@ -36,6 +36,12 @@ export const bangBoNhiemLai = async (params: any) => {
   });
 };
 
+export const countCanBo = async (params: any) => {
+  return axiosInstance.get(`/api/personnels/countCanBo`, {
+    params,
+  });
+};
+
 export const updatePersonnelRole = async (
   personnelId: string,
   personnelRoleId: string

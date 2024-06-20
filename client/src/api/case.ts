@@ -11,7 +11,7 @@ export const searchVanBanDen = async (params: any) => {
   });
 };
 
-export const searchVanBanDi= async (params: any) => {
+export const searchVanBanDi = async (params: any) => {
   return axiosInstance.get(`/api/cases/timVanBanDi`, {
     params,
   });
@@ -102,10 +102,7 @@ export const postCase = async (body: any) => {
   if (body.noi_nhan !== null && body.noi_nhan !== undefined) {
     formData.append("noi_nhan", body.noi_nhan);
   }
-  if (
-    body.trang_thai_van_ban !== null &&
-    body.trang_thai_van_ban !== undefined
-  ) {
+  if (body.trang_thai_van_ban !== null && body.trang_thai_van_ban !== undefined) {
     formData.append("trang_thai_van_ban", body.trang_thai_van_ban);
   }
   if (body.isChangedFile !== null && body.isChangedFile !== undefined) {
@@ -120,18 +117,26 @@ export const postCase = async (body: any) => {
     formData.append("file_van_ban", body.file_van_ban);
   }
 
-  const ngayBanHanhDate = new Date(body.ngay_ban_hanh);
-  if (!isNaN(ngayBanHanhDate.getTime())) {
-    formData.append("ngay_ban_hanh", ngayBanHanhDate.toISOString());
+  if (body.ngay_ban_hanh !== null && body.ngay_ban_hanh !== undefined) {
+    const ngayBanHanhDate = new Date(body.ngay_ban_hanh);
+    if (!isNaN(ngayBanHanhDate.getTime())) {
+      formData.append("ngay_ban_hanh", ngayBanHanhDate.toISOString());
+    } else {
+      console.error("NGÀY HẾT HẠN KHÔNG HỢP LỆ");
+    }
   } else {
-    console.error("NGÀY BAN HÀNH KHÔNG HỢP LỆ");
+    formData.append("ngay_ban_hanh", "null");
   }
 
-  const ngayTiepNhanDate = new Date(body.ngay_tiep_nhan);
-  if (!isNaN(ngayTiepNhanDate.getTime())) {
-    formData.append("ngay_tiep_nhan", ngayTiepNhanDate.toISOString());
+  if (body.ngay_tiep_nhan !== null && body.ngay_tiep_nhan !== undefined) {
+    const ngayTiepNhanDate = new Date(body.ngay_tiep_nhan);
+    if (!isNaN(ngayTiepNhanDate.getTime())) {
+      formData.append("ngay_tiep_nhan", ngayTiepNhanDate.toISOString());
+    } else {
+      console.error("NGÀY HẾT HẠN KHÔNG HỢP LỆ");
+    }
   } else {
-    console.error("NGÀY TIẾP NHẬN KHÔNG HỢP LỆ");
+    formData.append("ngay_tiep_nhan", "null");
   }
 
   if (body.ngay_het_han !== null && body.ngay_het_han !== undefined) {
@@ -157,7 +162,7 @@ export const postCase = async (body: any) => {
   } else {
     console.error("NGÀY TIẾP NHẬN KHÔNG HỢP LỆ");
   }
-  
+
   const ngayupdatedAt = new Date(body.updatedAt);
   if (!isNaN(ngayupdatedAt.getTime())) {
     formData.append("updatedAt", ngayupdatedAt.toISOString());
@@ -196,6 +201,12 @@ export const bangVanBanDenHan = async (params: any) => {
   });
 };
 
+export const bangBaoCaoDinhKy = async (params: any) => {
+  return axiosInstance.get(`/api/cases/bangBaoCaoDinhKy`, {
+    params,
+  });
+};
+
 export const bangVanBanDen = async (params: any) => {
   return axiosInstance.get(`/api/cases/bangVanBanDen`, {
     params,
@@ -218,3 +229,19 @@ export const updateStatusInDatabase = async (recordId: any, newStatus: any) => {
     console.error("Error updating status in database:", error);
   }
 };
+
+export const updateStatusInDatabaseBC = async (
+  caseIdId: string,
+  caseRoleId: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/cases/${caseIdId}/updateStatusInDatabaseBC`,
+      { caseRoleId }
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+

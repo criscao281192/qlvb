@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import {
   DON_VI,
   CHUC_VU,
-  LINH_VUC,
   TRINH_DO,
   DAO_TAO,
 } from "../shared/constants/index";
@@ -16,16 +15,12 @@ const SearchCaseCanBo = ({ onSearch, onDownload }) => {
 
   const onFinish = (values) => {
     const selectedDoiCongTac =
-      values["doi_cong_tac"] && values["doi_cong_tac"].length > 0
-        ? values["doi_cong_tac"][0].value
+      values["don_vi_cong_tac"] && values["don_vi_cong_tac"].length > 0
+        ? values["don_vi_cong_tac"][0].value
         : null;
     const selectedChucVu =
       values["chuc_vu"] && values["chuc_vu"].length > 0
         ? values["chuc_vu"][0].value
-        : null;
-    const selectedLinhVuc =
-      values["linh_vuc_cong_tac"] && values["linh_vuc_cong_tac"].length > 0
-        ? values["linh_vuc_cong_tac"][0].value
         : null;
     const selectedTrinhDoCongAn =
       values["trinh_do_cong_an"] && values["trinh_do_cong_an"].length > 0
@@ -41,8 +36,7 @@ const SearchCaseCanBo = ({ onSearch, onDownload }) => {
         : null;
     onSearch({
       ...values,
-      doi_cong_tac: selectedDoiCongTac,
-      linh_vuc_cong_tac: selectedLinhVuc,
+      don_vi_cong_tac: selectedDoiCongTac,
       chuc_vu: selectedChucVu,
       trinh_do_cong_an: selectedTrinhDoCongAn,
       trinh_do_ly_luan: selectedTrinhDoLyLuan,
@@ -106,7 +100,7 @@ const SearchCaseCanBo = ({ onSearch, onDownload }) => {
       name: "que_quan",
       label: "QUÊ QUÁN",
       render: () => {
-        return <Input placeholder="xã - huyện - tỉnh" />;
+        return <Input placeholder="" />;
       },
     },
     {
@@ -153,27 +147,13 @@ const SearchCaseCanBo = ({ onSearch, onDownload }) => {
       },
     },
     {
-      name: "doi_cong_tac",
+      name: "don_vi_cong_tac",
       label: "ĐƠN VỊ CÔNG TÁC",
       render: () => {
         return (
           <TreeSelect
             treeData={DON_VI}
             placeholder="ĐƠN VỊ"
-            treeCheckable={true}
-            treeCheckStrictly={true}
-          />
-        );
-      },
-    },
-    {
-      name: "linh_vuc_cong_tac",
-      label: "LĨNH VỰC CÔNG TÁC",
-      render: () => {
-        return (
-          <TreeSelect
-            treeData={LINH_VUC}
-            placeholder="LĨNH VỰC CÔNG TÁC"
             treeCheckable={true}
             treeCheckStrictly={true}
           />
@@ -287,7 +267,7 @@ const SearchCaseCanBo = ({ onSearch, onDownload }) => {
               type="primary"
               style={{ marginBottom: 16, marginLeft: 8 }}
             >
-              NHẬP CÁN BỘ MỚI
+              THÊM CÁN BỘ MỚI
             </Button>
             <Button
               onClick={onDownload}

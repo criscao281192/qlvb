@@ -5,12 +5,21 @@ import Cases from "../../pages/Cases";
 import CaseVanBanBanHanhs from "../../pages/Cases/indexVanBanBanHanh";
 import UserList from "../../pages/Users/UserList";
 import PersonnelList from "../../pages/Personnel/PersonnelList";
+import PersonList from "../../pages/Person/PersonList";
+
 import NewCase from "../../pages/Cases/NewCase";
+import NewBaoCaoDinhKy from "../../pages/Cases/NewBaoCaoDinhKy";
 import NewCaseHandle from "../../pages/Cases/NewCaseHandle";
 import NewCaseVanBanBanHanh from "../../pages/Cases/NewCaseVanBanBanHanh";
+
 import NewCasePersonnel from "../../pages/Personnel/CreatePersonnel";
+import NewCasePerson from "../../pages/Person/CreatePerson";
+
 import ThongBaoVanBanDenHan from "../../pages/Home/ThongBaoVanBanDenHan";
+import ThongBaoBaoCaoDinhKy from "../../pages/Home/ThongBaoBaoCaoDinhKy";
 import ThongBaoBoNhiemLai from "../../pages/Home/ThongBaoBoNhiemLai";
+
+import ThongKeCanBo from "../../pages/Home/ThongKeCanBo";
 import Home from "../../pages/Home";
 import NewUserForm from "../../pages/Users/Create";
 import Profile from "../../pages/Users/Profile";
@@ -25,12 +34,29 @@ const ROUTES = [
     component: <ThongBaoVanBanDenHan />,
   },
   {
+    path: "/thong-bao-dinh-ki",
+    key: "ThongBaoBaoCaoDinhKy",
+    exact: true,
+    component: <ThongBaoBaoCaoDinhKy />,
+  },
+  {
     path: "/thong-bao-bo-nhiem-lai",
     key: "ThongBaoBoNhiemLai",
     exact: true,
     component: <ThongBaoBoNhiemLai />,
   },
-
+  {
+    path: "/thong-ke-can-bo",
+    key: "ThongKeCanBo",
+    exact: true,
+    component: <ThongKeCanBo />,
+  },
+  {
+    path: "/quan-ly-van-ban/tao-moi-bao-cao-dinh-ky",
+    key: "NewBaoCaoDinhKy",
+    exact: true,
+    component: <NewBaoCaoDinhKy />,
+  },
   { path: "/quan-ly-van-ban", key: "Cases", exact: true, component: <Cases /> },
   {
     path: "/quan-ly-van-ban/tao-moi",
@@ -107,7 +133,24 @@ const ROUTES = [
     exact: true,
     component: <NewCasePersonnel />,
   },
-
+  {
+    path: "/quan-ly-than-nhan-can-bo",
+    key: "PersonList",
+    exact: true,
+    component: <PersonList />,
+  },
+  {
+    path: "/quan-ly-than-nhan-can-bo/them-moi",
+    key: "NewCasePerson",
+    exact: true,
+    component: <NewCasePerson />,
+  },
+  {
+    path: "/quan-ly-than-nhan-can-bo/chinh-sua/:id",
+    key: "NewCasePerson",
+    exact: true,
+    component: <NewCasePerson />,
+  },
   {
     path: "/trang-ca-nhan",
     key: "Profile",

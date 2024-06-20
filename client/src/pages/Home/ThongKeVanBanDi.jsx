@@ -102,53 +102,28 @@ const ThongKeVanBanDi = () => {
             <XAxis
               dataKey="ten_loai_tai_lieu"
               tickFormatter={(name) => {
-                if (name === "BÁO CÁO") {
-                  return "BC";
-                }
-                if (name === "CHƯƠNG TRÌNH") {
-                  return "CTr";
-                }
-                if (name === "CÔNG VĂN") {
-                  return "CV";
-                }
-                if (name === "TRÍCH SAO") {
-                  return "TTs";
-                }
-                if (name === "GIẤY MỜI") {
-                  return "GM";
-                }
-                if (name === "HƯỚNG DẪN") {
-                  return "HD";
-                }
-                if (name === "KẾ HOẠCH") {
+                const trimmedName = name.trim();
+                if (trimmedName === "BÁO CÁO") return "BC";
+                if (trimmedName === "CHƯƠNG TRÌNH") return "CTr";
+                if (trimmedName === "CÔNG VĂN") return "CV";
+                if (trimmedName === "GIẤY GIỚI THIỆU") return "GTT";
+                if (trimmedName === "GIẤY MỜI") return "GM";
+                if (trimmedName === "GIẤY XÁC NHẬN") return "GXN";
+                if (trimmedName === "HƯỚNG DẪN") return "HD";
+                if (trimmedName === "KẾ HOẠCH") {
                   return "KH";
                 }
-                if (name === "PHƯƠNG ÁN") {
-                  return "PA";
-                }
-                if (name === "QUYẾT ĐỊNH") {
-                  return "QĐ";
-                }
-                if (name === "THÔNG BÁO") {
-                  return "TB";
-                }
-                if (name === "YÊU CẦU") {
-                  return "YC";
-                }
-                if (name === "TỜ TRÌNH") {
-                  return "TTr";
-                }
-                if (name === "BÁO CÁO-ĐTN") {
-                  return "BC-ĐTN";
-                }
-                if (name === "GIẤY XÁC NHẬN") {
-                  return "GXN";
-                }
-                if (name === "GIẤY GIỚI THIỆU") {
-                  return "GTT";
-                }
-                return name;
+                if (trimmedName === "PHƯƠNG ÁN") return "PA";
+                if (trimmedName === "QUYẾT ĐỊNH") return "QĐ";
+                if (trimmedName === "THÔNG BÁO") return "TB";
+                if (trimmedName === "TỜ TRÌNH") return "TTr";
+                if (trimmedName === "TRÍCH SAO") return "TTs";
+                if (trimmedName === "YÊU CẦU") return "YC";
+                if (trimmedName === "SAO Y BẢN CHÍNH") return "SY";
+                if (trimmedName === "BẢN ĐỊNH THỜI HẠN BẢO QUẢN HỒ SƠ") return "BQHS";
+                return trimmedName;
               }}
+
             />
             <YAxis />
             <Tooltip />

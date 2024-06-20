@@ -7,11 +7,8 @@ import {
   Button,
   Radio,
   Divider,
-  Upload,
-  message,
   TreeSelect,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import { jwtDecode } from "jwt-decode";
@@ -26,9 +23,6 @@ const NewCaseHandle = () => {
   const { TextArea } = Input;
 
   const [selectedNoiNhan, setSelectedNoiNhan] = useState([]);
-
-  const [isChangedFile, setIsChangeFile] = useState(false);
-
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
 
   const onFinish = (values) => {
@@ -38,7 +32,6 @@ const NewCaseHandle = () => {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join("\n");
     }
-
     if (Array.isArray(values.noi_nhan)) {
       const selectedNoiNhan = values.noi_nhan
         .map((item) => item.value)
@@ -68,13 +61,6 @@ const NewCaseHandle = () => {
     const currentDate = moment();
     values.updatedAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
     values.updatedBy = userFullName;
-
-    values.isChangedFile = isChangedFile;
-    if (fileList.length > 0) {
-      values.file_van_ban = fileList[0].originFileObj;
-    } else {
-      values.file_van_ban = null;
-    }
     postCase(values).then((res) => {
       history.push("/quan-ly-van-ban");
       window.location.href = "/quan-ly-van-ban";
@@ -141,34 +127,9 @@ const NewCaseHandle = () => {
     }
   }, [id, form]);
   const { Option } = Select;
+
   const handleNoiNhanChange = (values) => {
     setSelectedNoiNhan(values);
-  };
-  const [fileList, setFileList] = useState([]);
-  const props = {
-    onRemove: (file) => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-    },
-    beforeUpload: (file) => {
-      return false;
-    },
-    fileList,
-    onChange(info) {
-      console.log(info);
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-        setFileList(info.fileList);
-        setIsChangeFile(true);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
   };
 
   const laysovanbanden = async (van_ban_den_id) => {
@@ -186,6 +147,9 @@ const NewCaseHandle = () => {
         break;
       case 2:
         tenviettatvanbanden = "/TLM";
+        break;
+      case 4:
+        tenviettatvanbanden = "/TLK";
         break;
       default:
         break;
@@ -370,20 +334,6 @@ const NewCaseHandle = () => {
             validateTrigger="onBlur"
           >
             <DatePicker format={dateFormatList} placeholder={"NGÀY"} />
-          </Form.Item>
-          <Form.Item
-            name="file_van_ban"
-            label="PDF"
-            wrapperCol={{
-              offset: 3,
-              span: 10,
-            }}
-            rules={[]}
-            validateTrigger="onBlur"
-          >
-            <Upload {...props}>
-              <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
-            </Upload>
           </Form.Item>
           <Form.Item
             name="trang_thai_van_ban"

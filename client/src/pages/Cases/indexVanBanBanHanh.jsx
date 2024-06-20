@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Modal } from "antd";
-import { EditOutlined, EyeFilled, SendOutlined } from "@ant-design/icons";
+import { Table } from "antd";
+import { EditOutlined, SendOutlined } from "@ant-design/icons";
 import { searchVanBanDi, bangVanBanBanHanh } from "../../api";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
@@ -16,17 +16,17 @@ const CaseVanBanBanHanhs = () => {
 
   let history = useHistory();
 
-  const [isPdfModalVisible, setIsPdfModalVisible] = useState(false);
-  const [pdfURL, setPdfURL] = useState(null);
-  const openPDFModal = (pdfUrl) => {
-    setPdfURL(pdfUrl);
-    setIsPdfModalVisible(true);
-  };
+  // const [isPdfModalVisible, setIsPdfModalVisible] = useState(false);
+  // const [pdfURL, setPdfURL] = useState(null);
+  // const openPDFModal = (pdfUrl) => {
+  //   setPdfURL(pdfUrl);
+  //   setIsPdfModalVisible(true);
+  // };
 
-  const closePDFModal = () => {
-    setPdfURL(null);
-    setIsPdfModalVisible(false);
-  };
+  // const closePDFModal = () => {
+  //   setPdfURL(null);
+  //   setIsPdfModalVisible(false);
+  // };
 
   const CaseColumns = [
     {
@@ -68,37 +68,37 @@ const CaseVanBanBanHanhs = () => {
       width: 200,
       align: "center",
     },
-    {
-      title: "VĂN BẢN",
-      key: "",
-      dataIndex: "action",
-      align: "center",
-      width: 100,
-      render: (text, record) => {
-        const openPDF = () => {
-          const caseData = cases.find((c) => c.id === record.id);
-          if (caseData && caseData.file_van_ban) {
-            const pdfData = caseData.file_van_ban.data;
-            const blobData = new Blob([new Uint8Array(pdfData).buffer], {
-              type: "application/pdf",
-            });
-            const pdfURL = URL.createObjectURL(blobData);
-            openPDFModal(pdfURL);
-          }
-        };
-        if (record.file_van_ban) {
-          return (
-            <EyeFilled
-              className="icon-wrapper-1"
-              onClick={openPDF}
-              style={{ cursor: "pointer", color: "blue" }}
-            />
-          );
-        } else {
-          return <></>;
-        }
-      },
-    },
+    // {
+    //   title: "VĂN BẢN",
+    //   key: "",
+    //   dataIndex: "action",
+    //   align: "center",
+    //   width: 100,
+    //   render: (text, record) => {
+    //     const openPDF = () => {
+    //       const caseData = cases.find((c) => c.id === record.id);
+    //       if (caseData && caseData.file_van_ban) {
+    //         const pdfData = caseData.file_van_ban.data;
+    //         const blobData = new Blob([new Uint8Array(pdfData).buffer], {
+    //           type: "application/pdf",
+    //         });
+    //         const pdfURL = URL.createObjectURL(blobData);
+    //         openPDFModal(pdfURL);
+    //       }
+    //     };
+    //     if (record.file_van_ban) {
+    //       return (
+    //         <EyeFilled
+    //           className="icon-wrapper-1"
+    //           onClick={openPDF}
+    //           style={{ cursor: "pointer", color: "blue" }}
+    //         />
+    //       );
+    //     } else {
+    //       return <></>;
+    //     }
+    //   },
+    // },
     {
       title: "GHI CHÚ",
       key: "",
@@ -152,14 +152,19 @@ const CaseVanBanBanHanhs = () => {
   ];
 
   const onDownload = () => {
-    const csvHeader =
-      DownloadColumns.map(({ title }) => title).join("###") + "\r\n";
-
+    let downloadColumns = DownloadColumns;
+    if (!searchCondition?.loai_tai_lieu_id) {
+      downloadColumns = [
+        { title: "LOẠI TÀI LIỆU", dataIndex: "loai_tai_lieu", key: "loai_tai_lieu", render: (data) => data ? data.name : "" },
+        ...DownloadColumns.slice(1)
+      ];
+    }
+    const csvHeader = downloadColumns.map(({ title }) => title).join("###") + "\r\n";
     const csvBody = cases.reduce((body, c) => {
-      c.loai_tai_lieu = c.loai_tai_lieu.name;
+      c.loai_tai_lieu = c.loai_tai_lieu ? c.loai_tai_lieu.name : "";
       c.ngay_ban_hanh = moment(c.ngay_ban_hanh).format("DD/MM/YYYY");
       return (body +=
-        DownloadColumns.map(({ key }) => {
+        downloadColumns.map(({ key }) => {
           return c[key] === 0 ? c[key] : c[key] ? `${c[key]}` : "-";
         }).join("###") + "\r\n");
     }, "");
@@ -180,6 +185,7 @@ const CaseVanBanBanHanhs = () => {
     link.click();
     document.body.removeChild(link);
   };
+
 
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -248,15 +254,22 @@ const CaseVanBanBanHanhs = () => {
   };
 
   const onSearch = (searchParams) => {
-    const { loai_tai_lieu_id, noi_nhan, noi_dung_van_ban } = searchParams;
+    const { loai_tai_lieu_id, noi_nhan, noi_dung_van_ban, ngay_ban_hanh } = searchParams || {};
+    const startDate = ngay_ban_hanh && ngay_ban_hanh[0] ? ngay_ban_hanh[0] : moment().startOf('year');
+    const endDate = ngay_ban_hanh && ngay_ban_hanh[1] ? ngay_ban_hanh[1] : moment().endOf('year');
+
     setLoaiTaiLieuContent(
       loaiTaiLieuContentMapping[loai_tai_lieu_id] || "VĂN BẢN CÁC LOẠI"
     );
-    setSearchCondition(searchParams);
-    setSelectedDateRange(searchParams.ngay_ban_hanh);
+    setSearchCondition({
+      ...searchParams,
+      ngay_ban_hanh: [startDate, endDate]
+    });
+    setSelectedDateRange([startDate, endDate]);
     setNoiNhan(noi_nhan);
     setTrichYeu(noi_dung_van_ban);
   };
+
 
   const currentDate = moment().format("DD/MM/YYYY");
   const currentYear = moment().format("YYYY");
@@ -264,34 +277,29 @@ const CaseVanBanBanHanhs = () => {
 
   let displayContent = "";
   if (totalItems === 0) {
-    displayContent = `${
-      noi_nhan
-        ? `ĐỒNG CHÍ ${noi_nhan.toUpperCase()} KHÔNG THAM MƯU BCH PHÒNG BAN HÀNH`
-        : "PHÒNG PC09 KHÔNG BAN HÀNH"
-    } 
+    displayContent = `${noi_nhan
+      ? `ĐỒNG CHÍ ${noi_nhan.toUpperCase()} KHÔNG THAM MƯU BCH PHÒNG BAN HÀNH`
+      : "PHÒNG PC09 KHÔNG BAN HÀNH"
+      } 
     ${loai_tai_lieu_content} 
-    ${
-      noi_dung_van_ban
+    ${noi_dung_van_ban
         ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
         : ""
-    } TRONG KHOẢNG THỜI GIAN NÀY!`;
+      } TRONG KHOẢNG THỜI GIAN NÀY!`;
   } else {
-    displayContent = `TỪ NGÀY ${
-      selectedDateRange && selectedDateRange[0]
-        ? selectedDateRange[0].format("DD/MM/YYYY")
-        : currentYearNow
-    } 
-    ĐẾN NGÀY ${
-      selectedDateRange && selectedDateRange[1]
+    displayContent = `TỪ NGÀY ${selectedDateRange && selectedDateRange[0]
+      ? selectedDateRange[0].format("DD/MM/YYYY")
+      : currentYearNow
+      } 
+    ĐẾN NGÀY ${selectedDateRange && selectedDateRange[1]
         ? selectedDateRange[1].format("DD/MM/YYYY")
         : currentDate
-    }, 
+      }, 
     PC09-HN ĐÃ BAN HÀNH ${totalItems} ${loai_tai_lieu_content} 
-    ${
-      noi_dung_van_ban
+    ${noi_dung_van_ban
         ? `LIÊN QUAN TỚI "${noi_dung_van_ban.toUpperCase()}"`
         : ""
-    } 
+      } 
     ${noi_nhan ? ` DO Đ/C ${noi_nhan.toUpperCase()} THAM MƯU XÂY DỰNG` : ""}!`;
   }
 
@@ -329,7 +337,7 @@ const CaseVanBanBanHanhs = () => {
           showQuickJumper: true,
         }}
       />
-      <Modal
+      {/* <Modal
         visible={isPdfModalVisible}
         onCancel={closePDFModal}
         footer={null}
@@ -338,7 +346,7 @@ const CaseVanBanBanHanhs = () => {
         bodyStyle={{ height: "100vh", overflow: "auto" }}
       >
         <embed src={pdfURL} type="application/pdf" width="100%" height="100%" />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
