@@ -887,8 +887,8 @@ router.post("/", (req: Request, res: Response) => {
     fs.readFile(body.file_van_ban.path, function (err, data) {
       const fileName = `./data/van-ban/${randomID(8)}-${body.file_van_ban_name}`;
       fs.writeFile(fileName, data, (err2) => {
-        if (err) {
-          console.error("LỖI KHI GHI FILE:", err);
+        if (err2) {
+          console.error("LỖI KHI GHI FILE:", err2);
         }
         else {  
           const record = {
