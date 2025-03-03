@@ -1,0 +1,11 @@
+node_modules
+/client/node_modules
+
+/mysql-note
+
+/docker/db/data
+
+yarn-error.log
+
+**/*/build
+*.bak

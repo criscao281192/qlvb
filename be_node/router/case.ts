@@ -293,7 +293,10 @@ router.get(
   "/countVanBanDenFor12Months",
   async (req: Request, res: Response) => {
     const currentYear = new Date().getFullYear();
-    const results = [];
+    const results: {
+      month: number;
+      count: number;
+    }[] = [];
 
     for (let i = 1; i <= 12; i++) {
       const firstDay = new Date(currentYear, i - 1, 1);
@@ -322,7 +325,13 @@ router.get(
   async (req: Request, res: Response) => {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
-    const results = [];
+    const results: {
+      month: number;
+      year: number;
+      countCurrentYear: number;
+      yearLastYear: number;
+      countLastYear: number;
+    }[] = [];
 
     for (let i = 1; i <= 12; i++) {
       const firstDayCurrentYear = new Date(currentYear, i - 1, 1);
@@ -449,7 +458,10 @@ router.get("/countVanBanDi", async (req: Request, res: Response) => {
 // THỐNG KÊ TỔNG SỐ VĂN BẢN BAN HÀNH THEO 12 THÁNG
 router.get("/countVanBanDiFor12Months", async (req: Request, res: Response) => {
   const currentYear = new Date().getFullYear();
-  const results = [];
+  const results: {
+    month: number;
+    count: number;
+  }[] = [];
 
   for (let i = 1; i <= 12; i++) {
     const firstDay = new Date(currentYear, i - 1, 1);
@@ -484,7 +496,13 @@ router.get(
   async (req: Request, res: Response) => {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
-    const results = [];
+    const results: {
+      month: number;
+      year: number;
+      countCurrentYear: number;
+      yearLastYear: number;
+      countLastYear: number;
+    }[] = [];
 
     for (let i = 1; i <= 12; i++) {
       const firstDayCurrentYear = new Date(currentYear, i - 1, 1);
@@ -678,7 +696,7 @@ router.get("/bangBaoCaoDinhKy", async (req: Request, res: Response) => {
 // *
 router.get("/bangVanBanDen", async (req, res) => {
   const trangThaiOptions = ["ĐANG XỬ LÝ", "LƯU", "XONG"];
-  let results = null;
+  let results: any[] = [];
   const numberOfDaysToCheck = 30;
   const currentDate = new Date();
 
@@ -800,7 +818,9 @@ router.post("/", (req: Request, res: Response) => {
   if (body.isChangedFile) {
     if (body.file_van_ban) {
       fs.readFile(body.file_van_ban.path, function (err, data) {
-        const fileName = `./data/van-ban/${randomID(8)}-${body.file_van_ban_name}`;
+        const fileName = `./data/van-ban/${randomID(8)}-${
+          body.file_van_ban_name
+        }`;
         fs.writeFile(fileName, data, (err2) => {
           if (err2) {
             console.error("LỖI KHI ĐỌC FILE PDF:", err2);
@@ -828,13 +848,13 @@ router.post("/", (req: Request, res: Response) => {
             };
             if (body.id) {
               TaiLieu.update(record, { where: { id: body.id } })
-                .then((a) => { })
+                .then((a) => {})
                 .catch((e) => {
                   console.error("LỖI KHI CẬP NHẬT:", e);
                 });
             } else {
               TaiLieu.create(record)
-                .then((a) => { })
+                .then((a) => {})
                 .catch((e) => {
                   console.error("LỖI KHI TẠO MỚI:", e);
                 });
@@ -842,10 +862,8 @@ router.post("/", (req: Request, res: Response) => {
           }
         });
       });
-      
-      fs.readFile(body.file_van_ban.path, function (err, data) {
-        
-      });
+
+      fs.readFile(body.file_van_ban.path, function (err, data) {});
     } else {
       const record = {
         loai_tai_lieu_id: body.loai_tai_lieu,
@@ -869,28 +887,28 @@ router.post("/", (req: Request, res: Response) => {
       };
       if (body.id) {
         TaiLieu.update(record, { where: { id: body.id } })
-          .then((a) => { })
+          .then((a) => {})
           .catch((e) => {
             console.error("LỖI KHI CẬP NHẬT:", e);
           });
       } else {
         TaiLieu.create(record)
-          .then((a) => { })
+          .then((a) => {})
           .catch((e) => {
             console.error("LỖI KHI TẠO MỚI:", e);
           });
       }
     }
   } else {
-
     // write file_van_ban to disk
     fs.readFile(body.file_van_ban.path, function (err, data) {
-      const fileName = `./data/van-ban/${randomID(8)}-${body.file_van_ban_name}`;
+      const fileName = `./data/van-ban/${randomID(8)}-${
+        body.file_van_ban_name
+      }`;
       fs.writeFile(fileName, data, (err2) => {
         if (err2) {
           console.error("LỖI KHI GHI FILE:", err2);
-        }
-        else {  
+        } else {
           const record = {
             loai_tai_lieu_id: body.loai_tai_lieu,
             van_ban_den_id: body.van_ban_den,
@@ -914,13 +932,13 @@ router.post("/", (req: Request, res: Response) => {
           };
           if (body.id) {
             TaiLieu.update(record, { where: { id: body.id } })
-              .then((a) => { })
+              .then((a) => {})
               .catch((e) => {
                 console.error("LỖI KHI CẬP NHẬT:", e);
               });
           } else {
             TaiLieu.create(record)
-              .then((a) => { })
+              .then((a) => {})
               .catch((e) => {
                 console.error("LỖI KHI TẠO MỚI:", e);
               });
