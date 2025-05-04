@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, Modal } from "antd";
+import { Table, Checkbox } from "antd";
 import SearchCase from "../../components/SearchCase";
 import {
   EditOutlined,
-  EyeFilled,
   SaveTwoTone,
   CheckCircleTwoTone,
   SyncOutlined,
@@ -18,22 +17,41 @@ import "./styles.css";
 const Cases = () => {
   const [cases, setCases] = useState([]);
   const [searchCondition, setSearchCondition] = useState();
-
+  const [sortedInfo] = useState({});
+  const [selectAll, setSelectAll] = useState(false);
   let history = useHistory();
 
-  const [isPdfModalVisible, setIsPdfModalVisible] = useState(false);
-  const [pdfURL, setPdfURL] = useState(null);
-  const openPDFModal = (pdfUrl) => {
-    setPdfURL(pdfUrl);
-    setIsPdfModalVisible(true);
-  };
+  // const [isPdfModalVisible, setIsPdfModalVisible] = useState(false);
+  // const [pdfURL, setPdfURL] = useState(null);
+  // const openPDFModal = (pdfUrl) => {
+  //   setPdfURL(pdfUrl);
+  //   setIsPdfModalVisible(true);
+  // };
 
-  const closePDFModal = () => {
-    setPdfURL(null);
-    setIsPdfModalVisible(false);
-  };
+  // const closePDFModal = () => {
+  //   setPdfURL(null);
+  //   setIsPdfModalVisible(false);
+  // };
 
   const CaseColumns = [
+    {
+      title: (
+        <Checkbox
+          checked={selectAll}
+          onChange={(e) => handleSelectAll(e)}
+        ></Checkbox>
+      ),
+      dataIndex: "selected",
+      key: "selected",
+      align: "center",
+      width: 30,
+      render: (text, record) => (
+        <Checkbox
+          checked={record.selected}
+          onChange={(e) => handleCheckboxChange(e, record)}
+        />
+      ),
+    },
     {
       title: "TT",
       render: (text, record, index) => {
@@ -77,6 +95,11 @@ const Cases = () => {
       key: "ngay_tiep_nhan",
       dataIndex: "ngay_tiep_nhan",
       render: (data) => data && moment(data).format("DD/MM/YYYY"),
+      sorter: (a, b) => new Date(a.ngay_tiep_nhan) - new Date(b.ngay_tiep_nhan),
+      sortOrder:
+        sortedInfo.columnKey === "ngay_tiep_nhan"
+          ? sortedInfo.order
+          : "decrease",
       align: "center",
       width: 130,
     },
@@ -122,37 +145,37 @@ const Cases = () => {
         </>
       ),
     },
-    {
-      title: "PDF",
-      key: "",
-      dataIndex: "action",
-      align: "center",
-      width: 50,
-      render: (text, record) => {
-        const openPDF = () => {
-          const caseData = cases.find((c) => c.id === record.id);
-          if (caseData && caseData.file_van_ban) {
-            const pdfData = caseData.file_van_ban.data;
-            const blobData = new Blob([new Uint8Array(pdfData).buffer], {
-              type: "application/pdf",
-            });
-            const pdfURL = URL.createObjectURL(blobData);
-            openPDFModal(pdfURL);
-          }
-        };
-        if (record.file_van_ban) {
-          return (
-            <EyeFilled
-              className="icon-wrapper-1"
-              onClick={openPDF}
-              style={{ cursor: "pointer", color: "blue" }}
-            />
-          );
-        } else {
-          return <></>;
-        }
-      },
-    },
+    // {
+    //   title: "PDF",
+    //   key: "",
+    //   dataIndex: "action",
+    //   align: "center",
+    //   width: 50,
+    //   render: (text, record) => {
+    //     const openPDF = () => {
+    //       const caseData = cases.find((c) => c.id === record.id);
+    //       if (caseData && caseData.file_van_ban) {
+    //         const pdfData = caseData.file_van_ban.data;
+    //         const blobData = new Blob([new Uint8Array(pdfData).buffer], {
+    //           type: "application/pdf",
+    //         });
+    //         const pdfURL = URL.createObjectURL(blobData);
+    //         openPDFModal(pdfURL);
+    //       }
+    //     };
+    //     if (record.file_van_ban) {
+    //       return (
+    //         <EyeFilled
+    //           className="icon-wrapper-1"
+    //           onClick={openPDF}
+    //           style={{ cursor: "pointer", color: "blue" }}
+    //         />
+    //       );
+    //     } else {
+    //       return <></>;
+    //     }
+    //   },
+    // },
     {
       title: "XỬ LÝ",
       key: "",
@@ -229,35 +252,24 @@ const Cases = () => {
       key: "noi_nhan",
       dataIndex: "noi_nhan",
     },
-    {
-      title: "THỜI HẠN",
-      key: "ngay_het_han",
-      dataIndex: "ngay_het_han",
-      render: (data) => data && moment(data).format("DD/MM/YYYY"),
-    },
-    {
-      title: "TRẠNG THÁI",
-      key: "trang_thai_van_ban",
-      dataIndex: "trang_thai_van_ban",
-    },
-    {
-      title: "ĐỀ XUẤT",
-      key: "de_xuat",
-      dataIndex: "de_xuat",
-    },
   ];
 
   const onDownloadVanBanDen = () => {
-    const csvHeader =
-      DownloadColumns.map(({ title }) => title).join("###") + "\r\n";
-
+    let downloadColumns = DownloadColumns;
+    if (!searchCondition.van_ban_den_id) {
+      downloadColumns = [
+        { title: "VĂN BẢN ĐẾN", dataIndex: "van_ban_den", key: "van_ban_den", render: (data) => data ? data.name : "" },
+        ...DownloadColumns.slice(1)
+      ];
+    }
+    const csvHeader = downloadColumns.map(({ title }) => title).join("###") + "\r\n";
     const csvBody = cases.reduce((body, c) => {
-      c.van_ban_den = c.van_ban_den.name;
+      c.van_ban_den = c.van_ban_den ? c.van_ban_den.name : "";
       c.ngay_ban_hanh = moment(c.ngay_ban_hanh).format("DD/MM/YYYY");
       c.ngay_tiep_nhan = moment(c.ngay_tiep_nhan).format("DD/MM/YYYY");
       c.ngay_het_han = moment(c.ngay_het_han).format("DD/MM/YYYY");
       return (body +=
-        DownloadColumns.map(({ key }) => {
+        downloadColumns.map(({ key }) => {
           return c[key] === 0 ? c[key] : c[key] ? `${c[key]}` : "-";
         }).join("###") + "\r\n");
     }, "");
@@ -279,13 +291,30 @@ const Cases = () => {
     document.body.removeChild(link);
   };
 
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+    const updatedCases = cases.map((c) => {
+      return { ...c, selected: checked };
+    });
+    setCases(updatedCases);
+  };
+
+  const handleCheckboxChange = (e, record) => {
+    const updatedCases = cases.map((c) => {
+      if (c.id === record.id) {
+        return { ...c, selected: e.target.checked };
+      }
+      return c;
+    });
+    setCases(updatedCases);
+  };
+
   const onPrint = (record) => {
     const printWindow = window.open("", "_blank");
     if (!printWindow.printContentAdded) {
       const currentDate = new Date();
-      const formattedDate = `${currentDate.getDate()}/${
-        currentDate.getMonth() + 1
-      }/${currentDate.getFullYear()}`;
+      const formattedDate = moment(currentDate).format("DD/MM/YYYY");
       printWindow.document.open();
       printWindow.document.write(`
       <html>
@@ -381,31 +410,26 @@ const Cases = () => {
             <table class="border-white">
               <tbody>
                 <tr>
-                  <td class="left-section">SỐ ĐẾN: <strong>${
-                    record.van_ban_den_so || "-"
-                  }</strong></td>
-                  <td class="middle-section">ĐƠN VỊ: <strong>${
-                    record.ten_don_vi || "-"
-                  }</strong></td>
-                  <td class="right-section">VĂN BẢN SỐ: <strong>${
-                    record.so_van_ban || "-"
-                  }</strong></td>
+                  <td class="left-section">SỐ ĐẾN: <strong>${record.van_ban_den_so || "-"
+        }</strong></td>
+                  <td class="middle-section">ĐƠN VỊ: <strong>${record.ten_don_vi || "-"
+        }</strong></td>
+                  <td class="right-section">VĂN BẢN SỐ: <strong>${record.so_van_ban || "-"
+        }</strong></td>
                 </tr>
               </tbody>
             </table>
             <table>
               <tbody>
                 <tr>
-                  <td class="left-section">NGÀY KÝ: <strong>${
-                    record.ngay_ban_hanh
-                      ? moment(record.ngay_ban_hanh).format("DD/MM/YYYY")
-                      : "-"
-                  }</strong></td>
-                  <td class="middle-section no-border">NGÀY NHẬN: <strong>${
-                    record.ngay_tiep_nhan
-                      ? moment(record.ngay_tiep_nhan).format("DD/MM/YYYY")
-                      : "-"
-                  }</strong></td>
+                  <td class="left-section">NGÀY KÝ: <strong>${record.ngay_ban_hanh
+          ? moment(record.ngay_ban_hanh).format("DD/MM/YYYY")
+          : "-"
+        }</strong></td>
+                  <td class="middle-section no-border">NGÀY NHẬN: <strong>${record.ngay_tiep_nhan
+          ? moment(record.ngay_tiep_nhan).format("DD/MM/YYYY")
+          : "-"
+        }</strong></td>
                   <td class="right-section">NGÀY IN PHIẾU: <strong>${formattedDate}</strong></td>
                 </tr>
               </tbody>
@@ -432,33 +456,36 @@ const Cases = () => {
                 margin: 5px;
                 text-align: center;
                 font-size: 14px;
+              }
+              .proposal-section-1 {
+                padding: 10px;
+                margin: 5px;
+                text-align: center;
+                font-size: 20px;
+              }
             </style>
             <div class="upper-section">
               <div class="left-section-2">
                 <div class="proposal-section">
                   <strong>Ý KIẾN ĐỀ XUẤT CỦA ĐỘI THAM MƯU</strong>
                   <div class="summary-column">
-                    <div class="summary-content">Tóm tắt: <strong>${
-                      record.noi_dung_van_ban || "-"
-                    }.</strong></div>
+                    <div class="summary-content">Tóm tắt: <strong>${record.noi_dung_van_ban || "-"
+        }.</strong></div>
                   </div>
                   <div class="summary-column">
-                    <div class="summary-content">Đề xuất: <em>${(
-                      record.de_xuat || "-"
-                    ).replace(/;/g, "<br>")}.</em></div>
+                    <div class="summary-content">Đề xuất: <em>${record.de_xuat || "-"}.</em></div>
                   </div>
                   <div class="summary-column">
                   <div class="summary-content">
-                    ${
-                      record.ngay_het_han
-                        ? `Hạn B/C: <em>${moment(record.ngay_het_han).format(
-                            "DD/MM/YYYY"
-                          )}</em>`
-                        : "Lưu"
-                    }
+                    ${record.ngay_het_han
+          ? `Hạn B/C: <em>${moment(record.ngay_het_han).format(
+            "DD/MM/YYYY"
+          )}</em>`
+          : "Lưu"
+        }
                   </div>
                   </div>
-                  <div class="proposal-section">
+                  <div class="proposal-section-1">
                   <strong>Kính!</strong>
                 </div>
               </div>
@@ -521,6 +548,14 @@ const Cases = () => {
           setTotalItems(response.data.result.length);
           setCurrentRowNumber((currentPage - 1) * itemsPerPage);
           setCases(response.data.result);
+          const allUnchecked = response.data.result.every((c) => !c.selected);
+          if (allUnchecked) {
+            const updatedCases = response.data.result.map((c) => {
+              return { ...c, selected: true };
+            });
+            setCases(updatedCases);
+            setSelectAll(true);
+          }
         })
         .catch((err) => {
           setCases([]);
@@ -568,7 +603,7 @@ const Cases = () => {
             : ""
         }
       />
-      <Modal
+      {/* <Modal
         visible={isPdfModalVisible}
         onCancel={closePDFModal}
         footer={null}
@@ -577,7 +612,7 @@ const Cases = () => {
         bodyStyle={{ height: "100vh", overflow: "auto" }}
       >
         <embed src={pdfURL} type="application/pdf" width="100%" height="100%" />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

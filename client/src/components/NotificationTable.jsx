@@ -47,7 +47,7 @@ const NotificationTable = ({ notifications, onClickItem }) => {
               handleClickItem(item.id);
             }}
           >
-            Đã nhận văn bản số {item.van_ban_den_so} từ {item.ten_don_vi} ngay{" "}
+            Đã nhận văn bản số {item.van_ban_den_so} từ {item.ten_don_vi} ngày {" "}
             {item.ngay_tiep_nhan
               ? moment(item.ngay_tiep_nhan).format("DD/MM/YYYY")
               : "-"}

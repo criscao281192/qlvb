@@ -94,7 +94,7 @@ const SearchCaseVanBanBanHanh = ({ onSearch, onDownload }) => {
         return (
           <TreeSelect
             treeData={XAY_DUNG_VAN_BAN}
-            placeholder="NƠI NHẬN"
+            placeholder="CÁN BỘ - ĐỘI SOẠN THẢO"
             treeCheckable={true}
             treeCheckStrictly={true}
           />

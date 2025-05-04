@@ -30,27 +30,27 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
       ngay_ban_hanh_1:
         values["ngay_ban_hanh"] &&
         values["ngay_ban_hanh"][0] &&
-        values["ngay_ban_hanh"][0].format("yyyy-MM-DD"),
+        values["ngay_ban_hanh"][0].format("YYYY-MM-DD"),
       ngay_ban_hanh_2:
         values["ngay_ban_hanh"] &&
         values["ngay_ban_hanh"][1] &&
-        values["ngay_ban_hanh"][1].format("yyyy-MM-DD"),
+        values["ngay_ban_hanh"][1].format("YYYY-MM-DD"),
       ngay_tiep_nhan_1:
         values["ngay_tiep_nhan"] &&
         values["ngay_tiep_nhan"][0] &&
-        values["ngay_tiep_nhan"][0].format("yyyy-MM-DD"),
+        values["ngay_tiep_nhan"][0].format("YYYY-MM-DD"),
       ngay_tiep_nhan_2:
         values["ngay_tiep_nhan"] &&
         values["ngay_tiep_nhan"][1] &&
-        values["ngay_tiep_nhan"][1].format("yyyy-MM-DD"),
+        values["ngay_tiep_nhan"][1].format("YYYY-MM-DD"),
       ngay_het_han_1:
         values["ngay_het_han"] &&
         values["ngay_het_han"][0] &&
-        values["ngay_het_han"][0].format("yyyy-MM-DD"),
+        values["ngay_het_han"][0].format("YYYY-MM-DD"),
       ngay_het_han_2:
         values["ngay_het_han"] &&
         values["ngay_het_han"][1] &&
-        values["ngay_het_han"][1].format("yyyy-MM-DD"),
+        values["ngay_het_han"][1].format("YYYY-MM-DD"),
     });
   };
 
@@ -99,8 +99,8 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
       name: "van_ban_den_so",
       label: "SỐ ĐẾN",
       render: () => {
-        return <Input placeholder="123/TLĐ" />;
-      },
+        return <Input placeholder="123" />
+      }
     },
     {
       name: "so_van_ban",
@@ -187,11 +187,10 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
   };
 
   const onPrint = () => {
+    const selectedCases = cases.filter((c) => c.selected);
     const printWindow = window.open("", "_blank");
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}/${
-      currentDate.getMonth() + 1
-    }/${currentDate.getFullYear()}`;
+    const formattedDate = moment(currentDate).format("DD/MM/YYYY");
     printWindow.document.open();
     printWindow.document.write(`
       <html>
@@ -209,7 +208,7 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
               th, td {
                 border: 1px solid black;
                 padding: 5px;
-                font-size: 14px;
+                font-size: 13px;
               }
               th {
                 background-color: #66FF33;
@@ -276,46 +275,35 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
                 <tr>
                   <th style="width: 30px;">TT</th>
                   <th>SỐ ĐẾN</th>
-                  <th style="width: 100px;">ĐƠN VỊ</th>
+                  <th style="width: 70px;">ĐƠN VỊ</th>
                   <th>SỐ VĂN BẢN</th>
-                  <th>NGÀY KÝ</th>
-                  <th>NGÀY NHẬN</th>
+                  <th style="width: 60px;">NGÀY KÝ</th>
+                  <th style="width: 60px;">NGÀY NHẬN</th>
                   <th>TRÍCH YẾU</th>
                   <th class="noi-nhan-header">NƠI NHẬN</th>
                   <th style="width: 150px;">KÝ NHẬN</th>
                 </tr>
               </thead>
               <tbody>
-                ${cases
-                  .map(
-                    (c, index) => `
+            ${selectedCases
+        .map(
+          (c, index) => `
                   <tr>
-                    <td>${index + 1}</td>
-                    <td>${c.van_ban_den_so || "-"}</td>
-                    <td>${c.ten_don_vi || "-"}</td>
-                    <td>${c.so_van_ban || "-"}</td>
-                    <td>${
-                      c.ngay_ban_hanh
-                        ? moment(c.ngay_ban_hanh).format("DD/MM/YYYY")
-                        : "-"
-                    }</td>
-                    <td>${
-                      c.ngay_tiep_nhan
-                        ? moment(c.ngay_tiep_nhan).format("DD/MM/YYYY")
-                        : "-"
-                    }</td>
-                    <td>${c.noi_dung_van_ban || "-"}</td>
-                    <td class="noi-nhan" style="white-space: pre-wrap; width: 150px;">${(c.noi_nhan
-                      ? c.noi_nhan.replace(/,/g, "<br>")
-                      : "TB GIAO BAN(LƯU: H.Anh)"
-                    ).replace(/,/g, "<br>")}</td>
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td style="text-align: center;">${c.van_ban_den_so || "-"}</td>
+                    <td style="text-align: center;">${c.ten_don_vi || "-"}</td>
+                    <td style="text-align: center;">${c.so_van_ban || "-"}</td>
+                    <td style="text-align: center;">${c.ngay_ban_hanh ? moment(c.ngay_ban_hanh).format("DD/MM/YYYY") : "-"}</td>
+                    <td style="text-align: center;">${c.ngay_tiep_nhan ? moment(c.ngay_tiep_nhan).format("DD/MM/YYYY") : "-"}</td>
+                    <td style="text-align: justify;">${c.noi_dung_van_ban || "-"}</td>
+                    <td class="noi-nhan" style="white-space: pre-wrap; width: 150px; text-align: justify;">${(c.noi_nhan ? c.noi_nhan.replace(/,/g, "<br>") : "TB GIAO BAN(LƯU: H.Anh)").replace(/,/g, "<br>")}</td>
                     <td> </td>
                   </tr>
                 `
-                  )
-                  .join("")}
-              </tbody>
-            </table>
+        )
+        .join("")}
+          </tbody>
+        </table>
             <style>
               .noi-nhan-header {
                 line-height: 1.5;
@@ -378,7 +366,7 @@ const SearchCase = ({ onSearch, cases, onDownloadVanBanDen }) => {
           </Col>
           <Col span={12} style={{ textAlign: "right" }}>
             <div>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" >
                 TÌM KIẾM
               </Button>
               <Button style={{ margin: "0 8px" }} onClick={onReset}>

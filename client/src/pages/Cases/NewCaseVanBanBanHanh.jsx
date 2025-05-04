@@ -6,11 +6,8 @@ import {
   DatePicker,
   Button,
   Radio,
-  message,
-  Upload,
   TreeSelect,
 } from "antd";
-import { UploadOutlined, AudioTwoTone } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment";
@@ -21,11 +18,7 @@ const NewCaseVanBanBanHanh = () => {
   const [form] = Form.useForm();
   let history = useHistory();
   let { id } = useParams();
-  const [isChangedFile, setIsChangeFile] = useState(false);
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
-
-  const [setSpokenText] = useState("");
-  const [trichYeu, setTrichYeu] = useState("");
   const { TextArea } = Input;
 
   const onFinish = (values) => {
@@ -49,13 +42,6 @@ const NewCaseVanBanBanHanh = () => {
     const currentDate = moment();
     values.createdAt = currentDate.format("YYYY-MM-DDT13:00:00.000Z");
     values.createdBy = userFullName;
-
-    values.isChangedFile = isChangedFile;
-    if (fileList.length > 0) {
-      values.file_van_ban = fileList[0].originFileObj;
-    } else {
-      values.file_van_ban = null;
-    }
     postCase(values).then((res) => {
       history.push("/quan-ly-van-ban-ban-hanh");
       window.location.href = "/quan-ly-van-ban-ban-hanh";
@@ -103,60 +89,11 @@ const NewCaseVanBanBanHanh = () => {
           updatedAt: res.data.updatedAt,
           updatedBy: res.data.updatedBy,
         });
-        setTrichYeu(res.data.noi_dung_van_ban);
       });
     }
   }, [id, form]);
 
   const { Option } = Select;
-
-  const [fileList, setFileList] = useState([]);
-  const props = {
-    onRemove: (file) => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-    },
-    beforeUpload: (file) => {
-      return false;
-    },
-    fileList,
-    onChange(info) {
-      console.log(info);
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-        setFileList(info.fileList);
-        setIsChangeFile(true);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
-
-  const handleSpeechRecognitionTrichyeu = () => {
-    if ("webkitSpeechRecognition" in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.lang = "vi-VN";
-      recognition.onresult = (event) => {
-        console.log("KẾT QUẢ NHẬN DẠNG GIỌNG NÓI:", event.results);
-        const transcript = event.results[0][0].transcript;
-        setSpokenText(transcript);
-        if (transcript) {
-          form.setFieldsValue({
-            noi_dung_van_ban: transcript,
-          });
-          setTrichYeu(transcript);
-        }
-      };
-      recognition.start();
-    } else {
-      console.error("TRÌNH DUYỆT KHÔNG HỖ TRỢ.");
-    }
-  };
 
   const laysovanbandi = async (loai_tai_lieu_id) => {
     const result = await lay_so_van_ban_di({
@@ -175,7 +112,7 @@ const NewCaseVanBanBanHanh = () => {
         tenviettat = "/CTr-PC09";
         break;
       case 3:
-        tenviettat = "/PC09-Đ1";
+        tenviettat = "/PC09";
         break;
       case 4:
         tenviettat = "/GGT-PC09";
@@ -209,6 +146,9 @@ const NewCaseVanBanBanHanh = () => {
         break;
       case 14:
         tenviettat = "/YC-PC09";
+        break;
+      case 15:
+        tenviettat = "/SY-PC09";
         break;
       case 29:
         tenviettat = "/BQHS-PC09";
@@ -341,15 +281,6 @@ const NewCaseVanBanBanHanh = () => {
           <div className="input-with-icon">
             <TextArea
               rows={4}
-              value={trichYeu}
-              onChange={(e) => {
-                setTrichYeu(e.target.value);
-              }}
-            />
-            <Button
-              className="icon-button"
-              icon={<AudioTwoTone />}
-              onClick={handleSpeechRecognitionTrichyeu}
             />
           </div>
         );
@@ -381,20 +312,20 @@ const NewCaseVanBanBanHanh = () => {
         },
       ],
     },
-    {
-      name: "file_van_ban",
-      label: "VĂN BẢN",
-      render: () => {
-        return (
-          <>
-            <Upload {...props}>
-              <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
-            </Upload>
-          </>
-        );
-      },
-      rules: [],
-    },
+    // {
+    //   name: "file_van_ban",
+    //   label: "VĂN BẢN",
+    //   render: () => {
+    //     return (
+    //       <>
+    //         <Upload {...props}>
+    //           <Button icon={<UploadOutlined />}>TẢI VĂN BẢN</Button>
+    //         </Upload>
+    //       </>
+    //     );
+    //   },
+    //   rules: [],
+    // },
   ];
 
   const getFields = () => {

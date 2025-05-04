@@ -4,6 +4,7 @@ import ThongKeVanBanDi from "./ThongKeVanBanDi";
 import ThongKeVanBanDen from "./ThongKeVanBanDen";
 import ThongKeVanBanDenDifference from "./ThongKeVanBanDenDifference";
 import ThongKeVanBanDiDifference from "./ThongKeVanBanDiDifference";
+import ThongKeCanBo from "./ThongKeCanBo";
 import { Col, Row } from "antd";
 
 const ThongKe = () => {
@@ -16,9 +17,7 @@ const ThongKe = () => {
   }, []);
 
   return (
-    <div
-    >
-      
+    <div>
       <Row>
         <Col span={12}>
           <ThongKeVanBanDen config={config} />
@@ -27,12 +26,19 @@ const ThongKe = () => {
           <ThongKeVanBanDi config={config} />
         </Col>
       </Row>
+      <hr style={{ borderTop: "3px double #0958d9", margin: "20px 0" }} />
       <Row>
         <Col span={12}>
           <ThongKeVanBanDenDifference config={config} />
         </Col>
         <Col span={12}>
           <ThongKeVanBanDiDifference config={config} />
+        </Col>
+      </Row>
+      <hr style={{ borderTop: "3px double #0958d9", margin: "20px 0" }} />
+      <Row>
+        <Col span={24}>
+          <ThongKeCanBo config={config} />
         </Col>
       </Row>
     </div>

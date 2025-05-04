@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   HomeOutlined,
   CloudUploadOutlined,
@@ -8,12 +8,15 @@ import {
   ClockCircleOutlined,
   FolderOpenOutlined,
   SolutionOutlined,
-  TeamOutlined,
+  HourglassOutlined,
+  UserOutlined,
+  TeamOutlined
 } from "@ant-design/icons";
 import logoImage from "../assets/img/Logo.png";
 import { jwtDecode } from "jwt-decode";
 import { Layout, Menu } from "antd";
 import { Roles } from "../shared/constants/roles";
+import { bangVanBanDenHan, bangBaoCaoDinhKy, bangThongTinCanBo, bangThongTinThanNhanCanBo } from "../api";
 
 const MenuWrapper = styled(Menu)`
   &&& .ant-menu-item-selected {
@@ -76,10 +79,24 @@ let menus = [
     roles: [Roles.Admin, Roles.User],
   },
   {
-    name: "Văn bản lưu",
-    icon: <FolderOpenOutlined style={iconStyle} />,
-    link: "http://192.168.1.28/vanban/",
-    outside: true,
+    name: "Định kỳ",
+    icon: <HourglassOutlined style={iconStyle} />,
+    link: "/thong-bao-dinh-ki",
+    outside: false,
+    roles: [Roles.Admin, Roles.User],
+  },
+  {
+    name: "Cán bộ",
+    icon: <UserOutlined style={iconStyle} />,
+    link: "/quan-ly-can-bo",
+    outside: false,
+    roles: [Roles.Admin, Roles.User],
+  },
+  {
+    name: "Thân nhân",
+    icon: <TeamOutlined style={iconStyle} />,
+    link: "/quan-ly-than-nhan-can-bo",
+    outside: false,
     roles: [Roles.Admin, Roles.User],
   },
   {
@@ -90,10 +107,10 @@ let menus = [
     roles: [Roles.Admin],
   },
   {
-    name: "Cán bộ",
-    icon: <TeamOutlined style={iconStyle} />,
-    link: "/quan-ly-can-bo",
-    outside: false,
+    name: "Văn bản lưu",
+    icon: <FolderOpenOutlined style={iconStyle} />,
+    link: "http://192.168.1.28/vanban/",
+    outside: true,
     roles: [Roles.Admin, Roles.User],
   },
 ];
@@ -107,6 +124,67 @@ const Header = ({ isFold }) => {
       setUser(userInfo);
     }
   }, []);
+
+  const [overdueDocuments, setOverdueDocuments] = useState([]);
+  const [currentDocumentIndex, setCurrentDocumentIndex] = useState(0);
+  const [numberOfOverdueDocuments, setNumberOfOverdueDocuments] = useState(0);
+  const [numberOfScheduledReports, setNumberOfScheduledReports] = useState(0);
+  const [numberOfOfficerNotifications, setNumberOfOfficerNotifications] = useState(0);
+  const [numberOfFamilyNotifications, setNumberOfFamilyNotifications] = useState(0);
+
+  const fetchOverdueDocuments = async () => {
+    try {
+      const response = await bangVanBanDenHan({});
+      setOverdueDocuments(response.data.result);
+      setNumberOfOverdueDocuments(response.data.result.length);
+    } catch (error) {
+      console.error("Error fetching overdue documents:", error);
+    }
+  };
+
+  const fetchScheduledReports = async () => {
+    try {
+      const response = await bangBaoCaoDinhKy({});
+      setNumberOfScheduledReports(response.data.result.length);
+    } catch (error) {
+      console.error("Error fetching scheduled reports:", error);
+    }
+  };
+
+  const fetchOfficerNotifications = async () => {
+    try {
+      const response = await bangThongTinCanBo({});
+      setNumberOfOfficerNotifications(response.data.result.length);
+    } catch (error) {
+      console.error("Error fetching officer notifications:", error);
+    }
+  };
+
+  const fetchFamilyNotifications = async () => {
+    try {
+      const response = await bangThongTinThanNhanCanBo({});
+      setNumberOfFamilyNotifications(response.data.result.length);
+    } catch (error) {
+      console.error("Error fetching family notifications:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOverdueDocuments();
+    fetchScheduledReports();
+    fetchOfficerNotifications();
+    fetchFamilyNotifications();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDocumentIndex(
+        (prevIndex) => (prevIndex + 1) % overdueDocuments.length
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [overdueDocuments]);
 
   return (
     <Layout.Sider
@@ -128,35 +206,56 @@ const Header = ({ isFold }) => {
         style={{ backgroundColor: "#defdda", height: "calc(100vh - 64px)" }}
       >
         {menus.map((menu, index) => {
-          const handleClick = () => {
-            if (menu.link === "/") {
-              window.location.href = "/";
+          const handleClick = (e) => {
+            if (menu.outside) {
+              window.open(menu.link, "_blank");
+              history.push("/");
             } else {
               history.push(menu.link);
             }
           };
+
           return (
-            <Menu.Item key={index}>
-              {menu.outside ? (
-                <a
-                  href={menu.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleClick}
-                >
-                  {menu.icon}
-                  <MenuTitle>{menu.name}</MenuTitle>
-                </a>
-              ) : (
-                <Link to={menu.link} onClick={handleClick}>
-                  {menu.icon}
-                  <MenuTitle>{menu.name}</MenuTitle>
-                </Link>
+            <Menu.Item key={index} onClick={handleClick}>
+              {menu.icon}
+              <MenuTitle>{menu.name}</MenuTitle>
+              {(menu.name === "Nhắc việc" && numberOfOverdueDocuments > 0) && (
+                <span style={{ marginLeft: 5, fontSize: 12, color: "Blue" }}>
+                  ({numberOfOverdueDocuments})
+                </span>
+              )}
+              {(menu.name === "Định kỳ" && numberOfScheduledReports > 0) && (
+                <span style={{ marginLeft: 5, fontSize: 12, color: "Blue" }}>
+                  ({numberOfScheduledReports})
+                </span>
+              )}
+              {(menu.name === "Cán bộ" && numberOfOfficerNotifications > 0) && (
+                <span style={{ marginLeft: 5, fontSize: 12, color: "Blue" }}>
+                  ({numberOfOfficerNotifications})
+                </span>
+              )}
+              {(menu.name === "Thân nhân" && numberOfFamilyNotifications > 0) && (
+                <span style={{ marginLeft: 5, fontSize: 12, color: "Blue" }}>
+                  ({numberOfFamilyNotifications})
+                </span>
               )}
             </Menu.Item>
           );
         })}
       </MenuWrapper>
+      <div style={{ position: "fixed", bottom: 0, width: "100%", left: 0, zIndex: "1000" }}>
+        {overdueDocuments.length > 0 && (
+          <marquee behavior="scroll" direction="left" style={{ fontSize: "18px", color: "blue", backgroundColor: "lightyellow" }}>
+            {overdueDocuments.map((document, index) => (
+              <span key={index} style={{ color: "red" }}>
+                {"  "}- Văn bản số {document.so_van_ban} của{" "}
+                {document.ten_don_vi} do đồng chí {document.noi_nhan} phụ trách
+                đến hạn báo cáo {"./*****/."}
+              </span>
+            ))}
+          </marquee>
+        )}
+      </div>
     </Layout.Sider>
   );
 };

@@ -7,30 +7,25 @@ import {
   getConfigPersonnel,
   getCasePersonnel,
 } from "../../api/personnel";
-import { CHUC_VU, DON_VI, LINH_VUC } from "../../shared/constants";
+import { CHUC_VU, DON_VI, DOAN_THE, CHUC_VU_DANG, CHUC_DANH, CAP_BAC } from "../../shared/constants";
 
 const NewCasePersonnel = () => {
   const [form] = Form.useForm();
   let history = useHistory();
   let { id } = useParams();
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
-  const [selectedLinhVucCongTac, setSelectedLinhVucCongTac] = useState([]);
+  const { TextArea } = Input;
 
   const onFinish = (values) => {
-    if (Array.isArray(values.linh_vuc_cong_tac)) {
-      const selectedLinhVucCongTac = values.linh_vuc_cong_tac
-        .map((item) => item.value)
-        .join("; ");
-      if (selectedLinhVucCongTac.trim()) {
-        values.linh_vuc_cong_tac = selectedLinhVucCongTac.replace(
-          /(^\s*,)|(,\s*$)/g,
-          ""
-        );
-      } else {
-        values.linh_vuc_cong_tac = "";
-      }
+    if (Array.isArray(values.doan_the)) {
+      values.doan_the = values.doan_the.map((item) => item.value).join(", ");
     }
-
+    if (Array.isArray(values.chuc_vu_dang)) {
+      values.chuc_vu_dang = values.chuc_vu_dang.map((item) => item.value).join(", ");
+    }
+    if (Array.isArray(values.chuc_danh)) {
+      values.chuc_danh = values.chuc_danh.map((item) => item.value).join(", ");
+    }
     if (values.ngay_sinh) {
       values.ngay_sinh = moment(values.ngay_sinh).format(
         "YYYY-MM-DDT13:00:00.000Z"
@@ -55,7 +50,6 @@ const NewCasePersonnel = () => {
       history.push("/quan-ly-can-bo");
     });
   };
-
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -72,26 +66,35 @@ const NewCasePersonnel = () => {
         form.setFieldsValue({
           id: res.data.id,
           ho_ten: res.data.ho_ten,
-          que_quan: res.data.que_quan,
+          gioi_tinh: res.data.gioi_tinh,
           ngay_sinh: moment(res.data.ngay_sinh),
+          que_quan: res.data.que_quan,
+          noi_o_hien_nay: res.data.noi_o_hien_nay,
+          don_vi_cong_tac: res.data.don_vi_cong_tac,
           so_hieu: res.data.so_hieu,
-          doi_cong_tac: res.data.doi_cong_tac,
-          linh_vuc_cong_tac: res.data.linh_vuc_cong_tac,
+          cap_bac: res.data.cap_bac,
+          doan_the: res.data.doan_the,
           chuc_vu: res.data.chuc_vu,
           ngay_bo_nhiem: moment(res.data.ngay_bo_nhiem),
+          chuc_vu_dang: res.data.chuc_vu_dang,
+          dan_toc: res.data.dan_toc,
           ngay_vao_nganh: moment(res.data.ngay_vao_nganh),
           ngay_vao_dang: moment(res.data.ngay_vao_dang),
+          ngay_vao_dang_chinh_thuc: moment(res.data.ngay_vao_dang_chinh_thuc),
           trinh_do_ly_luan: res.data.trinh_do_ly_luan,
           trinh_do_dao_tao: res.data.trinh_do_dao_tao,
           trinh_do_cong_an: res.data.trinh_do_cong_an,
+          chuc_danh: res.data.chuc_danh,
+          qua_trinh_cong_tac: res.data.qua_trinh_cong_tac,
+          qua_trinh_len_luong: res.data.qua_trinh_len_luong,
+          xep_loai_can_bo: res.data.xep_loai_can_bo,
+          khen_thuong: res.data.khen_thuong,
+          ky_luat: res.data.ky_luat,
+
         });
       });
     }
   }, [id, form]);
-
-  const handleLinhVucChange = (values) => {
-    setSelectedLinhVucCongTac(values);
-  };
 
   const searchControls = [
     {
@@ -105,6 +108,24 @@ const NewCasePersonnel = () => {
       label: "HỌ VÀ TÊN",
       render: () => {
         return <Input placeholder="NGUYỄN VĂN A" />;
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "gioi_tinh",
+      label: "GIỚI TÍNH",
+      render: () => {
+        return (
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="Nam"> NAM </Radio.Button>
+            <Radio.Button value="Nữ"> NỮ </Radio.Button>
+          </Radio.Group>
+        );
       },
       rules: [
         {
@@ -137,7 +158,7 @@ const NewCasePersonnel = () => {
       label: "QUÊ QUÁN",
       render: () => {
         return (
-          <Input placeholder="xã/phường/thị trấn - huyện/thị xã/quận - tỉnh/Thành phố" />
+          <Input placeholder="XÃ/PHƯỜNG/THỊ TRẤN - QUẬN/HUYỆN/THỊ XÃ/THÀNH PHỐ - TỈNH/THÀNH PHỐ" />
         );
       },
       rules: [
@@ -148,7 +169,22 @@ const NewCasePersonnel = () => {
       ],
     },
     {
-      name: "doi_cong_tac",
+      name: "noi_o_hien_nay",
+      label: "NƠI Ở HIỆN NAY",
+      render: () => {
+        return (
+          <Input placeholder="XÃ/PHƯỜNG/THỊ TRẤN - QUẬN/HUYỆN/THỊ XÃ/THÀNH PHỐ - TỈNH/THÀNH PHỐ" />
+        );
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "don_vi_cong_tac",
       label: "ĐƠN VỊ CÔNG TÁC",
       render: () => {
         return (
@@ -172,25 +208,16 @@ const NewCasePersonnel = () => {
       render: () => {
         return <Input placeholder="123 - 456" />;
       },
-      rules: [
-        {
-          required: true,
-          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
-        },
-      ],
+      rules: [],
     },
     {
-      name: "linh_vuc_cong_tac",
-      label: "LĨNH VỰC CÔNG TÁC",
+      name: "cap_bac",
+      label: "CẤP BẬC",
       render: () => {
         return (
           <TreeSelect
-            treeData={LINH_VUC}
-            placeholder="LĨNH VỰC CÔNG TÁC"
-            treeCheckable={true}
-            treeCheckStrictly={true}
-            onChange={handleLinhVucChange}
-            value={selectedLinhVucCongTac}
+            treeData={CAP_BAC}
+            placeholder="CẤP BẬC HÀM"
           />
         );
       },
@@ -202,14 +229,15 @@ const NewCasePersonnel = () => {
       ],
     },
     {
-      name: "ngay_vao_nganh",
-      label: "NGÀY VÀO NGÀNH",
+      name: "doan_the",
+      label: "ĐẢNG - ĐOÀN THỂ",
       render: () => {
         return (
-          <DatePicker
-            format={dateFormatList}
-            showTime={false}
-            placeholder={"NGÀY"}
+          <TreeSelect
+            treeData={DOAN_THE}
+            placeholder="ĐẢNG VIÊN - ĐOÀN VIÊN - HỘI VIÊN HỘI PHỤ NỮ"
+            treeCheckable={true}
+            treeCheckStrictly={true}
           />
         );
       },
@@ -232,16 +260,51 @@ const NewCasePersonnel = () => {
           />
         );
       },
-      rules: [
-        {
-          required: true,
-          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
-        },
-      ],
+      rules: [],
     },
     {
       name: "ngay_bo_nhiem",
       label: "NGÀY BỔ NHIỆM",
+      render: () => {
+        return (
+          <DatePicker
+            format={dateFormatList}
+            showTime={false}
+            placeholder={"NGÀY"}
+          />
+        );
+      },
+      rules: [],
+    },
+    {
+      name: "chuc_vu_dang",
+      label: "CHỨC VỤ ĐẢNG/ĐOÀN THỂ",
+      render: () => {
+        return (
+          <TreeSelect
+            style={{ width: "100%", textAlign: "left" }}
+            treeData={CHUC_VU_DANG}
+            placeholder="CHỨC VỤ ĐẢNG/ĐOÀN THỂ"
+            treeCheckable={true}
+            treeCheckStrictly={true}
+          />
+        );
+      },
+      rules: [],
+    },
+    {
+      name: "dan_toc",
+      label: "DÂN TỘC",
+      render: () => {
+        return (
+          <Input placeholder="Kinh, Tày, Nùng, Mường, Ê-đê ..." />
+        );
+      },
+      rules: [],
+    },
+    {
+      name: "ngay_vao_nganh",
+      label: "NGÀY TUYỂN DỤNG",
       render: () => {
         return (
           <DatePicker
@@ -268,15 +331,15 @@ const NewCasePersonnel = () => {
       rules: [],
     },
     {
-      name: "trinh_do_ly_luan",
-      label: "TRÌNH ĐỘ LÝ LUẬN",
+      name: "ngay_vao_dang_chinh_thuc",
+      label: "NGÀY CHUYỂN ĐẢNG CHÍNH THỨC",
       render: () => {
         return (
-          <Radio.Group buttonStyle="solid">
-            <Radio.Button value="SƠ CẤP"> SƠ CẤP </Radio.Button>
-            <Radio.Button value="TRUNG CẤP">TRUNG CẤP</Radio.Button>
-            <Radio.Button value="CAO CẤP">CAO CẤP</Radio.Button>
-          </Radio.Group>
+          <DatePicker
+            format={dateFormatList}
+            showTime={false}
+            placeholder={"NGÀY"}
+          />
         );
       },
       rules: [],
@@ -287,12 +350,12 @@ const NewCasePersonnel = () => {
       render: () => {
         return (
           <Radio.Group buttonStyle="solid">
-            <Radio.Button value="SƠ CẤP"> SƠ CẤP </Radio.Button>
-            <Radio.Button value="TRUNG CẤP"> TRUNG CẤP </Radio.Button>
-            <Radio.Button value="CAO ĐẲNG"> CAO ĐẲNG </Radio.Button>
-            <Radio.Button value="ĐẠI HỌC"> ĐẠI HỌC </Radio.Button>
-            <Radio.Button value="THẠC SĨ"> THẠC SĨ </Radio.Button>
-            <Radio.Button value="TIẾN SĨ"> TIẾN SĨ </Radio.Button>
+            <Radio.Button value="Sơ cấp"> SƠ CẤP </Radio.Button>
+            <Radio.Button value="Trung cấp"> TRUNG CẤP </Radio.Button>
+            <Radio.Button value="Cao đẳng"> CAO ĐẲNG </Radio.Button>
+            <Radio.Button value="Đại học"> ĐẠI HỌC </Radio.Button>
+            <Radio.Button value="Thạc sĩ"> THẠC SĨ </Radio.Button>
+            <Radio.Button value="Tiến sĩ"> TIẾN SĨ </Radio.Button>
           </Radio.Group>
         );
       },
@@ -304,14 +367,107 @@ const NewCasePersonnel = () => {
       render: () => {
         return (
           <Radio.Group buttonStyle="solid">
-            <Radio.Button value="SƠ CẤP"> SƠ CẤP </Radio.Button>
-            <Radio.Button value="TRUNG CẤP"> TRUNG CẤP </Radio.Button>
-            <Radio.Button value="CAO ĐẲNG"> CAO ĐẲNG </Radio.Button>
-            <Radio.Button value="ĐẠI HỌC"> ĐẠI HỌC </Radio.Button>
-            <Radio.Button value="THẠC SĨ"> THẠC SĨ </Radio.Button>
-            <Radio.Button value="TIẾN SĨ"> TIẾN SĨ </Radio.Button>
+            <Radio.Button value="Sơ cấp"> SƠ CẤP </Radio.Button>
+            <Radio.Button value="Trung cấp"> TRUNG CẤP </Radio.Button>
+            <Radio.Button value="Cao đẳng"> CAO ĐẲNG </Radio.Button>
+            <Radio.Button value="Đại học"> ĐẠI HỌC </Radio.Button>
+            <Radio.Button value="Thạc sĩ"> THẠC SĨ </Radio.Button>
+            <Radio.Button value="Tiến sĩ"> TIẾN SĨ </Radio.Button>
           </Radio.Group>
         );
+      },
+      rules: [],
+    },
+    {
+      name: "trinh_do_ly_luan",
+      label: "TRÌNH ĐỘ LÝ LUẬN",
+      render: () => {
+        return (
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="Không"> KHÔNG </Radio.Button>
+            <Radio.Button value="Sơ cấp"> SƠ CẤP </Radio.Button>
+            <Radio.Button value="Trung cấp">TRUNG CẤP</Radio.Button>
+            <Radio.Button value="Cao cấp">CAO CẤP</Radio.Button>
+          </Radio.Group>
+        );
+      },
+      rules: [],
+    },
+    {
+
+      name: "chuc_danh",
+      label: "CHỨC DANH",
+      render: () => {
+        return (
+          <TreeSelect
+            style={{ width: "100%", textAlign: "left" }}
+            treeData={CHUC_DANH}
+            placeholder="CHỨC DANH"
+            treeCheckable={true}
+            treeCheckStrictly={true}
+          />
+        );
+      },
+      rules: [
+        {
+          required: true,
+          message: "HÃY CHỌN TRƯỜNG DỮ LIỆU",
+        },
+      ],
+    },
+    {
+      name: "qua_trinh_cong_tac",
+      label: "QUÁ TRÌNH CÔNG TÁC",
+      render: () => {
+        return <TextArea
+          rows={6}
+          placeholder="- Từ tháng, năm đến tháng năm: .../... - .../...: Chức danh? Chức vụ? Đơn vị công tác: ..." />
+      },
+      rules: [],
+    },
+    {
+      name: "qua_trinh_len_luong",
+      label: "QUÁ TRÌNH LÊN LƯƠNG",
+      render: () => {
+        return <TextArea
+          rows={5}
+          placeholder="- Thời gian: .../...; Ngạch/bậc: ...; Hệ số lương: ...?"
+          der
+        />;
+      },
+      rules: [],
+    },
+    {
+      name: "xep_loai_can_bo",
+      label: "XẾP LOẠI CÁN BỘ",
+      render: () => {
+        return (
+          <TextArea
+            rows={6}
+            placeholder="- Năm .....: Mức xếp loại?"
+            defaultValue={`- Năm 2019:\n- Năm 2020:\n- Năm 2021:\n- Năm 2022:\n- Năm 2023:\n- Năm 2024:`}
+          />
+        );
+      },
+      rules: [],
+    },
+    {
+      name: "khen_thuong",
+      label: "KHEN THƯỞNG",
+      render: () => {
+        return <TextArea
+          rows={6}
+          placeholder="- Năm .....: Hình thức khen thưởng?" />;
+      },
+      rules: [],
+    },
+    {
+      name: "ky_luat",
+      label: "KỶ LUẬT",
+      render: () => {
+        return <TextArea
+          rows={6}
+          placeholder="- Năm .....: Hình thức xử lý kỷ luật?" />;
       },
       rules: [],
     },

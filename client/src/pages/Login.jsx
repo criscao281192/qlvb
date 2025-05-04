@@ -160,7 +160,7 @@ const Login = ({ onLogin }) => {
       <LogoImage src={logoImage} alt="Logo" 
       />
 
-      <LoginTitle>HỆ THỐNG QUẢN LÝ VĂN BẢN</LoginTitle>
+      <LoginTitle>HỆ THỐNG QUẢN LÝ THAM MƯU</LoginTitle>
 
       <LoginForm>
         <FormTitle>ĐĂNG NHẬP HỆ THỐNG</FormTitle>
@@ -168,7 +168,7 @@ const Login = ({ onLogin }) => {
           <LoginInput
             size="large"
             prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="TÊN ĐĂNG NHẬP"
+            placeholder="USERNAME"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -178,7 +178,7 @@ const Login = ({ onLogin }) => {
           <Input.Password
             size="large"
             prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="MẬT KHẨU"
+            placeholder="PASSWORD"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
